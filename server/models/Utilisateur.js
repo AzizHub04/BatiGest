@@ -17,7 +17,13 @@ const utilisateurSchema = new mongoose.Schema({
     required: [true, 'L\'email est obligatoire'],
     unique: true,
     lowercase: true,
-    trim: true
+    trim: true,
+    validate: {
+      validator: function(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+      },
+      message: 'Format email invalide (ex: nom@domaine.com)'
+    }
   },
   motDePasse: {
     type: String,
@@ -25,15 +31,28 @@ const utilisateurSchema = new mongoose.Schema({
     minlength: [8, 'Minimum 8 caractères'],
     validate: {
       validator: function(value) {
+        // Valider seulement si le mot de passe est nouveau (pas un hash bcrypt)
+        if (value.startsWith('$2a$') || value.startsWith('$2b$')) return true;
         return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,;:#_\-])[A-Za-z\d@$!%*?&.,;:#_\-]{8,}$/.test(value);
       },
-      message: 'Mot de passe doit contenir en minimum : 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial'
+      message: 'Doit contenir : 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial'
     }
   },
   role: {
     type: String,
     enum: ['admin', 'responsable'],
     required: true
+  },
+  tarifJournalier: {
+    type: Number,
+    default: null,
+    min: 0
+  },
+  // L'admin qui a créé ce responsable
+  admin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Utilisateur',
+    default: null
   }
 }, { timestamps: true });
 

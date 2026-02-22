@@ -1,0 +1,599 @@
+import { useState } from "react";
+import {
+  useGetResponsablesQuery,
+  useCreerResponsableMutation,
+  useModifierResponsableMutation,
+  useSupprimerResponsableMutation,
+} from "../../services/responsableApiSlice";
+
+const Responsables = () => {
+  const { data: responsables = [], isLoading } = useGetResponsablesQuery();
+  const [creerResponsable] = useCreerResponsableMutation();
+  const [modifierResponsable] = useModifierResponsableMutation();
+  const [supprimerResponsable] = useSupprimerResponsableMutation();
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [recherche, setRecherche] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [voirMdp, setVoirMdp] = useState(false);
+  const [succes, setSucces] = useState("");
+  const [form, setForm] = useState({
+    nom: "",
+    prenom: "",
+    email: "",
+    motDePasse: "",
+    tarifJournalier: "",
+  });
+  const [erreur, setErreur] = useState("");
+
+  // Filtrer par recherche
+  const filteredResponsables = responsables.filter((r) =>
+    `${r.nom} ${r.prenom} ${r.email}`
+      .toLowerCase()
+      .includes(recherche.toLowerCase()),
+  );
+
+  const openCreate = () => {
+    setForm({
+      nom: "",
+      prenom: "",
+      email: "",
+      motDePasse: "",
+      tarifJournalier: "",
+    });
+    setEditMode(false);
+    setSelectedId(null);
+    setErreur("");
+    setModalOpen(true);
+    setVoirMdp(false);
+  };
+
+  const openEdit = (r) => {
+    setForm({
+      nom: r.nom,
+      prenom: r.prenom,
+      email: r.email,
+      motDePasse: "",
+      tarifJournalier: r.tarifJournalier || "",
+    });
+    setEditMode(true);
+    setSelectedId(r._id);
+    setErreur("");
+    setModalOpen(true);
+    setVoirMdp(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErreur("");
+    try {
+      if (editMode) {
+        const data = {
+          id: selectedId,
+          nom: form.nom,
+          prenom: form.prenom,
+          email: form.email,
+          tarifJournalier: form.tarifJournalier,
+        };
+        if (form.motDePasse) data.motDePasse = form.motDePasse;
+        await modifierResponsable(data).unwrap();
+        setSucces("Responsable modifié avec succès");
+      } else {
+        await creerResponsable(form).unwrap();
+        setSucces("Responsable créé avec succès");
+      }
+      setModalOpen(false);
+      setTimeout(() => setSucces(""), 3000);
+    } catch (err) {
+      setErreur(err?.data?.message || "Erreur");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await supprimerResponsable(id).unwrap();
+      setDeleteConfirm(null);
+      setSucces("Responsable supprimé avec succès");
+      setTimeout(() => setSucces(""), 3000);
+    } catch (err) {
+      setErreur(err?.data?.message || "Erreur lors de la suppression");
+      setTimeout(() => setErreur(""), 3000);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <svg
+          className="animate-spin h-8 w-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          style={{ color: "#dc5539" }}
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+          />
+        </svg>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {/* Message de succès */}
+      {succes && (
+        <div
+          className="mb-4 p-3.5 rounded-xl flex items-center gap-2.5"
+          style={{
+            backgroundColor: "#dcfce7",
+            border: "1px solid #bbf7d0",
+          }}
+        >
+          <svg
+            width="18"
+            height="18"
+            fill="none"
+            stroke="#16a34a"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+          <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
+            {succes}
+          </p>
+        </div>
+      )}
+
+      {/* Message d'erreur global */}
+      {erreur && !modalOpen && (
+        <div
+          className="mb-4 p-3.5 rounded-xl flex items-center gap-2.5"
+          style={{
+            backgroundColor: "#dc55391a",
+            border: "1px solid #dc55394d",
+          }}
+        >
+          <svg
+            width="18"
+            height="18"
+            fill="none"
+            stroke="#dc5539"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+          </svg>
+          <p className="text-sm font-medium" style={{ color: "#dc5539" }}>
+            {erreur}
+          </p>
+        </div>
+      )}
+      {/* Header */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-gray-800">Responsables</h2>
+          <div className="flex items-center gap-3">
+            {/* Recherche */}
+            <div className="relative">
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Rechercher..."
+                value={recherche}
+                onChange={(e) => setRecherche(e.target.value)}
+                className="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm w-56"
+                style={{ outline: "none", transition: "border-color 0.15s" }}
+                onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+              />
+            </div>
+
+            {/* Bouton créer */}
+            <button
+              onClick={openCreate}
+              className="flex items-center gap-2 px-4 py-2 text-white rounded-xl text-sm font-medium"
+              style={{
+                backgroundColor: "#dc5539",
+                transition: "background-color 0.15s",
+              }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#c44a30")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc5539")}
+            >
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              Créer compte
+            </button>
+          </div>
+        </div>
+
+        {/* Tableau */}
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-gray-100">
+              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
+                Nom
+              </th>
+              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
+                Prénom
+              </th>
+              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
+                Email
+              </th>
+              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
+                Chantier Assigné
+              </th>
+              <th className="text-right py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredResponsables.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="5"
+                  className="text-center py-12 text-gray-400 text-sm"
+                >
+                  Aucun responsable trouvé
+                </td>
+              </tr>
+            ) : (
+              filteredResponsables.map((r) => (
+                <tr
+                  key={r._id}
+                  className="border-b border-gray-50 hover:bg-gray-50"
+                  style={{ transition: "background-color 0.1s" }}
+                >
+                  <td className="py-3.5 px-4 text-sm text-gray-800 font-medium">
+                    {r.nom}
+                  </td>
+                  <td className="py-3.5 px-4 text-sm text-gray-600">
+                    {r.prenom}
+                  </td>
+                  <td className="py-3.5 px-4 text-sm text-gray-500">
+                    {r.email}
+                  </td>
+                  <td className="py-3.5 px-4">
+                    <span
+                      className="text-xs px-2.5 py-1 rounded-full font-medium"
+                      style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                    >
+                      Non assigné
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4">
+                    <div className="flex items-center justify-end gap-2">
+                      {/* Modifier */}
+                      <button
+                        onClick={() => openEdit(r)}
+                        className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50"
+                        style={{ transition: "all 0.15s" }}
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </button>
+                      {/* Supprimer */}
+                      <button
+                        onClick={() => setDeleteConfirm(r._id)}
+                        className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50"
+                        style={{ transition: "all 0.15s" }}
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Modal Créer/Modifier */}
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
+          onClick={() => setModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-md p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-bold text-gray-800 mb-4">
+              {editMode ? "Modifier le responsable" : "Créer un responsable"}
+            </h3>
+
+            {erreur && (
+              <div
+                className="mb-4 p-3 rounded-xl text-sm"
+                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+              >
+                {erreur}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nom
+                  </label>
+                  <input
+                    type="text"
+                    value={form.nom}
+                    onChange={(e) => setForm({ ...form, nom: e.target.value })}
+                    required
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                    style={{
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Prénom
+                  </label>
+                  <input
+                    type="text"
+                    value={form.prenom}
+                    onChange={(e) =>
+                      setForm({ ...form, prenom: e.target.value })
+                    }
+                    required
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                    style={{
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  required
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                  style={{ outline: "none", transition: "border-color 0.15s" }}
+                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tarif journalier (DT)
+                </label>
+                <input
+                  type="number"
+                  value={form.tarifJournalier}
+                  onChange={(e) =>
+                    setForm({ ...form, tarifJournalier: e.target.value })
+                  }
+                  placeholder="0.00"
+                  min="0"
+                  step="0.5"
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                  style={{ outline: "none", transition: "border-color 0.15s" }}
+                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mot de passe{" "}
+                  {editMode && (
+                    <span className="text-gray-400 font-normal">
+                      (laisser vide pour ne pas changer)
+                    </span>
+                  )}
+                </label>
+                <div className="relative">
+                  <input
+                    type={voirMdp ? "text" : "password"}
+                    value={form.motDePasse}
+                    onChange={(e) =>
+                      setForm({ ...form, motDePasse: e.target.value })
+                    }
+                    required={!editMode}
+                    placeholder={editMode ? "••••••••" : ""}
+                    className="w-full px-3 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm"
+                    style={{
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setVoirMdp(!voirMdp)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    style={{ transition: "color 0.15s" }}
+                  >
+                    {voirMdp ? (
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
+                    ) : (
+                      <svg
+                        width="18"
+                        height="18"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50"
+                  style={{ transition: "background-color 0.15s" }}
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
+                  style={{
+                    backgroundColor: "#dc5539",
+                    transition: "background-color 0.15s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.backgroundColor = "#c44a30")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.backgroundColor = "#dc5539")
+                  }
+                >
+                  {editMode ? "Modifier" : "Créer"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Confirmation suppression */}
+      {deleteConfirm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
+          onClick={() => setDeleteConfirm(null)}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-sm p-6 text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
+              style={{ backgroundColor: "#dc55391a" }}
+            >
+              <svg
+                width="24"
+                height="24"
+                fill="none"
+                stroke="#dc5539"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-gray-800 mb-2">
+              Supprimer le responsable ?
+            </h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Cette action est irréversible.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50"
+                style={{ transition: "background-color 0.15s" }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={() => handleDelete(deleteConfirm)}
+                className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
+                style={{
+                  backgroundColor: "#dc5539",
+                  transition: "background-color 0.15s",
+                }}
+                onMouseEnter={(e) =>
+                  (e.target.style.backgroundColor = "#c44a30")
+                }
+                onMouseLeave={(e) =>
+                  (e.target.style.backgroundColor = "#dc5539")
+                }
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Responsables;

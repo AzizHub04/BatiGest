@@ -46,9 +46,13 @@ io.on('connection', (socket) => {
   });
 });
 
-// Routes
+//Authentification Route
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
+
+// Routes responsables
+const responsableRoutes = require('./routes/responsableRoutes');
+app.use('/api/responsables', responsableRoutes);
 
 // Route test
 app.get('/', (req, res) => {

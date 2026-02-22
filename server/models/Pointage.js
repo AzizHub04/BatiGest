@@ -11,13 +11,18 @@ const pointageSchema = new mongoose.Schema({
     enum: ['Complète', 'Demi'],
     required: [true, 'Le type de journée est obligatoire']
   },
-  // Relation "posséder" : le pointage appartient à un Ouvrier
+  // Pointage pour un ouvrier (optionnel)
   ouvrier: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Ouvrier',
-    required: true
+    default: null
   },
-  // Relation "travailler" : le pointage est lié à un Chantier
+  // Pointage pour un responsable (optionnel)
+  responsable: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Utilisateur',
+    default: null
+  },
   chantier: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Chantier',

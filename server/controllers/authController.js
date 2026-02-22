@@ -106,4 +106,83 @@ const getProfil = async (req, res) => {
   });
 };
 
-module.exports = { register, login, logout, getProfil };
+// PUT /api/auth/profil — Modifier le profil
+const modifierProfil = async (req, res) => {
+  try {
+    const utilisateur = await Utilisateur.findById(req.utilisateur._id);
+    const { nom, prenom, email } = req.body;
+
+    // Vérifier si le nouvel email existe déjà
+    if (email && email !== utilisateur.email) {
+      const emailExiste = await Utilisateur.findOne({ email });
+      if (emailExiste) {
+        return res.status(400).json({ message: 'Cet email existe déjà' });
+      }
+    }
+
+    if (nom) utilisateur.nom = nom;
+    if (prenom) utilisateur.prenom = prenom;
+    if (email) utilisateur.email = email;
+
+    await utilisateur.save();
+
+    res.json({
+      message: 'Profil modifié avec succès',
+      utilisateur: {
+        id: utilisateur._id,
+        nom: utilisateur.nom,
+        prenom: utilisateur.prenom,
+        email: utilisateur.email,
+        role: utilisateur.role
+      }
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// PUT /api/auth/mot-de-passe — Changer le mot de passe
+const changerMotDePasse = async (req, res) => {
+  try {
+    const { ancienMotDePasse, nouveauMotDePasse } = req.body;
+    const utilisateur = await Utilisateur.findById(req.utilisateur._id);
+
+    // Vérifier l'ancien mot de passe
+    const valide = await utilisateur.comparerMotDePasse(ancienMotDePasse);
+    if (!valide) {
+      return res.status(401).json({ message: 'Ancien mot de passe incorrect' });
+    }
+
+    utilisateur.motDePasse = nouveauMotDePasse;
+    await utilisateur.save();
+
+    res.json({ message: 'Mot de passe modifié avec succès' });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// DELETE /api/auth/compte — Supprimer son compte
+const supprimerCompte = async (req, res) => {
+  try {
+    const { motDePasse } = req.body;
+    const utilisateur = await Utilisateur.findById(req.utilisateur._id);
+
+    // Confirmer avec le mot de passe
+    const valide = await utilisateur.comparerMotDePasse(motDePasse);
+    if (!valide) {
+      return res.status(401).json({ message: 'Mot de passe incorrect' });
+    }
+
+    await utilisateur.deleteOne();
+
+    // Supprimer le cookie
+    res.cookie('token', '', { httpOnly: true, expires: new Date(0) });
+
+    res.json({ message: 'Compte supprimé avec succès' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { register, login, logout, getProfil, modifierProfil, changerMotDePasse, supprimerCompte };

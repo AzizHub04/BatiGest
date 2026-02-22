@@ -421,6 +421,7 @@ const Login = () => {
   const [erreur, setErreur] = useState("");
   const [voirMdp, setVoirMdp] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -428,6 +429,24 @@ const Login = () => {
 
   useEffect(() => {
     setTimeout(() => setLoaded(true), 100);
+  }, []);
+
+  const featuresList = [
+    "Gestion des chantiers et travaux",
+    "Suivi des ouvriers et paiements",
+    "Gestion du stock en temps réel",
+    "Tableau de bord intelligent",
+    "Assistant IA intégré",
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentFeatureIndex(
+        (prevIndex) => (prevIndex + 1) % featuresList.length,
+      );
+    }, 3500);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -447,9 +466,10 @@ const Login = () => {
   };
 
   const features = [
-    "Tableau de bord intelligent",
+    "Consultation des Chantiers et Travaux",
     "Suivi des ouvriers et paiements",
     "Gestion du stock en temps réel",
+    "Tableau de bord intelligent",
     "Assistant IA intégré",
   ];
 
@@ -719,36 +739,55 @@ const Login = () => {
               </h1>
             </div>
 
-            <div className="space-y-3">
-              {features.map((f, i) => (
+            <div
+              className="relative w-full max-w-sm h-40 rounded-lg overflow-hidden flex items-center px-6"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.15)",
+                border: "1px solid rgba(255,255,255,0.25)",
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? "translateX(0)" : "translateX(-40px)",
+                transition: "all 0.7s ease-out 0.3s",
+              }}
+            >
+              {featuresList.map((feature, index) => (
                 <div
-                  key={i}
-                  className="rounded-xl px-5 py-3.5 max-w-sm cursor-default"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.2)",
-                    border: "1px solid rgba(255,255,255,0.28)",
-                    color: "#fde8e0",
-                    opacity: loaded ? 1 : 0,
-                    transform: loaded ? "translateX(0)" : "translateX(-40px)",
-                    transition: `opacity 0.5s ease-out ${0.4 + i * 0.12}s, transform 0.15s ease-out, background-color 0.15s, border-color 0.15s`,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      "rgba(255,255,255,0.1)";
-                    e.currentTarget.style.transform = "translateX(8px)";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      "rgba(255,255,255,0.2)";
-                    e.currentTarget.style.transform = "translateX(0)";
-                    e.currentTarget.style.borderColor =
-                      "rgba(255,255,255,0.28)";
-                  }}
+                  key={index}
+                  className={`absolute inset-0 flex items-center px-6 transition-all duration-700 ${
+                    index === currentFeatureIndex
+                      ? "opacity-100 scale-100 translate-x-0"
+                      : "opacity-0 scale-95 -translate-x-12 pointer-events-none"
+                  }`}
+                  onMouseEnter={() =>
+                    index === currentFeatureIndex &&
+                    setCurrentFeatureIndex(currentFeatureIndex)
+                  }
                 >
-                  <span className="text-sm font-medium">{f}</span>
+                  <h3
+                    className="text-2xl font-bold leading-tight"
+                    style={{ color: "#fff4f0" }}
+                  >
+                    {feature}
+                  </h3>
                 </div>
               ))}
+
+              {/* Indicators */}
+              <div className="absolute bottom-3 left-6 flex gap-2">
+                {featuresList.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === currentFeatureIndex ? "w-6" : "w-2"
+                    }`}
+                    style={{
+                      backgroundColor:
+                        index === currentFeatureIndex
+                          ? "rgba(255,255,255,0.9)"
+                          : "rgba(255,255,255,0.4)",
+                    }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
