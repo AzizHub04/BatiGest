@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const coutPaiementChantierSchema = new mongoose.Schema({
   type: {
     type: String,
-    required: [true, 'Le type est obligatoire'],
-    trim: true
+    enum: ['Dépense', 'Règlement'],
+    required: [true, 'Le type est obligatoire']
   },
   montant: {
     type: Number,

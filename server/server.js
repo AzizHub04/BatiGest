@@ -54,10 +54,23 @@ app.use('/api/auth', authRoutes);
 const responsableRoutes = require('./routes/responsableRoutes');
 app.use('/api/responsables', responsableRoutes);
 
-// Route test
-app.get('/', (req, res) => {
-  res.json({ message: 'BatiGest API fonctionne ✅' });
-});
+// Routes chantiers
+const chantierRoutes = require('./routes/chantierRoutes');
+app.use('/api/chantiers', chantierRoutes);
+
+// Routes travaux et taches
+const travailRoutes = require('./routes/travailRoutes');
+const tacheRoutes = require('./routes/tacheRoutes');
+app.use('/api/travaux', travailRoutes);
+app.use('/api/taches', tacheRoutes);
+
+// Routes notes
+const noteRoutes = require('./routes/noteRoutes');
+app.use('/api/notes', noteRoutes);
+
+// Routes couts
+const coutRoutes = require('./routes/coutRoutes');
+app.use('/api/couts', coutRoutes);
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;

@@ -331,6 +331,16 @@ const AdminLayout = () => {
               {profileOpen && (
                 <div className="absolute right-0 top-12 w-48 bg-white rounded-xl border border-gray-100 py-2 z-50">
                   <button
+                    onClick={() => {
+                      navigate("/admin/profil");
+                      setProfileOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+                    style={{ transition: "background-color 0.15s" }}
+                  >
+                    Mon profil
+                  </button>
+                  <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
                     style={{ transition: "background-color 0.15s" }}

@@ -25,6 +25,11 @@ const materielSchema = new mongoose.Schema({
     type: Number,
     default: 0,
     min: 0
+  },
+  admin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Utilisateur',
+    required: true
   }
 }, { timestamps: true });
 

@@ -5,6 +5,7 @@ import {
   useModifierResponsableMutation,
   useSupprimerResponsableMutation,
 } from "../../services/responsableApiSlice";
+import { useGetChantiersQuery } from "../../services/chantierApiSlice";
 
 const Responsables = () => {
   const { data: responsables = [], isLoading } = useGetResponsablesQuery();
@@ -26,6 +27,7 @@ const Responsables = () => {
     motDePasse: "",
     tarifJournalier: "",
   });
+  const { data: chantiers = [] } = useGetChantiersQuery();
   const [erreur, setErreur] = useState("");
 
   // Filtrer par recherche
@@ -34,6 +36,13 @@ const Responsables = () => {
       .toLowerCase()
       .includes(recherche.toLowerCase()),
   );
+  // Trouver le chantier assigné à un responsable
+  const getChantierAssigne = (responsableId) => {
+    const chantier = chantiers.find(
+      (c) => c.responsable?._id === responsableId,
+    );
+    return chantier ? chantier.nom : null;
+  };
 
   const openCreate = () => {
     setForm({
@@ -289,12 +298,19 @@ const Responsables = () => {
                     {r.email}
                   </td>
                   <td className="py-3.5 px-4">
-                    <span
-                      className="text-xs px-2.5 py-1 rounded-full font-medium"
-                      style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
-                    >
-                      Non assigné
-                    </span>
+                    {getChantierAssigne(r._id) ? (
+                      <span
+                        className="text-xs px-2.5 py-1 rounded-full font-medium"
+                        style={{
+                          backgroundColor: "#dc55391a",
+                          color: "#dc5539",
+                        }}
+                      >
+                        {getChantierAssigne(r._id)}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-gray-400">Non assigné</span>
+                    )}
                   </td>
                   <td className="py-3.5 px-4">
                     <div className="flex items-center justify-end gap-2">

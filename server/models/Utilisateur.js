@@ -53,6 +53,24 @@ const utilisateurSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Utilisateur',
     default: null
+  },
+  // Token pour réinitialisation mot de passe
+  resetToken: {
+    type: String,
+    default: null
+  },
+  resetTokenExpire: {
+    type: Date,
+    default: null
+  },
+  // Token pour confirmation suppression
+  deleteToken: {
+    type: String,
+    default: null
+  },
+  deleteTokenExpire: {
+    type: Date,
+    default: null
   }
 }, { timestamps: true });
 

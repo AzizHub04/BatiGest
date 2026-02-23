@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../services/authApiSlice";
 import { setUtilisateur } from "../services/authSlice";
+import { Link } from "react-router-dom";
 
 const floatStyles = `
   @keyframes drift1 {
@@ -1065,6 +1066,15 @@ const Login = () => {
                   "Se connecter"
                 )}
               </button>
+              <div className="text-right mt-1">
+                <Link
+                  to="/forgot-password"
+                  className="text-xs font-medium"
+                  style={{ color: "#dc5539" }}
+                >
+                  Mot de passe oublié ?
+                </Link>
+              </div>
             </form>
 
             <p className="text-center text-xs text-gray-400 mt-8">

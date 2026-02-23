@@ -30,6 +30,11 @@ const ouvrierSchema = new mongoose.Schema({
     type: String,
     enum: ['Actif', 'Inactif'],
     default: 'Actif'
+  },
+  admin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Utilisateur',
+    required: true
   }
 }, { timestamps: true });
 

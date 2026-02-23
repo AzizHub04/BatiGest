@@ -35,6 +35,11 @@ const chantierSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Utilisateur',
     default: null  // peut ne pas avoir de responsable au début
+  },
+  admin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Utilisateur',
+    required: true
   }
 }, { timestamps: true });
 
