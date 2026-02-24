@@ -8,6 +8,8 @@ import {
 } from "../../services/chantierApiSlice";
 import { useGetResponsablesQuery } from "../../services/responsableApiSlice";
 import { useNavigate } from "react-router-dom";
+import Alert from "../../components/Alert";
+import ConfirmDelete from "../../components/ConfirmDelete";
 
 const Chantiers = () => {
   const { data: chantiers = [], isLoading } = useGetChantiersQuery();
@@ -22,7 +24,7 @@ const Chantiers = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [recherche, setRecherche] = useState("");
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [succes, setSucces] = useState("");
+  const [succes, setSucces] = useState(null);
   const [erreur, setErreur] = useState("");
   const [form, setForm] = useState({
     nom: "",
@@ -93,13 +95,13 @@ const Chantiers = () => {
 
       if (editMode) {
         await modifierChantier({ id: selectedId, ...data }).unwrap();
-        setSucces("Chantier modifié avec succès");
+        setSucces({ type: "warning", message: "Chantier modifié avec succès" });
       } else {
         await creerChantier(data).unwrap();
-        setSucces("Chantier créé avec succès");
+        setSucces({ type: "success", message: "Chantier créé avec succès" });
       }
       setModalOpen(false);
-      setTimeout(() => setSucces(""), 3000);
+      setTimeout(() => setSucces(null), 3000);
     } catch (err) {
       setErreur(err?.data?.message || "Erreur");
     }
@@ -109,8 +111,8 @@ const Chantiers = () => {
     try {
       await supprimerChantier(id).unwrap();
       setDeleteConfirm(null);
-      setSucces("Chantier supprimé avec succès");
-      setTimeout(() => setSucces(""), 3000);
+      setSucces({ type: "delete", message: "Chantier supprimé avec succès" });
+      setTimeout(() => setSucces(null), 3000);
     } catch (err) {
       console.error(err);
     }
@@ -194,27 +196,7 @@ const Chantiers = () => {
   return (
     <div>
       {/* Messages */}
-      {succes && (
-        <div
-          className="mb-4 p-3.5 rounded-xl flex items-center gap-2.5"
-          style={{ backgroundColor: "#dcfce7", border: "1px solid #bbf7d0" }}
-        >
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="#16a34a"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 12 2 2 4-4" />
-          </svg>
-          <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
-            {succes}
-          </p>
-        </div>
-      )}
+      <Alert type={succes?.type} message={succes?.message} />
 
       {/* Tableau */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
@@ -389,6 +371,23 @@ const Chantiers = () => {
                       </td>
                       <td className="py-3.5 px-3">
                         <div className="flex items-center justify-end gap-1.5">
+                          <button
+                            onClick={() => openEdit(c)}
+                            className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50"
+                            style={{ transition: "all 0.15s" }}
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                          </button>
                           <button
                             onClick={() =>
                               navigate(`/admin/chantiers/${c._id}`)
@@ -659,66 +658,13 @@ const Chantiers = () => {
         </div>
       )}
 
-      {/* Modal Confirmation suppression */}
-      {deleteConfirm && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
-          onClick={() => setDeleteConfirm(null)}
-        >
-          <div
-            className="bg-white rounded-2xl w-full max-w-sm p-6 text-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ backgroundColor: "#dc55391a" }}
-            >
-              <svg
-                width="24"
-                height="24"
-                fill="none"
-                stroke="#dc5539"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-bold text-gray-800 mb-2">
-              Supprimer le chantier ?
-            </h3>
-            <p className="text-sm text-gray-500 mb-6">
-              Toutes les données associées (travaux, tâches, notes, coûts)
-              seront supprimées.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setDeleteConfirm(null)}
-                className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50"
-                style={{ transition: "background-color 0.15s" }}
-              >
-                Annuler
-              </button>
-              <button
-                onClick={() => handleDelete(deleteConfirm)}
-                className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
-                style={{
-                  backgroundColor: "#dc5539",
-                  transition: "background-color 0.15s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.target.style.backgroundColor = "#c44a30")
-                }
-                onMouseLeave={(e) =>
-                  (e.target.style.backgroundColor = "#dc5539")
-                }
-              >
-                Supprimer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDelete
+        isOpen={!!deleteConfirm}
+        onClose={() => setDeleteConfirm(null)}
+        onConfirm={() => handleDelete(deleteConfirm)}
+        title="Supprimer le chantier ?"
+        message="Toutes les données associées (travaux, tâches, notes, coûts) seront supprimées."
+      />
     </div>
   );
 };

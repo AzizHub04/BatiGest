@@ -6,6 +6,8 @@ import {
   useSupprimerResponsableMutation,
 } from "../../services/responsableApiSlice";
 import { useGetChantiersQuery } from "../../services/chantierApiSlice";
+import Alert from "../../components/Alert";
+import ConfirmDelete from "../../components/ConfirmDelete";
 
 const Responsables = () => {
   const { data: responsables = [], isLoading } = useGetResponsablesQuery();
@@ -19,7 +21,7 @@ const Responsables = () => {
   const [recherche, setRecherche] = useState("");
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [voirMdp, setVoirMdp] = useState(false);
-  const [succes, setSucces] = useState("");
+  const [succes, setSucces] = useState(null);
   const [form, setForm] = useState({
     nom: "",
     prenom: "",
@@ -88,13 +90,16 @@ const Responsables = () => {
         };
         if (form.motDePasse) data.motDePasse = form.motDePasse;
         await modifierResponsable(data).unwrap();
-        setSucces("Responsable modifié avec succès");
+        setSucces({
+          type: "warning",
+          message: "Responsable modifié avec succès",
+        });
       } else {
         await creerResponsable(form).unwrap();
-        setSucces("Responsable créé avec succès");
+        setSucces({ type: "success", message: "Responsable créé avec succès" });
       }
       setModalOpen(false);
-      setTimeout(() => setSucces(""), 3000);
+      setTimeout(() => setSucces(null), 3000);
     } catch (err) {
       setErreur(err?.data?.message || "Erreur");
     }
@@ -104,11 +109,14 @@ const Responsables = () => {
     try {
       await supprimerResponsable(id).unwrap();
       setDeleteConfirm(null);
-      setSucces("Responsable supprimé avec succès");
-      setTimeout(() => setSucces(""), 3000);
+      setSucces({
+        type: "delete",
+        message: "Responsable supprimé avec succès",
+      });
+      setTimeout(() => setSucces(null), 3000);
     } catch (err) {
       setErreur(err?.data?.message || "Erreur lors de la suppression");
-      setTimeout(() => setErreur(""), 3000);
+      setTimeout(() => setErreur(null), 3000);
     }
   };
 
@@ -142,57 +150,10 @@ const Responsables = () => {
   return (
     <div>
       {/* Message de succès */}
-      {succes && (
-        <div
-          className="mb-4 p-3.5 rounded-xl flex items-center gap-2.5"
-          style={{
-            backgroundColor: "#dcfce7",
-            border: "1px solid #bbf7d0",
-          }}
-        >
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="#16a34a"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 12 2 2 4-4" />
-          </svg>
-          <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
-            {succes}
-          </p>
-        </div>
-      )}
+      <Alert type={succes?.type} message={succes?.message} />
 
       {/* Message d'erreur global */}
-      {erreur && !modalOpen && (
-        <div
-          className="mb-4 p-3.5 rounded-xl flex items-center gap-2.5"
-          style={{
-            backgroundColor: "#dc55391a",
-            border: "1px solid #dc55394d",
-          }}
-        >
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="#dc5539"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <line x1="15" y1="9" x2="9" y2="15" />
-            <line x1="9" y1="9" x2="15" y2="15" />
-          </svg>
-          <p className="text-sm font-medium" style={{ color: "#dc5539" }}>
-            {erreur}
-          </p>
-        </div>
-      )}
+      {!modalOpen && <Alert type="error" message={erreur} />}
       {/* Header */}
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-6">
@@ -549,65 +510,13 @@ const Responsables = () => {
         </div>
       )}
 
-      {/* Modal Confirmation suppression */}
-      {deleteConfirm && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
-          onClick={() => setDeleteConfirm(null)}
-        >
-          <div
-            className="bg-white rounded-2xl w-full max-w-sm p-6 text-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ backgroundColor: "#dc55391a" }}
-            >
-              <svg
-                width="24"
-                height="24"
-                fill="none"
-                stroke="#dc5539"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-bold text-gray-800 mb-2">
-              Supprimer le responsable ?
-            </h3>
-            <p className="text-sm text-gray-500 mb-6">
-              Cette action est irréversible.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setDeleteConfirm(null)}
-                className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50"
-                style={{ transition: "background-color 0.15s" }}
-              >
-                Annuler
-              </button>
-              <button
-                onClick={() => handleDelete(deleteConfirm)}
-                className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
-                style={{
-                  backgroundColor: "#dc5539",
-                  transition: "background-color 0.15s",
-                }}
-                onMouseEnter={(e) =>
-                  (e.target.style.backgroundColor = "#c44a30")
-                }
-                onMouseLeave={(e) =>
-                  (e.target.style.backgroundColor = "#dc5539")
-                }
-              >
-                Supprimer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDelete
+        isOpen={!!deleteConfirm}
+        onClose={() => setDeleteConfirm(null)}
+        onConfirm={() => handleDelete(deleteConfirm)}
+        title="Supprimer le responsable ?"
+        message="Cette action est irréversible."
+      />
     </div>
   );
 };

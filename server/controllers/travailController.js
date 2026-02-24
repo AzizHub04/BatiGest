@@ -96,7 +96,19 @@ const modifierTravail = async (req, res) => {
 
     if (titre) travail.titre = titre;
     if (description !== undefined) travail.description = description;
-    if (etat) travail.etat = etat;
+
+    if (etat) {
+      // Vérifier si le travail a des tâches
+      const taches = await Tache.find({ travail: travail._id });
+
+      if (taches.length > 0) {
+        // Travail avec tâches : l'état dépend des tâches, pas modifiable directement
+        return res.status(400).json({ message: 'Ce travail contient des tâches. Son état dépend de l\'avancement des tâches.' });
+      }
+
+      // Travail sans tâches : modification libre
+      travail.etat = etat;
+    }
 
     await travail.save();
 

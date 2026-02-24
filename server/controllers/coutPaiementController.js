@@ -19,14 +19,15 @@ const getCoutsByChantier = async (req, res) => {
       .sort({ createdAt: -1 });
 
     // Calculer les totaux
-    const totalDepense = couts.reduce((sum, c) => sum + c.montant, 0);
+    const totalDepense = couts.filter(c => c.type === 'Dépense').reduce((sum, c) => sum + c.montant, 0);
+    const totalRecu = couts.filter(c => c.type === 'Règlement').reduce((sum, c) => sum + c.montant, 0);
     const chantier = await Chantier.findById(req.params.chantierId);
 
     res.json({
       couts,
       totalDepense,
-      budget: chantier.budget,
-      restant: chantier.budget - totalDepense
+      totalRecu,
+      budget: chantier.budget
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

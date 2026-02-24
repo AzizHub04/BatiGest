@@ -45,7 +45,9 @@ const getTachesByTravail = async (req, res) => {
     const acces = await verifierAccesTravail(req.params.travailId, req.utilisateur);
     if (!acces) return res.status(403).json({ message: 'Accès refusé' });
 
+    const prioriteOrdre = { 'Haute': 1, 'Moyenne': 2, 'Basse': 3 };
     const taches = await Tache.find({ travail: req.params.travailId });
+    taches.sort((a, b) => (prioriteOrdre[a.priorite] || 99) - (prioriteOrdre[b.priorite] || 99));
     res.json(taches);
   } catch (error) {
     res.status(500).json({ message: error.message });

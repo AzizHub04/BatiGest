@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetChantierQuery } from "../../services/chantierApiSlice";
+import {
+  useGetChantierQuery,
+  useModifierChantierMutation,
+} from "../../services/chantierApiSlice";
 import {
   useGetTravauxByChantierQuery,
   useCreerTravailMutation,
   useModifierTravailMutation,
   useSupprimerTravailMutation,
 } from "../../services/travailApiSlice";
-import {
-  useGetTachesByTravailQuery,
-  useCreerTacheMutation,
-  useModifierTacheMutation,
-  useChangerStatutMutation,
-  useSupprimerTacheMutation,
-} from "../../services/tacheApiSlice";
+import TachesList from "../../components/TachesList";
+import Alert from "../../components/Alert";
 import {
   useGetNotesByChantierQuery,
   useCreerNoteMutation,
@@ -26,259 +24,7 @@ import {
   useModifierCoutMutation,
   useSupprimerCoutMutation,
 } from "../../services/coutApiSlice";
-
-// Composant Tâches d'un travail
-const TachesList = ({ travailId }) => {
-  const { data: taches = [] } = useGetTachesByTravailQuery(travailId);
-  const [creerTache] = useCreerTacheMutation();
-  const [modifierTache] = useModifierTacheMutation();
-  const [changerStatut] = useChangerStatutMutation();
-  const [supprimerTache] = useSupprimerTacheMutation();
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
-  const [form, setForm] = useState({
-    titre: "",
-    description: "",
-    priorite: "Moyenne",
-  });
-
-  const prioriteStyle = (p) => {
-    switch (p) {
-      case "Haute":
-        return { bg: "#fee2e2", color: "#dc2626" };
-      case "Moyenne":
-        return { bg: "#fef3c7", color: "#d97706" };
-      case "Basse":
-        return { bg: "#dcfce7", color: "#16a34a" };
-      default:
-        return { bg: "#f3f4f6", color: "#6b7280" };
-    }
-  };
-
-  const statutStyle = (s) => {
-    switch (s) {
-      case "Terminé":
-        return { bg: "#dcfce7", color: "#16a34a" };
-      case "En cours":
-        return { bg: "#dbeafe", color: "#2563eb" };
-      default:
-        return { bg: "#f3f4f6", color: "#6b7280" };
-    }
-  };
-
-  const openCreate = () => {
-    setForm({ titre: "", description: "", priorite: "Moyenne" });
-    setEditMode(false);
-    setSelectedId(null);
-    setModalOpen(true);
-  };
-
-  const openEdit = (t) => {
-    setForm({
-      titre: t.titre,
-      description: t.description || "",
-      priorite: t.priorite,
-    });
-    setEditMode(true);
-    setSelectedId(t._id);
-    setModalOpen(true);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (editMode) {
-        await modifierTache({ id: selectedId, ...form }).unwrap();
-      } else {
-        await creerTache({ ...form, travail: travailId }).unwrap();
-      }
-      setModalOpen(false);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  return (
-    <div className="ml-6 mt-2 mb-4">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-semibold text-gray-400 uppercase">
-          Tâches ({taches.length})
-        </span>
-        <button
-          onClick={openCreate}
-          className="text-xs font-medium"
-          style={{ color: "#dc5539" }}
-        >
-          + Ajouter
-        </button>
-      </div>
-
-      {taches.length === 0 ? (
-        <p className="text-xs text-gray-400 italic">Aucune tâche</p>
-      ) : (
-        <div className="space-y-1.5">
-          {taches.map((t) => {
-            const ps = prioriteStyle(t.priorite);
-            const ss = statutStyle(t.statut);
-            return (
-              <div
-                key={t._id}
-                className="flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50 hover:bg-gray-100"
-                style={{ transition: "background-color 0.1s" }}
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  <select
-                    value={t.statut}
-                    onChange={(e) =>
-                      changerStatut({ id: t._id, statut: e.target.value })
-                    }
-                    className="text-[10px] px-1.5 py-0.5 rounded-full font-medium border-0 cursor-pointer"
-                    style={{
-                      backgroundColor: ss.bg,
-                      color: ss.color,
-                      outline: "none",
-                    }}
-                  >
-                    <option value="Non commencé">Non commencé</option>
-                    <option value="En cours">En cours</option>
-                    <option value="Terminé">Terminé</option>
-                  </select>
-                  <span className="text-sm text-gray-700">{t.titre}</span>
-                  <span
-                    className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
-                    style={{ backgroundColor: ps.bg, color: ps.color }}
-                  >
-                    {t.priorite}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => openEdit(t)}
-                    className="p-1 text-gray-400 hover:text-blue-500"
-                    style={{ transition: "color 0.15s" }}
-                  >
-                    <svg
-                      width="14"
-                      height="14"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => supprimerTache(t._id)}
-                    className="p-1 text-gray-400 hover:text-red-500"
-                    style={{ transition: "color 0.15s" }}
-                  >
-                    <svg
-                      width="14"
-                      height="14"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Modal tâche */}
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
-          onClick={() => setModalOpen(false)}
-        >
-          <div
-            className="bg-white rounded-2xl w-full max-w-md p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="text-lg font-bold text-gray-800 mb-4">
-              {editMode ? "Modifier la tâche" : "Ajouter une tâche"}
-            </h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Titre
-                </label>
-                <input
-                  type="text"
-                  value={form.titre}
-                  onChange={(e) => setForm({ ...form, titre: e.target.value })}
-                  required
-                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
-                  style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
-                  onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <textarea
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm({ ...form, description: e.target.value })
-                  }
-                  rows="2"
-                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"
-                  style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
-                  onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Priorité
-                </label>
-                <select
-                  value={form.priorite}
-                  onChange={(e) =>
-                    setForm({ ...form, priorite: e.target.value })
-                  }
-                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
-                  style={{ outline: "none" }}
-                >
-                  <option value="Haute">Haute</option>
-                  <option value="Moyenne">Moyenne</option>
-                  <option value="Basse">Basse</option>
-                </select>
-              </div>
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
-                  style={{ backgroundColor: "#dc5539" }}
-                >
-                  {editMode ? "Modifier" : "Créer"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+import { useGetResponsablesQuery } from "../../services/responsableApiSlice";
 
 // Page principale
 const ChantierDetail = () => {
@@ -298,6 +44,8 @@ const ChantierDetail = () => {
   const [creerCout] = useCreerCoutMutation();
   const [modifierCout] = useModifierCoutMutation();
   const [supprimerCout] = useSupprimerCoutMutation();
+  const [modifierChantierMut] = useModifierChantierMutation();
+  const { data: responsables = [] } = useGetResponsablesQuery();
 
   const [onglet, setOnglet] = useState("travaux");
   const [travailOpen, setTravailOpen] = useState(null); // ID du travail ouvert
@@ -308,6 +56,16 @@ const ChantierDetail = () => {
   const [coutModal, setCoutModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [chantierModal, setChantierModal] = useState(false);
+  const [chantierForm, setChantierForm] = useState({
+    nom: "",
+    localisation: "",
+    dateDebut: "",
+    dateFinPrevue: "",
+    budget: "",
+    etat: "",
+    responsable: "",
+  });
 
   const [travailForm, setTravailForm] = useState({
     titre: "",
@@ -321,8 +79,38 @@ const ChantierDetail = () => {
     modePaiement: "Espèces",
   });
 
-  const [succes, setSucces] = useState("");
+  const [succes, setSucces] = useState(null);
 
+  // === CHANTIER ===
+  const openEditChantier = () => {
+    setChantierForm({
+      nom: chantier.nom,
+      localisation: chantier.localisation,
+      dateDebut: chantier.dateDebut?.split("T")[0] || "",
+      dateFinPrevue: chantier.dateFinPrevue?.split("T")[0] || "",
+      budget: chantier.budget || "",
+      etat: chantier.etat,
+      responsable: chantier.responsable?._id || "",
+    });
+    setChantierModal(true);
+  };
+
+  const handleChantier = async (e) => {
+    e.preventDefault();
+    try {
+      await modifierChantierMut({
+        id,
+        ...chantierForm,
+        budget: Number(chantierForm.budget),
+        responsable: chantierForm.responsable || null,
+      }).unwrap();
+      setChantierModal(false);
+      setSucces({ type: "warning", message: "Chantier modifié avec succès" });
+      setTimeout(() => setSucces(null), 3000);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   // === TRAVAUX ===
   const openCreateTravail = () => {
     setTravailForm({ titre: "", description: "" });
@@ -343,13 +131,13 @@ const ChantierDetail = () => {
     try {
       if (editMode) {
         await modifierTravail({ id: selectedId, ...travailForm }).unwrap();
-        setSucces("Travail modifié");
+        setSucces({ type: "warning", message: "Travail modifié" });
       } else {
         await creerTravail({ ...travailForm, chantier: id }).unwrap();
-        setSucces("Travail créé");
+        setSucces({ type: "success", message: "Travail créé" });
       }
       setTravailModal(false);
-      setTimeout(() => setSucces(""), 3000);
+      setTimeout(() => setSucces(null), 3000);
     } catch (err) {
       console.error(err);
     }
@@ -375,13 +163,13 @@ const ChantierDetail = () => {
     try {
       if (editMode) {
         await modifierNote({ id: selectedId, ...noteForm }).unwrap();
-        setSucces("Note modifiée");
+        setSucces({ type: "warning", message: "Note modifiée" });
       } else {
         await creerNote({ ...noteForm, chantier: id }).unwrap();
-        setSucces("Note ajoutée");
+        setSucces({ type: "success", message: "Note ajoutée" });
       }
       setNoteModal(false);
-      setTimeout(() => setSucces(""), 3000);
+      setTimeout(() => setSucces(null), 3000);
     } catch (err) {
       console.error(err);
     }
@@ -418,13 +206,13 @@ const ChantierDetail = () => {
       const data = { ...coutForm, montant: Number(coutForm.montant) };
       if (editMode) {
         await modifierCout({ id: selectedId, ...data }).unwrap();
-        setSucces("Opération modifiée");
+        setSucces({ type: "warning", message: "Opération modifiée" });
       } else {
         await creerCout({ ...data, chantier: id }).unwrap();
-        setSucces("Opération enregistrée");
+        setSucces({ type: "success", message: "Opération enregistrée" });
       }
       setCoutModal(false);
-      setTimeout(() => setSucces(""), 3000);
+      setTimeout(() => setSucces(null), 3000);
     } catch (err) {
       console.error(err);
     }
@@ -522,12 +310,31 @@ const ChantierDetail = () => {
               {chantier.localisation}
             </p>
           </div>
-          <span
-            className="text-xs px-3 py-1.5 rounded-full font-medium"
-            style={{ backgroundColor: es.bg, color: es.color }}
-          >
-            {chantier.etat}
-          </span>
+          <div className="flex items-center gap-3">
+            <span
+              className="text-xs px-3 py-1.5 rounded-full font-medium"
+              style={{ backgroundColor: es.bg, color: es.color }}
+            >
+              {chantier.etat}
+            </span>
+            <button
+              onClick={openEditChantier}
+              className="p-2 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50"
+              style={{ transition: "all 0.15s" }}
+            >
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+            </button>
+          </div>
         </div>
         <div className="grid grid-cols-4 gap-4 mt-5">
           <div>
@@ -573,27 +380,7 @@ const ChantierDetail = () => {
       </div>
 
       {/* Message succès */}
-      {succes && (
-        <div
-          className="mb-4 p-3 rounded-xl flex items-center gap-2"
-          style={{ backgroundColor: "#dcfce7", border: "1px solid #bbf7d0" }}
-        >
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="#16a34a"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="m9 12 2 2 4-4" />
-          </svg>
-          <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
-            {succes}
-          </p>
-        </div>
-      )}
+      <Alert type={succes?.type} message={succes?.message} />
 
       {/* Onglets */}
       <div className="flex gap-1 mb-6 border-b border-gray-200">
@@ -680,12 +467,44 @@ const ChantierDetail = () => {
                         <span className="text-sm font-medium text-gray-800">
                           {t.titre}
                         </span>
-                        <span
-                          className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                          style={{ backgroundColor: tes.bg, color: tes.color }}
-                        >
-                          {t.etat}
-                        </span>
+                        {t.nbTaches > 0 ? (
+                          <span
+                            className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                            style={{
+                              backgroundColor: tes.bg,
+                              color: tes.color,
+                            }}
+                            title="État géré automatiquement par les tâches"
+                          >
+                            {t.etat}
+                          </span>
+                        ) : (
+                          <select
+                            value={t.etat}
+                            onChange={async (e) => {
+                              e.stopPropagation();
+                              try {
+                                await modifierTravail({
+                                  id: t._id,
+                                  etat: e.target.value,
+                                }).unwrap();
+                              } catch (err) {
+                                console.error(err);
+                              }
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-[10px] px-2 py-0.5 rounded-full font-medium border-0 cursor-pointer"
+                            style={{
+                              backgroundColor: tes.bg,
+                              color: tes.color,
+                              outline: "none",
+                            }}
+                          >
+                            <option value="Non commencé">Non commencé</option>
+                            <option value="En cours">En cours</option>
+                            <option value="Terminé">Terminé</option>
+                          </select>
+                        )}
                         <span className="text-xs text-gray-400">
                           {t.nbTaches} tâches
                         </span>
@@ -725,9 +544,14 @@ const ChantierDetail = () => {
                           </svg>
                         </button>
                         <button
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.stopPropagation();
-                            supprimerTravail(t._id);
+                            await supprimerTravail(t._id).unwrap();
+                            setSucces({
+                              type: "delete",
+                              message: "Travail supprimé",
+                            });
+                            setTimeout(() => setSucces(null), 3000);
                           }}
                           className="p-1 text-gray-400 hover:text-red-500"
                         >
@@ -763,7 +587,7 @@ const ChantierDetail = () => {
               style={{ backgroundColor: "#dbeafe" }}
             >
               <p className="text-xs font-medium" style={{ color: "#2563eb" }}>
-                Budget total
+                Budget initial
               </p>
               <p
                 className="text-lg font-bold mt-1"
@@ -777,7 +601,7 @@ const ChantierDetail = () => {
               style={{ backgroundColor: "#fee2e2" }}
             >
               <p className="text-xs font-medium" style={{ color: "#dc2626" }}>
-                Total dépensé
+                Total dépenses
               </p>
               <p
                 className="text-lg font-bold mt-1"
@@ -791,13 +615,13 @@ const ChantierDetail = () => {
               style={{ backgroundColor: "#dcfce7" }}
             >
               <p className="text-xs font-medium" style={{ color: "#16a34a" }}>
-                Restant
+                Total reçu
               </p>
               <p
                 className="text-lg font-bold mt-1"
                 style={{ color: "#166534" }}
               >
-                {formatMontant(coutsData?.restant)}
+                {formatMontant(coutsData?.totalRecu)}
               </p>
             </div>
           </div>
@@ -907,7 +731,14 @@ const ChantierDetail = () => {
                           </svg>
                         </button>
                         <button
-                          onClick={() => supprimerCout(c._id)}
+                          onClick={async () => {
+                            await supprimerCout(c._id).unwrap();
+                            setSucces({
+                              type: "delete",
+                              message: "Opération supprimée",
+                            });
+                            setTimeout(() => setSucces(null), 3000);
+                          }}
                           className="p-1 text-gray-400 hover:text-red-500"
                         >
                           <svg
@@ -999,7 +830,14 @@ const ChantierDetail = () => {
                         </svg>
                       </button>
                       <button
-                        onClick={() => supprimerNote(n._id)}
+                        onClick={async () => {
+                          await supprimerNote(n._id).unwrap();
+                          setSucces({
+                            type: "delete",
+                            message: "Note supprimée",
+                          });
+                          setTimeout(() => setSucces(null), 3000);
+                        }}
                         className="p-1 text-gray-400 hover:text-red-500"
                       >
                         <svg
@@ -1246,6 +1084,212 @@ const ChantierDetail = () => {
                   style={{ backgroundColor: "#dc5539" }}
                 >
                   {editMode ? "Modifier" : "Enregistrer"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* Modal Chantier */}
+      {/* Modal Modifier Chantier */}
+      {chantierModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
+          onClick={() => setChantierModal(false)}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-bold text-gray-800 mb-4">
+              Modifier le chantier
+            </h3>
+            <form onSubmit={handleChantier} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nom
+                  </label>
+                  <input
+                    type="text"
+                    value={chantierForm.nom}
+                    onChange={(e) =>
+                      setChantierForm({ ...chantierForm, nom: e.target.value })
+                    }
+                    required
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                    style={{
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Localisation
+                  </label>
+                  <input
+                    type="text"
+                    value={chantierForm.localisation}
+                    onChange={(e) =>
+                      setChantierForm({
+                        ...chantierForm,
+                        localisation: e.target.value,
+                      })
+                    }
+                    required
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                    style={{
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date début
+                  </label>
+                  <input
+                    type="date"
+                    value={chantierForm.dateDebut}
+                    onChange={(e) =>
+                      setChantierForm({
+                        ...chantierForm,
+                        dateDebut: e.target.value,
+                      })
+                    }
+                    required
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                    style={{
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date fin prévue
+                  </label>
+                  <input
+                    type="date"
+                    value={chantierForm.dateFinPrevue}
+                    onChange={(e) =>
+                      setChantierForm({
+                        ...chantierForm,
+                        dateFinPrevue: e.target.value,
+                      })
+                    }
+                    required
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                    style={{
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Budget (DT)
+                  </label>
+                  <input
+                    type="number"
+                    value={chantierForm.budget}
+                    onChange={(e) =>
+                      setChantierForm({
+                        ...chantierForm,
+                        budget: e.target.value,
+                      })
+                    }
+                    required
+                    min="0"
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                    style={{
+                      outline: "none",
+                      transition: "border-color 0.15s",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    État
+                  </label>
+                  <select
+                    value={chantierForm.etat}
+                    onChange={(e) =>
+                      setChantierForm({ ...chantierForm, etat: e.target.value })
+                    }
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                    style={{ outline: "none" }}
+                  >
+                    <option value="Planifié">Planifié</option>
+                    <option value="En cours">En cours</option>
+                    <option value="En retard">En retard</option>
+                    <option value="Terminé">Terminé</option>
+                    <option value="Suspendu">Suspendu</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Responsable
+                </label>
+                <select
+                  value={chantierForm.responsable}
+                  onChange={(e) =>
+                    setChantierForm({
+                      ...chantierForm,
+                      responsable: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
+                  style={{ outline: "none" }}
+                >
+                  <option value="">— Aucun responsable —</option>
+                  {responsables.map((r) => (
+                    <option key={r._id} value={r._id}>
+                      {r.prenom} {r.nom}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setChantierModal(false)}
+                  className="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50"
+                  style={{ transition: "background-color 0.15s" }}
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
+                  style={{
+                    backgroundColor: "#dc5539",
+                    transition: "background-color 0.15s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.backgroundColor = "#c44a30")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.backgroundColor = "#dc5539")
+                  }
+                >
+                  Modifier
                 </button>
               </div>
             </form>

@@ -20,7 +20,7 @@ export const travailApiSlice = apiSlice.injectEndpoints({
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: ['Travail'],
+      invalidatesTags: ['Travail', 'Tache', 'Chantier'],
     }),
     supprimerTravail: builder.mutation({
       query: (id) => ({

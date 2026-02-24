@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useResetPasswordMutation } from "../services/authApiSlice";
+import Alert from "../components/Alert";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -102,56 +103,9 @@ const ResetPassword = () => {
             Entrez votre nouveau mot de passe ci-dessous.
           </p>
 
-          {succes && (
-            <div
-              className="mb-4 p-3 rounded-xl flex items-center gap-2"
-              style={{
-                backgroundColor: "#dcfce7",
-                border: "1px solid #bbf7d0",
-              }}
-            >
-              <svg
-                width="18"
-                height="18"
-                fill="none"
-                stroke="#16a34a"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="m9 12 2 2 4-4" />
-              </svg>
-              <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
-                {succes}
-              </p>
-            </div>
-          )}
+          <Alert type="success" message={succes} />
 
-          {erreur && (
-            <div
-              className="mb-4 p-3 rounded-xl flex items-center gap-2"
-              style={{
-                backgroundColor: "#dc55391a",
-                border: "1px solid #dc55394d",
-              }}
-            >
-              <svg
-                width="18"
-                height="18"
-                fill="none"
-                stroke="#dc5539"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="15" y1="9" x2="9" y2="15" />
-                <line x1="9" y1="9" x2="15" y2="15" />
-              </svg>
-              <p className="text-sm font-medium" style={{ color: "#dc5539" }}>
-                {erreur}
-              </p>
-            </div>
-          )}
+          <Alert type="error" message={erreur} />
 
           {!succes && (
             <form onSubmit={handleSubmit} className="space-y-4">

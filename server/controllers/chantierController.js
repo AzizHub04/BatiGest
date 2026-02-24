@@ -5,6 +5,41 @@ const Tache = require('../models/Tache');
 const NoteChantier = require('../models/NoteChantier');
 const CoutPaiementChantier = require('../models/CoutPaiementChantier');
 
+const calculerAvancement = async (chantierId) => {
+  const travaux = await Travail.find({ chantier: chantierId });
+  const travauxIds = travaux.map(t => t._id);
+  const taches = await Tache.find({ travail: { $in: travauxIds } });
+
+  let avancement = 0;
+  const nbTravaux = travaux.length;
+
+  if (nbTravaux > 0) {
+    const poidsTravail = 100 / nbTravaux;
+    let totalAvancement = 0;
+
+    for (const travail of travaux) {
+      const tachesDuTravail = taches.filter(t => String(t.travail) === String(travail._id));
+
+      if (tachesDuTravail.length > 0) {
+        const terminees = tachesDuTravail.filter(t => t.statut === 'Terminé').length;
+        totalAvancement += (terminees / tachesDuTravail.length) * poidsTravail;
+      } else {
+        if (travail.etat === 'Terminé') totalAvancement += poidsTravail;
+      }
+    }
+
+    avancement = Math.round(totalAvancement);
+  }
+
+  return avancement;
+};
+
+const calculerFinancement = async (chantierId) => {
+  const couts = await CoutPaiementChantier.find({ chantier: chantierId });
+  const totalDepense = couts.filter(c => c.type === 'Dépense').reduce((sum, c) => sum + c.montant, 0);
+  const totalRecu = couts.filter(c => c.type === 'Règlement').reduce((sum, c) => sum + c.montant, 0);
+  return { totalDepense, totalRecu };
+};
 // GET /api/chantiers
 const getChantiers = async (req, res) => {
   try {
@@ -21,25 +56,9 @@ const getChantiers = async (req, res) => {
     // Calculer l'avancement pour chaque chantier
     const chantiersAvecAvancement = await Promise.all(
       chantiers.map(async (chantier) => {
-        const travaux = await Travail.find({ chantier: chantier._id });
-        const travauxIds = travaux.map(t => t._id);
-        const taches = await Tache.find({ travail: { $in: travauxIds } });
-
-        let avancement = 0;
-        if (taches.length > 0) {
-          const terminees = taches.filter(t => t.statut === 'Terminé').length;
-          avancement = Math.round((terminees / taches.length) * 100);
-        }
-
-        // Calculer le total dépensé
-        const couts = await CoutPaiementChantier.find({ chantier: chantier._id });
-        const totalDepense = couts.reduce((sum, c) => sum + c.montant, 0);
-
-        return {
-          ...chantier.toObject(),
-          avancement,
-          totalDepense
-        };
+        const avancement = await calculerAvancement(chantier._id);
+        const { totalDepense, totalRecu } = await calculerFinancement(chantier._id);
+        return { ...chantier.toObject(), avancement, totalDepense, totalRecu };
       })
     );
 
@@ -66,20 +85,10 @@ const getChantier = async (req, res) => {
     }
 
     // Avancement
-    const travaux = await Travail.find({ chantier: chantier._id });
-    const travauxIds = travaux.map(t => t._id);
-    const taches = await Tache.find({ travail: { $in: travauxIds } });
+    const avancement = await calculerAvancement(chantier._id);
+    const { totalDepense, totalRecu } = await calculerFinancement(chantier._id);
 
-    let avancement = 0;
-    if (taches.length > 0) {
-      const terminees = taches.filter(t => t.statut === 'Terminé').length;
-      avancement = Math.round((terminees / taches.length) * 100);
-    }
-
-    const couts = await CoutPaiementChantier.find({ chantier: chantier._id });
-    const totalDepense = couts.reduce((sum, c) => sum + c.montant, 0);
-
-    res.json({ ...chantier.toObject(), avancement, totalDepense });
+    res.json({ ...chantier.toObject(), avancement, totalDepense, totalRecu });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

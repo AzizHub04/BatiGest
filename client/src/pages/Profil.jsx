@@ -8,6 +8,7 @@ import {
   useLogoutMutation,
 } from "../services/authApiSlice";
 import { setUtilisateur, clearUtilisateur } from "../services/authSlice";
+import Alert from "../components/Alert";
 
 const Profil = () => {
   const { utilisateur } = useSelector((state) => state.auth);
@@ -225,56 +226,9 @@ const Profil = () => {
             Informations personnelles
           </h3>
 
-          {succes && (
-            <div
-              className="mb-4 p-3 rounded-xl flex items-center gap-2"
-              style={{
-                backgroundColor: "#dcfce7",
-                border: "1px solid #bbf7d0",
-              }}
-            >
-              <svg
-                width="18"
-                height="18"
-                fill="none"
-                stroke="#16a34a"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="m9 12 2 2 4-4" />
-              </svg>
-              <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
-                {succes}
-              </p>
-            </div>
-          )}
+          <Alert type="success" message={succes} />
 
-          {erreur && (
-            <div
-              className="mb-4 p-3 rounded-xl flex items-center gap-2"
-              style={{
-                backgroundColor: "#dc55391a",
-                border: "1px solid #dc55394d",
-              }}
-            >
-              <svg
-                width="18"
-                height="18"
-                fill="none"
-                stroke="#dc5539"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="15" y1="9" x2="9" y2="15" />
-                <line x1="9" y1="9" x2="15" y2="15" />
-              </svg>
-              <p className="text-sm font-medium" style={{ color: "#dc5539" }}>
-                {erreur}
-              </p>
-            </div>
-          )}
+          <Alert type="error" message={erreur} />
 
           <form onSubmit={handleProfil} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -361,56 +315,9 @@ const Profil = () => {
             Changer le mot de passe
           </h3>
 
-          {succesMdp && (
-            <div
-              className="mb-4 p-3 rounded-xl flex items-center gap-2"
-              style={{
-                backgroundColor: "#dcfce7",
-                border: "1px solid #bbf7d0",
-              }}
-            >
-              <svg
-                width="18"
-                height="18"
-                fill="none"
-                stroke="#16a34a"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="m9 12 2 2 4-4" />
-              </svg>
-              <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
-                {succesMdp}
-              </p>
-            </div>
-          )}
+          <Alert type="success" message={succesMdp} />
 
-          {erreurMdp && (
-            <div
-              className="mb-4 p-3 rounded-xl flex items-center gap-2"
-              style={{
-                backgroundColor: "#dc55391a",
-                border: "1px solid #dc55394d",
-              }}
-            >
-              <svg
-                width="18"
-                height="18"
-                fill="none"
-                stroke="#dc5539"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="15" y1="9" x2="9" y2="15" />
-                <line x1="9" y1="9" x2="15" y2="15" />
-              </svg>
-              <p className="text-sm font-medium" style={{ color: "#dc5539" }}>
-                {erreurMdp}
-              </p>
-            </div>
-          )}
+          <Alert type="error" message={erreurMdp} />
 
           <form onSubmit={handleMotDePasse} className="space-y-4">
             <div>
@@ -593,56 +500,9 @@ const Profil = () => {
               sera envoyé.
             </p>
 
-            {succesDelete && (
-              <div
-                className="mb-4 p-3 rounded-xl flex items-center gap-2"
-                style={{
-                  backgroundColor: "#dcfce7",
-                  border: "1px solid #bbf7d0",
-                }}
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  fill="none"
-                  stroke="#16a34a"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
-                <p className="text-sm font-medium" style={{ color: "#16a34a" }}>
-                  {succesDelete}
-                </p>
-              </div>
-            )}
+            <Alert type="success" message={succesDelete} />
 
-            {erreurDelete && (
-              <div
-                className="mb-4 p-3 rounded-xl flex items-center gap-2"
-                style={{
-                  backgroundColor: "#dc55391a",
-                  border: "1px solid #dc55394d",
-                }}
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  fill="none"
-                  stroke="#dc5539"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="15" y1="9" x2="9" y2="15" />
-                  <line x1="9" y1="9" x2="15" y2="15" />
-                </svg>
-                <p className="text-sm font-medium" style={{ color: "#dc5539" }}>
-                  {erreurDelete}
-                </p>
-              </div>
-            )}
+            <Alert type="error" message={erreurDelete} />
 
             {!succesDelete && (
               <form onSubmit={handleDelete}>
