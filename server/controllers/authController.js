@@ -288,4 +288,12 @@ const confirmDelete = async (req, res) => {
   }
 };
 
-module.exports = { register, login, logout, getProfil, modifierProfil, changerMotDePasse, supprimerCompte, forgotPassword, resetPassword, demandeSuppression, confirmDelete };
+const verifierSession = async (req, res) => {
+  try {
+    res.json({ utilisateur: req.utilisateur });
+  } catch (error) {
+    res.status(401).json({ message: 'Session invalide' });
+  }
+};
+
+module.exports = { register, login, logout, getProfil, modifierProfil, changerMotDePasse, supprimerCompte, forgotPassword, resetPassword, demandeSuppression, confirmDelete,verifierSession };

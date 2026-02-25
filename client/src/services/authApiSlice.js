@@ -59,6 +59,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: 'DELETE',
       }),
     }),
+    verifierSession: builder.query({
+      query: () => '/auth/session',
+    }),
   }),
 });
 
@@ -72,4 +75,5 @@ export const {
   useResetPasswordMutation,
   useDemandeSuppressionMutation,
   useConfirmDeleteMutation,
+  useVerifierSessionQuery,
 } = authApiSlice;

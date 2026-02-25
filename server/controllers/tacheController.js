@@ -2,6 +2,14 @@ const Tache = require('../models/Tache');
 const Travail = require('../models/Travail');
 const Chantier = require('../models/Chantier');
 
+const emitChantierUpdate = async (req, travailId) => {
+  const travail = await Travail.findById(travailId);
+  if (travail) {
+    const io = req.app.get('io');
+    io.to(`chantier-${travail.chantier}`).emit('tache-updated');
+  }
+};
+
 // Vérifier l'accès via travail → chantier
 const verifierAccesTravail = async (travailId, utilisateur) => {
   const travail = await Travail.findById(travailId);
@@ -72,7 +80,7 @@ const creerTache = async (req, res) => {
 
     // Mettre à jour l'état du travail
     await mettreAJourEtatTravail(travail);
-
+    await emitChantierUpdate(req, tache.travail);
     res.status(201).json({ message: 'Tâche créée avec succès', tache });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -99,7 +107,7 @@ const modifierTache = async (req, res) => {
 
     // Mettre à jour l'état du travail
     await mettreAJourEtatTravail(tache.travail);
-
+    await emitChantierUpdate(req, tache.travail);
     res.json({ message: 'Tâche modifiée avec succès', tache });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -127,7 +135,7 @@ const changerStatut = async (req, res) => {
 
     // Mettre à jour l'état du travail
     await mettreAJourEtatTravail(tache.travail);
-
+    await emitChantierUpdate(req, tache.travail);
     res.json({ message: `Statut changé à "${statut}"`, tache });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -148,7 +156,7 @@ const supprimerTache = async (req, res) => {
 
     // Mettre à jour l'état du travail
     await mettreAJourEtatTravail(travailId);
-
+    await emitChantierUpdate(req, travailId);
     res.json({ message: 'Tâche supprimée avec succès' });
   } catch (error) {
     res.status(500).json({ message: error.message });

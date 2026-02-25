@@ -162,7 +162,7 @@ const modifierChantier = async (req, res) => {
     await chantier.populate('responsable', 'nom prenom email');
 
     const io = req.app.get('io');
-    io.emit('chantier-updated', chantier);
+    io.to(`chantier-${chantier._id}`).emit('chantier-updated');
 
     res.json({ message: 'Chantier modifié avec succès', chantier });
   } catch (error) {
@@ -230,7 +230,7 @@ const changerEtat = async (req, res) => {
     await chantier.populate('responsable', 'nom prenom email');
 
     const io = req.app.get('io');
-    io.emit('chantier-etat-changed', chantier);
+    io.to(`chantier-${chantier._id}`).emit('chantier-updated');
 
     res.json({ message: `État changé à "${etat}"`, chantier });
   } catch (error) {
@@ -245,7 +245,10 @@ const getChantierByResponsable = async (req, res) => {
     if (!chantier) {
       return res.json(null);
     }
-    res.json(chantier);
+
+    const avancement = await calculerAvancement(chantier._id);
+
+    res.json({ ...chantier.toObject(), avancement });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

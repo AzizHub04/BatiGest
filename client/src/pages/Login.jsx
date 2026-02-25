@@ -459,7 +459,7 @@ const Login = () => {
       if (res.utilisateur.role === "admin") {
         navigate("/admin/dashboard");
       } else {
-        navigate("/responsable/mon-chantier");
+        navigate("/responsable/chantier");
       }
     } catch (err) {
       setErreur(err?.data?.message || "Erreur de connexion");

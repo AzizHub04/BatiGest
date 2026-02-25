@@ -39,10 +39,22 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Socket.io - Connexion
 io.on('connection', (socket) => {
-  console.log('🔌 Utilisateur connecté:', socket.id);
+  console.log('Utilisateur connecté:', socket.id);
+
+  // L'utilisateur rejoint sa room personnelle
+  socket.on('join', (userId) => {
+    socket.join(userId);
+    console.log(`Utilisateur ${userId} a rejoint sa room`);
+  });
+
+  // Rejoindre la room d'un chantier
+  socket.on('join-chantier', (chantierId) => {
+    socket.join(`chantier-${chantierId}`);
+    console.log(`Socket ${socket.id} a rejoint chantier-${chantierId}`);
+  });
 
   socket.on('disconnect', () => {
-    console.log('🔌 Utilisateur déconnecté:', socket.id);
+    console.log('Utilisateur déconnecté:', socket.id);
   });
 });
 

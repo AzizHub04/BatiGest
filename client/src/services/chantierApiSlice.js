@@ -10,6 +10,10 @@ export const chantierApiSlice = apiSlice.injectEndpoints({
       query: (id) => `/chantiers/${id}`,
       providesTags: ['Chantier'],
     }),
+    getChantierByResponsable: builder.query({
+      query: (responsableId) => `/chantiers/responsable/${responsableId}`,
+      providesTags: ['Chantier'],
+    }),
     creerChantier: builder.mutation({
       query: (data) => ({
         url: '/chantiers',
@@ -47,6 +51,7 @@ export const chantierApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetChantiersQuery,
   useGetChantierQuery,
+  useGetChantierByResponsableQuery,
   useCreerChantierMutation,
   useModifierChantierMutation,
   useSupprimerChantierMutation,

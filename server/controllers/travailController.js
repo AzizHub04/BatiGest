@@ -2,6 +2,11 @@ const Travail = require('../models/Travail');
 const Tache = require('../models/Tache');
 const Chantier = require('../models/Chantier');
 
+const emitChantierUpdate = (req, chantierId) => {
+  const io = req.app.get('io');
+  io.to(`chantier-${chantierId}`).emit('travail-updated');
+};
+
 // Vérifier l'accès au chantier
 const verifierAccesChantier = async (chantierId, utilisateur) => {
   const chantier = await Chantier.findById(chantierId);
@@ -76,7 +81,7 @@ const creerTravail = async (req, res) => {
       chantier,
       etat: 'Non commencé'
     });
-
+    emitChantierUpdate(req, travail.chantier);
     res.status(201).json({ message: 'Travail créé avec succès', travail: { ...travail.toObject(), avancement: 0, nbTaches: 0 } });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -111,7 +116,7 @@ const modifierTravail = async (req, res) => {
     }
 
     await travail.save();
-
+    emitChantierUpdate(req, travail.chantier);
     res.json({ message: 'Travail modifié avec succès', travail });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -130,7 +135,7 @@ const supprimerTravail = async (req, res) => {
     // Supprimer les tâches liées
     await Tache.deleteMany({ travail: travail._id });
     await travail.deleteOne();
-
+    emitChantierUpdate(req, travail.chantier);
     res.json({ message: 'Travail et tâches associées supprimés avec succès' });
   } catch (error) {
     res.status(500).json({ message: error.message });
