@@ -7,9 +7,12 @@ import {
   useSupprimerTacheMutation,
 } from "../services/tacheApiSlice";
 import Alert from "../components/Alert";
+import { useEffect } from "react";
+import socket from "../services/socket";
 
 const TachesList = ({ travailId }) => {
-  const { data: taches = [] } = useGetTachesByTravailQuery(travailId);
+  const { data: taches = [], refetch: refetchTaches } =
+    useGetTachesByTravailQuery(travailId);
   const [creerTache] = useCreerTacheMutation();
   const [modifierTache] = useModifierTacheMutation();
   const [changerStatut] = useChangerStatutMutation();
@@ -84,6 +87,13 @@ const TachesList = ({ travailId }) => {
       console.error(err);
     }
   };
+  useEffect(() => {
+    socket.on("tache-updated", () => refetchTaches());
+
+    return () => {
+      socket.off("tache-updated");
+    };
+  }, [refetchTaches]);
 
   return (
     <div className="ml-6 mt-2 mb-4">

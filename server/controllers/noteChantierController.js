@@ -1,5 +1,8 @@
 const NoteChantier = require('../models/NoteChantier');
 const Chantier = require('../models/Chantier');
+const Notification = require('../models/Notification');
+const Utilisateur = require('../models/Utilisateur');
+const { envoyerEmailNotification } = require('../config/email');
 
 const verifierAccesChantier = async (chantierId, utilisateur) => {
   const chantier = await Chantier.findById(chantierId);
@@ -41,6 +44,16 @@ const creerNote = async (req, res) => {
 
     await note.populate('auteur', 'nom prenom role');
 
+    const io = req.app.get('io');
+    io.to(`chantier-${chantier}`).emit('note-added');
+
+    const auteur = `${req.utilisateur.prenom} ${req.utilisateur.nom}`;
+    await creerNotificationNote(
+      req, chantier,
+      'Nouvelle note ajoutée',
+      `${auteur} a ajouté une note : "${contenu.substring(0, 50)}${contenu.length > 50 ? '...' : ''}"`
+    );
+
     res.status(201).json({ message: 'Note ajoutée avec succès', note });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -63,6 +76,9 @@ const modifierNote = async (req, res) => {
 
     await note.save();
     await note.populate('auteur', 'nom prenom role');
+
+    const io = req.app.get('io');
+    io.to(`chantier-${note.chantier}`).emit('note-updated');
 
     res.json({ message: 'Note modifiée avec succès', note });
   } catch (error) {
@@ -89,9 +105,63 @@ const supprimerNote = async (req, res) => {
 
     await note.deleteOne();
 
+    const io = req.app.get('io');
+    io.to(`chantier-${note.chantier}`).emit('note-deleted');
+
     res.json({ message: 'Note supprimée avec succès' });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+const creerNotificationNote = async (req, chantierId, titre, messageText) => {
+  const chantier = await Chantier.findById(chantierId);
+  if (!chantier) return;
+
+  const destinataires = [];
+
+  // Si l'auteur est l'admin → notifier le responsable
+  if (req.utilisateur.role === 'admin' && chantier.responsable) {
+    destinataires.push(chantier.responsable);
+  }
+
+  // Si l'auteur est le responsable → notifier l'admin
+  if (req.utilisateur.role === 'responsable' && chantier.admin) {
+    destinataires.push(chantier.admin);
+  }
+
+  const io = req.app.get('io');
+
+  for (const destId of destinataires) {
+    // Créer la notification en base
+    const notification = await Notification.create({
+      titre,
+      message: messageText,
+      utilisateur: destId,
+      chantier: chantierId
+    });
+
+    console.log('Envoi notif à room:', String(destId));
+    console.log('Rooms actives:', io.sockets.adapter.rooms);
+    
+    // Envoyer en temps réel via Socket.io
+    io.to(String(destId)).emit('nouvelle-notification', {
+      _id: notification._id,
+      titre: notification.titre,
+      message: notification.message,
+      chantier: { _id: chantierId, nom: chantier.nom },
+      estLue: false,
+      createdAt: notification.createdAt
+    });
+
+    // Envoyer par email
+    try {
+      const destinataire = await Utilisateur.findById(destId);
+      if (destinataire?.email) {
+        await envoyerEmailNotification(destinataire.email, titre, messageText, chantier.nom);
+      }
+    } catch (emailErr) {
+      console.error('Erreur envoi email notification:', emailErr.message);
+    }
   }
 };
 

@@ -84,6 +84,10 @@ app.use('/api/notes', noteRoutes);
 const coutRoutes = require('./routes/coutRoutes');
 app.use('/api/couts', coutRoutes);
 
+// Routes Notifications
+const notificationRoutes = require('./routes/notificationRoutes');
+app.use('/api/notifications', notificationRoutes);
+
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {

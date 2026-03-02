@@ -10,9 +10,15 @@ import { useGetResponsablesQuery } from "../../services/responsableApiSlice";
 import { useNavigate } from "react-router-dom";
 import Alert from "../../components/Alert";
 import ConfirmDelete from "../../components/ConfirmDelete";
+import { useEffect } from "react";
+import socket from "../../services/socket";
 
 const Chantiers = () => {
-  const { data: chantiers = [], isLoading } = useGetChantiersQuery();
+  const {
+    data: chantiers = [],
+    isLoading,
+    refetch: refetchChantiers,
+  } = useGetChantiersQuery();
   const { data: responsables = [] } = useGetResponsablesQuery();
   const [creerChantier] = useCreerChantierMutation();
   const [modifierChantier] = useModifierChantierMutation();
@@ -165,6 +171,18 @@ const Chantiers = () => {
     if (!m && m !== 0) return "—";
     return m.toLocaleString("fr-FR") + " DT";
   };
+
+  useEffect(() => {
+    socket.on("travail-updated", () => refetchChantiers());
+    socket.on("tache-updated", () => refetchChantiers());
+    socket.on("chantier-updated", () => refetchChantiers());
+
+    return () => {
+      socket.off("travail-updated");
+      socket.off("tache-updated");
+      socket.off("chantier-updated");
+    };
+  }, [refetchChantiers]);
 
   if (isLoading) {
     return (

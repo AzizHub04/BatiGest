@@ -25,15 +25,24 @@ import {
   useSupprimerCoutMutation,
 } from "../../services/coutApiSlice";
 import { useGetResponsablesQuery } from "../../services/responsableApiSlice";
+import { useEffect } from "react";
+import socket from "../../services/socket";
 
 // Page principale
 const ChantierDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: chantier, isLoading } = useGetChantierQuery(id);
-  const { data: travaux = [] } = useGetTravauxByChantierQuery(id);
-  const { data: notes = [] } = useGetNotesByChantierQuery(id);
-  const { data: coutsData } = useGetCoutsByChantierQuery(id);
+  const {
+    data: chantier,
+    isLoading,
+    refetch: refetchChantier,
+  } = useGetChantierQuery(id);
+  const { data: travaux = [], refetch: refetchTravaux } =
+    useGetTravauxByChantierQuery(id);
+  const { data: notes = [], refetch: refetchNotes } =
+    useGetNotesByChantierQuery(id);
+  const { data: coutsData, refetch: refetchCouts } =
+    useGetCoutsByChantierQuery(id);
 
   const [creerTravail] = useCreerTravailMutation();
   const [modifierTravail] = useModifierTravailMutation();
@@ -248,6 +257,25 @@ const ChantierDetail = () => {
         return { bg: "#f3f4f6", color: "#6b7280" };
     }
   };
+  useEffect(() => {
+    socket.emit('join-chantier', id);
+
+    socket.on('chantier-updated', () => refetchChantier());
+    socket.on('travail-updated', () => { refetchTravaux(); refetchChantier(); });
+    socket.on('tache-updated', () => { refetchTravaux(); refetchChantier(); });
+    socket.on('note-added', () => refetchNotes());
+    socket.on('note-updated', () => refetchNotes());
+    socket.on('note-deleted', () => refetchNotes());
+
+    return () => {
+      socket.off('chantier-updated');
+      socket.off('travail-updated');
+      socket.off('tache-updated');
+      socket.off('note-added');
+      socket.off('note-updated');
+      socket.off('note-deleted');
+    };
+  }, [id, refetchChantier, refetchTravaux, refetchNotes, refetchCouts]);
 
   if (isLoading) {
     return (

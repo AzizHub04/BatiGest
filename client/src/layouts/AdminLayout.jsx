@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../services/authApiSlice";
 import { clearUtilisateur } from "../services/authSlice";
+import NotificationBell from "../components/NotificationBell";
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -274,28 +275,7 @@ const AdminLayout = () => {
 
           <div className="flex items-center gap-4">
             {/* Notification bell */}
-            <button
-              className="relative p-2 text-gray-400 hover:text-gray-600"
-              style={{ transition: "color 0.15s" }}
-            >
-              <svg
-                width="20"
-                height="20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-              <span
-                className="absolute top-1 right-1 w-4 h-4 text-white text-[10px] font-bold rounded-full flex items-center justify-center"
-                style={{ backgroundColor: "#dc5539" }}
-              >
-                3
-              </span>
-            </button>
+            <NotificationBell />
 
             {/* Profile */}
             <div className="relative">

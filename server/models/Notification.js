@@ -11,18 +11,18 @@ const notificationSchema = new mongoose.Schema({
     required: [true, 'Le message est obligatoire'],
     trim: true
   },
-  dateEnvoi: {
-    type: Date,
-    default: Date.now
-  },
   estLue: {
     type: Boolean,
     default: false
   },
-  // Relation "recevoir" : la notification appartient à un Utilisateur
   utilisateur: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Utilisateur',
+    required: true
+  },
+  chantier: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Chantier',
     required: true
   }
 }, { timestamps: true });

@@ -71,5 +71,30 @@ const envoyerEmailSuppression = async (email, token) => {
     `,
   });
 };
+const envoyerEmailNotification = async (email, titre, message, chantierNom) => {
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background-color: #dc5539; padding: 20px; text-align: center; border-radius: 12px 12px 0 0;">
+        <h1 style="color: white; margin: 0; font-size: 24px;">BatiGest</h1>
+      </div>
+      <div style="padding: 30px; background-color: #f9fafb; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
+        <h2 style="color: #1f2937; font-size: 18px; margin-bottom: 10px;">${titre}</h2>
+        <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">Chantier : <strong>${chantierNom}</strong></p>
+        <div style="background-color: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+          <p style="color: #374151; font-size: 14px; margin: 0;">${message}</p>
+        </div>
+        <a href="${process.env.CLIENT_URL}/login" style="display: inline-block; background-color: #dc5539; color: white; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600;">Ouvrir BatiGest</a>
+        <p style="color: #9ca3af; font-size: 12px; margin-top: 20px;">Ceci est une notification automatique de BatiGest.</p>
+      </div>
+    </div>
+  `;
 
-module.exports = { envoyerEmailReset, envoyerEmailSuppression };
+  await transporter.sendMail({
+    from: `"BatiGest" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: `BatiGest - ${titre}`,
+    html
+  });
+};
+
+module.exports = { envoyerEmailReset, envoyerEmailSuppression, envoyerEmailNotification };
