@@ -106,6 +106,10 @@ const creerChantier = async (req, res) => {
       }
     }
 
+    if (dateDebut && dateFinPrevue && new Date(dateFinPrevue) <= new Date(dateDebut)) {
+      return res.status(400).json({ message: 'La date de fin prévue doit être postérieure à la date de début' });
+    }
+
     const chantier = await Chantier.create({
       nom,
       localisation,
@@ -148,6 +152,10 @@ const modifierChantier = async (req, res) => {
       if (!user || user.role !== 'responsable' || String(user.admin) !== String(req.utilisateur._id)) {
         return res.status(400).json({ message: 'Responsable invalide' });
       }
+    }
+
+    if (dateDebut && dateFinPrevue && new Date(dateFinPrevue) <= new Date(dateDebut)) {
+      return res.status(400).json({ message: 'La date de fin prévue doit être postérieure à la date de début' });
     }
 
     if (nom) chantier.nom = nom;

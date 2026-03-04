@@ -37,8 +37,10 @@ const NotesSection = ({
   const [modifierNote] = useModifierNoteMutation();
   const [supprimerNote] = useSupprimerNoteMutation();
 
+  const [titre, setTitre] = useState("");
   const [contenu, setContenu] = useState("");
   const [editId, setEditId] = useState(null);
+  const [editTitre, setEditTitre] = useState("");
   const [editContenu, setEditContenu] = useState("");
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [succes, setSucces] = useState(null);
@@ -64,9 +66,10 @@ const NotesSection = ({
   };
 
   const handleAdd = async () => {
-    if (!contenu.trim()) return;
+    if (!titre.trim() || !contenu.trim()) return;
     try {
-      await creerNote({ contenu, chantier: chantierId }).unwrap();
+      await creerNote({ titre, contenu, chantier: chantierId }).unwrap();
+      setTitre("");
       setContenu("");
       pushSuccess("success", "Note ajout\u00e9e avec succ\u00e8s");
     } catch (err) {
@@ -75,10 +78,11 @@ const NotesSection = ({
   };
 
   const handleEdit = async (id) => {
-    if (!editContenu.trim()) return;
+    if (!editTitre.trim() || !editContenu.trim()) return;
     try {
-      await modifierNote({ id, contenu: editContenu }).unwrap();
+      await modifierNote({ id, titre: editTitre, contenu: editContenu }).unwrap();
       setEditId(null);
+      setEditTitre("");
       setEditContenu("");
       pushSuccess("warning", "Note modifi\u00e9e avec succ\u00e8s");
     } catch (err) {
@@ -110,6 +114,17 @@ const NotesSection = ({
       <Alert type={succes?.type} message={succes?.message} />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
+        <input
+          type="text"
+          value={titre}
+          onChange={(e) => setTitre(e.target.value)}
+          placeholder="Titre de la note..."
+          required
+          className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm mb-3"
+          style={{ outline: "none", transition: "border-color 0.15s" }}
+          onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+          onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+        />
         <textarea
           value={contenu}
           onChange={(e) => setContenu(e.target.value)}
@@ -123,19 +138,19 @@ const NotesSection = ({
         <div className="flex justify-end mt-3">
           <button
             onClick={handleAdd}
-            disabled={!contenu.trim()}
+            disabled={!titre.trim() || !contenu.trim()}
             className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl"
             style={{
-              backgroundColor: contenu.trim() ? "#dc5539" : "#f3f4f6",
-              color: contenu.trim() ? "white" : "#9ca3af",
+              backgroundColor: (titre.trim() && contenu.trim()) ? "#dc5539" : "#f3f4f6",
+              color: (titre.trim() && contenu.trim()) ? "white" : "#9ca3af",
               transition: "all 0.15s",
-              cursor: contenu.trim() ? "pointer" : "not-allowed",
+              cursor: (titre.trim() && contenu.trim()) ? "pointer" : "not-allowed",
             }}
             onMouseEnter={(e) => {
-              if (contenu.trim()) e.target.style.backgroundColor = "#c44a30";
+              if (titre.trim() && contenu.trim()) e.target.style.backgroundColor = "#c44a30";
             }}
             onMouseLeave={(e) => {
-              if (contenu.trim()) e.target.style.backgroundColor = "#dc5539";
+              if (titre.trim() && contenu.trim()) e.target.style.backgroundColor = "#dc5539";
             }}
           >
             <svg
@@ -198,6 +213,7 @@ const NotesSection = ({
                     <button
                       onClick={() => {
                         setEditId(note._id);
+                        setEditTitre(note.titre);
                         setEditContenu(note.contenu);
                       }}
                       className="p-1 text-gray-400 hover:text-blue-500 rounded"
@@ -236,6 +252,16 @@ const NotesSection = ({
 
                 {editId === note._id ? (
                   <div>
+                    <input
+                      type="text"
+                      value={editTitre}
+                      onChange={(e) => setEditTitre(e.target.value)}
+                      required
+                      className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm mb-2"
+                      style={{ outline: "none" }}
+                      onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                      onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+                    />
                     <textarea
                       value={editContenu}
                       onChange={(e) => setEditContenu(e.target.value)}
@@ -262,9 +288,12 @@ const NotesSection = ({
                     </div>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {note.contenu}
-                  </p>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800 mb-1">{note.titre}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      {note.contenu}
+                    </p>
+                  </div>
                 )}
               </div>
 

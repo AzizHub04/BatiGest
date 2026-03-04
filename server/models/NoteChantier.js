@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const noteChantierSchema = new mongoose.Schema({
+  titre: {
+    type: String,
+    required: [true, 'Le titre est obligatoire'],
+    trim: true
+  },
   contenu: {
     type: String,
     required: [true, 'Le contenu est obligatoire'],

@@ -4,7 +4,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { clearUtilisateur } from "./services/authSlice";
 import Login from "./pages/Login";
 import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
@@ -19,12 +20,34 @@ import Chantiers from "./pages/admin/Chantiers";
 import ChantierDetail from "./pages/admin/ChantierDetail";
 import ResponsableLayout from "./layouts/ResponsableLayout";
 import socket from "./services/socket";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TravauxTaches from "./pages/responsable/TravauxTaches";
 import NotesChantier from "./pages/responsable/NotesChantier";
+import Ouvriers from "./pages/admin/Ouvriers";
 
 function App() {
   const { utilisateur } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [verifSession, setVerifSession] = useState(true);
+
+  useEffect(() => {
+    const verifier = async () => {
+      if (utilisateur) {
+        try {
+          const res = await fetch("http://localhost:5000/api/auth/session", {
+            credentials: "include",
+          });
+          if (!res.ok) {
+            dispatch(clearUtilisateur());
+          }
+        } catch (error) {
+          dispatch(clearUtilisateur());
+        }
+      }
+      setVerifSession(false);
+    };
+    verifier();
+  }, []);
 
   useEffect(() => {
     if (utilisateur) {
@@ -53,6 +76,33 @@ function App() {
       socket.off("connect");
     };
   }, [utilisateur]);
+
+  if (verifSession) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <svg
+          className="animate-spin h-8 w-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          style={{ color: "#dc5539" }}
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+          />
+        </svg>
+      </div>
+    );
+  }
 
   return (
     <Router>
@@ -86,7 +136,7 @@ function App() {
           <Route path="profil" element={<Profil />} />
           <Route path="chantiers" element={<Chantiers />} />
           <Route path="chantiers/:id" element={<ChantierDetail />} />
-          <Route path="ouvriers" element={<div>Ouvriers (à venir)</div>} />
+          <Route path="ouvriers" element={<Ouvriers />} />
           <Route path="materiaux" element={<div>Materiaux (à venir)</div>} />
         </Route>
         <Route

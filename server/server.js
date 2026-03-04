@@ -88,6 +88,19 @@ app.use('/api/couts', coutRoutes);
 const notificationRoutes = require('./routes/notificationRoutes');
 app.use('/api/notifications', notificationRoutes);
 
+// Routes ouvriers
+const ouvrierRoutes = require('./routes/ouvrierRoutes');
+app.use('/api/ouvriers', ouvrierRoutes);
+
+// Routes pointages
+const pointageRoutes = require('./routes/pointageRoutes');
+app.use('/api/pointages', pointageRoutes);
+
+
+// Routes paiements ouvriers
+const paiementOuvrierRoutes = require('./routes/paiementOuvrierRoutes');
+app.use('/api/paiements-ouvriers', paiementOuvrierRoutes);
+
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {

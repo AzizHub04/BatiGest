@@ -92,6 +92,10 @@ const Chantiers = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErreur("");
+    if (new Date(form.dateFinPrevue) <= new Date(form.dateDebut)) {
+      setErreur('La date de fin prévue doit être postérieure à la date de début');
+      return;
+    }
     try {
       const data = {
         ...form,
@@ -549,6 +553,7 @@ const Chantiers = () => {
                       setForm({ ...form, dateFinPrevue: e.target.value })
                     }
                     required
+                    min={form.dateDebut || undefined}
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",

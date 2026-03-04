@@ -59,6 +59,7 @@ const ChantierDetail = () => {
   });
 
   const [succes, setSucces] = useState(null);
+  const [erreurChantier, setErreurChantier] = useState("");
 
   // === CHANTIER ===
   const openEditChantier = () => {
@@ -71,11 +72,16 @@ const ChantierDetail = () => {
       etat: chantier.etat,
       responsable: chantier.responsable?._id || "",
     });
+    setErreurChantier("");
     setChantierModal(true);
   };
 
   const handleChantier = async (e) => {
     e.preventDefault();
+    if (new Date(chantierForm.dateFinPrevue) <= new Date(chantierForm.dateDebut)) {
+      setErreurChantier('La date de fin prévue doit être postérieure à la date de début');
+      return;
+    }
     try {
       await modifierChantierMut({
         id,
@@ -632,6 +638,14 @@ const ChantierDetail = () => {
             <h3 className="text-lg font-bold text-gray-800 mb-4">
               Modifier le chantier
             </h3>
+            {erreurChantier && (
+              <div
+                className="mb-4 p-3 rounded-xl text-sm"
+                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+              >
+                {erreurChantier}
+              </div>
+            )}
             <form onSubmit={handleChantier} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -716,6 +730,7 @@ const ChantierDetail = () => {
                       })
                     }
                     required
+                    min={chantierForm.dateDebut || undefined}
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",

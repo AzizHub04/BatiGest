@@ -11,11 +11,6 @@ const ouvrierSchema = new mongoose.Schema({
     required: [true, 'Le prénom est obligatoire'],
     trim: true
   },
-  typeOuvrier: {
-    type: String,
-    required: [true, 'Le type est obligatoire'],
-    trim: true
-  },
   tarifJournalier: {
     type: Number,
     required: [true, 'Le tarif journalier est obligatoire'],

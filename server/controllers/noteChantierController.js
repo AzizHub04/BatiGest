@@ -31,12 +31,13 @@ const getNotesByChantier = async (req, res) => {
 // POST /api/notes
 const creerNote = async (req, res) => {
   try {
-    const { contenu, chantier } = req.body;
+    const { titre, contenu, chantier } = req.body;
 
     const acces = await verifierAccesChantier(chantier, req.utilisateur);
     if (!acces) return res.status(403).json({ message: 'Accès refusé' });
 
     const note = await NoteChantier.create({
+      titre,
       contenu,
       chantier,
       auteur: req.utilisateur._id
@@ -51,7 +52,8 @@ const creerNote = async (req, res) => {
     await creerNotificationNote(
       req, chantier,
       'Nouvelle note ajoutée',
-      `${auteur} a ajouté une note : "${contenu.substring(0, 50)}${contenu.length > 50 ? '...' : ''}"`
+      `${auteur} a ajouté une note : "${titre}"`,
+      note._id
     );
 
     res.status(201).json({ message: 'Note ajoutée avec succès', note });
@@ -71,7 +73,8 @@ const modifierNote = async (req, res) => {
       return res.status(403).json({ message: 'Vous ne pouvez modifier que vos propres notes' });
     }
 
-    const { contenu } = req.body;
+    const { titre, contenu } = req.body;
+    if (titre) note.titre = titre;
     if (contenu) note.contenu = contenu;
 
     await note.save();
@@ -113,7 +116,7 @@ const supprimerNote = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-const creerNotificationNote = async (req, chantierId, titre, messageText) => {
+const creerNotificationNote = async (req, chantierId, titre, messageText, noteId = null) => {
   const chantier = await Chantier.findById(chantierId);
   if (!chantier) return;
 
@@ -137,7 +140,8 @@ const creerNotificationNote = async (req, chantierId, titre, messageText) => {
       titre,
       message: messageText,
       utilisateur: destId,
-      chantier: chantierId
+      chantier: chantierId,
+      note: noteId
     });
 
     console.log('Envoi notif à room:', String(destId));
@@ -149,6 +153,7 @@ const creerNotificationNote = async (req, chantierId, titre, messageText) => {
       titre: notification.titre,
       message: notification.message,
       chantier: { _id: chantierId, nom: chantier.nom },
+      note: noteId ? { _id: noteId } : null,
       estLue: false,
       createdAt: notification.createdAt
     });

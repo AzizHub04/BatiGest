@@ -5,6 +5,7 @@ const getNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find({ utilisateur: req.utilisateur._id })
       .populate('chantier', 'nom')
+      .populate('note', 'titre contenu')
       .sort({ createdAt: -1 })
       .limit(20);
 

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   useGetNotificationsQuery,
   useMarquerToutLuMutation,
@@ -9,6 +11,8 @@ import {
 import socket from "../services/socket";
 
 const NotificationBell = () => {
+  const navigate = useNavigate();
+  const { utilisateur } = useSelector((state) => state.auth);
   const { data, refetch } = useGetNotificationsQuery();
   const [marquerToutLu] = useMarquerToutLuMutation();
   const [marquerLu] = useMarquerLuMutation();
@@ -50,6 +54,14 @@ const NotificationBell = () => {
         await marquerLu(notif._id).unwrap();
       } catch (err) {
         console.error(err);
+      }
+    }
+    setOpen(false);
+    if (notif.note && notif.chantier) {
+      if (utilisateur?.role === 'admin') {
+        navigate(`/admin/chantiers/${notif.chantier._id}`);
+      } else {
+        navigate('/responsable/notes');
       }
     }
   };

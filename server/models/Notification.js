@@ -24,6 +24,11 @@ const notificationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Chantier',
     required: true
+  },
+  note: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'NoteChantier',
+    default: null
   }
 }, { timestamps: true });
 
