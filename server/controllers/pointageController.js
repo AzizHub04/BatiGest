@@ -13,9 +13,9 @@ const getPointages = async (req, res) => {
       admin: req.utilisateur._id,
       date: { $regex: `^${mois}` }
     })
-    .populate('ouvrier', 'nom prenom tarifJournalier')
-    .populate('responsable', 'nom prenom tarifJournalier')
-    .populate('chantier', 'nom');
+      .populate('ouvrier', 'nom prenom tarifJournalier')
+      .populate('responsable', 'nom prenom tarifJournalier')
+      .populate('chantier', 'nom');
 
     res.json(pointages);
   } catch (error) {
@@ -46,21 +46,33 @@ const setPointage = async (req, res) => {
     if (ouvrierId) filtre.ouvrier = ouvrierId;
     if (responsableId) filtre.responsable = responsableId;
 
+    // Build $set/$unset dynamically — never store null on the unused
+    // person field, because MongoDB's sparse unique index treats null
+    // as a real value and causes duplicate-key errors.
+    const $set = {
+      date,
+      chantier: chantierFinal || null,
+      demiJournee: demiJournee || false,
+      admin: req.utilisateur._id
+    };
+    const $unset = {};
+
+    if (ouvrierId) {
+      $set.ouvrier = ouvrierId;
+      $unset.responsable = '';
+    } else {
+      $set.responsable = responsableId;
+      $unset.ouvrier = '';
+    }
+
     const pointage = await Pointage.findOneAndUpdate(
       filtre,
-      {
-        date,
-        ouvrier: ouvrierId || null,
-        responsable: responsableId || null,
-        chantier: chantierFinal || null,
-        demiJournee: demiJournee || false,
-        admin: req.utilisateur._id
-      },
-      { upsert: true, new: true }
+      { $set, $unset },
+      { upsert: true, returnDocument: 'after' }
     )
-    .populate('ouvrier', 'nom prenom tarifJournalier')
-    .populate('responsable', 'nom prenom tarifJournalier')
-    .populate('chantier', 'nom');
+      .populate('ouvrier', 'nom prenom tarifJournalier')
+      .populate('responsable', 'nom prenom tarifJournalier')
+      .populate('chantier', 'nom');
 
     res.json(pointage);
   } catch (error) {

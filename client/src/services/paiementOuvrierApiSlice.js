@@ -18,7 +18,7 @@ export const paiementOuvrierApiSlice = apiSlice.injectEndpoints({
         if (responsableId) url += `responsableId=${responsableId}`;
         return url;
       },
-      providesTags: ['PaiementOuvrier'],
+      providesTags: ['PaiementOuvrier', 'Pointage'],
     }),
     genererPaiement: builder.mutation({
       query: (data) => ({ url: '/paiements-ouvriers/generer', method: 'POST', body: data }),

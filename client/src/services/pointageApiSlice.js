@@ -8,11 +8,11 @@ export const pointageApiSlice = apiSlice.injectEndpoints({
     }),
     setPointage: builder.mutation({
       query: (data) => ({ url: '/pointages', method: 'POST', body: data }),
-      invalidatesTags: ['Pointage'],
+      invalidatesTags: ['Pointage', 'PaiementOuvrier'],
     }),
     supprimerPointage: builder.mutation({
       query: (data) => ({ url: '/pointages', method: 'DELETE', body: data }),
-      invalidatesTags: ['Pointage'],
+      invalidatesTags: ['Pointage', 'PaiementOuvrier'],
     }),
   }),
 });

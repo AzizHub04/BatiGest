@@ -8,13 +8,14 @@ const pointageSchema = new mongoose.Schema({
   // Soit un ouvrier, soit un responsable (utilisateur)
   ouvrier: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Ouvrier',
-    default: null
+    ref: 'Ouvrier'
+    // No default — field must be absent (not null) when unused,
+    // so the partial index below can correctly ignore it.
   },
   responsable: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Utilisateur',
-    default: null
+    ref: 'Utilisateur'
+    // No default — same reason as above.
   },
   chantier: {
     type: mongoose.Schema.Types.ObjectId,
@@ -32,8 +33,17 @@ const pointageSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Un ouvrier/responsable ne peut avoir qu'un seul pointage par jour
-pointageSchema.index({ date: 1, ouvrier: 1 }, { unique: true, sparse: true });
-pointageSchema.index({ date: 1, responsable: 1 }, { unique: true, sparse: true });
+// Un ouvrier/responsable ne peut avoir qu'un seul pointage par jour.
+// Use partialFilterExpression instead of sparse — sparse compound indexes
+// don't work as expected because MongoDB includes documents where at least
+// one indexed field exists (date is always present, so every doc is indexed).
+pointageSchema.index(
+  { date: 1, ouvrier: 1 },
+  { unique: true, partialFilterExpression: { ouvrier: { $exists: true } } }
+);
+pointageSchema.index(
+  { date: 1, responsable: 1 },
+  { unique: true, partialFilterExpression: { responsable: { $exists: true } } }
+);
 
 module.exports = mongoose.model('Pointage', pointageSchema);

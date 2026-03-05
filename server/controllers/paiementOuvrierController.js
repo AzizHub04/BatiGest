@@ -189,86 +189,12 @@ const modifierPaiement = async (req, res) => {
   }
 };
 // GET /api/paiements-ouvriers/auto?ouvrierId=xxx ou responsableId=xxx
+// Retourne le résumé automatique par SEMAINE (lundi→dimanche)
 const getAutoResume = async (req, res) => {
   try {
     const { ouvrierId, responsableId } = req.query;
     if (!ouvrierId && !responsableId) {
       return res.status(400).json({ message: 'Ouvrier ou responsable requis' });
-    }
-
-    // Récupérer le tarif journalier
-    let tarif = 0;
-    if (ouvrierId) {
-      const ouvrier = await Ouvrier.findById(ouvrierId);
-      tarif = ouvrier?.tarifJournalier || 0;
-    }
-    if (responsableId) {
-      const resp = await Utilisateur.findById(responsableId);
-      tarif = resp?.tarifJournalier || 0;
-    }
-
-    // Tous les pointages travaillés (chantier non null)
-    const filtrePointage = {
-      admin: req.utilisateur._id,
-      chantier: { $ne: null }
-    };
-    if (ouvrierId) filtrePointage.ouvrier = ouvrierId;
-    if (responsableId) filtrePointage.responsable = responsableId;
-
-    const pointages = await Pointage.find(filtrePointage).sort({ date: 1 });
-
-    // Grouper par mois
-    const parMois = {};
-    pointages.forEach(p => {
-      const mois = p.date.substring(0, 7);
-      if (!parMois[mois]) parMois[mois] = 0;
-      parMois[mois] += p.demiJournee ? 0.5 : 1;
-    });
-
-    // Tous les paiements existants pour cette personne
-    const filtrePaiement = { admin: req.utilisateur._id };
-    if (ouvrierId) filtrePaiement.ouvrier = ouvrierId;
-    if (responsableId) filtrePaiement.responsable = responsableId;
-
-    const paiements = await PaiementOuvrier.find(filtrePaiement);
-
-    // Indexer les paiements par mois (dateDebut commence par mois YYYY-MM)
-    const paiementParMois = {};
-    paiements.forEach(p => {
-      if (p.dateDebut && p.dateDebut.length >= 7) {
-        paiementParMois[p.dateDebut.substring(0, 7)] = p;
-      }
-    });
-
-    // Construire le résultat trié par mois décroissant
-    const moisTries = Object.keys(parMois).sort().reverse();
-    const result = moisTries.map(mois => ({
-      mois,
-      jours: parMois[mois],
-      montantDu: parMois[mois] * tarif,
-      tarif,
-      paiement: paiementParMois[mois] || null
-    }));
-
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// POST /api/paiements-ouvriers/regler — Régler un mois donné
-const reglerPaiement = async (req, res) => {
-  try {
-    const { ouvrierId, responsableId, mois, montant } = req.body;
-
-    if (!ouvrierId && !responsableId) {
-      return res.status(400).json({ message: 'Ouvrier ou responsable requis' });
-    }
-    if (!mois) {
-      return res.status(400).json({ message: 'Le mois est obligatoire (format: YYYY-MM)' });
-    }
-    if (!montant || Number(montant) <= 0) {
-      return res.status(400).json({ message: 'Le montant doit être supérieur à 0' });
     }
 
     // Tarif journalier
@@ -282,74 +208,134 @@ const reglerPaiement = async (req, res) => {
       tarif = resp?.tarifJournalier || 0;
     }
 
-    // Pointages travaillés du mois
-    const filtrePointage = {
-      admin: req.utilisateur._id,
-      chantier: { $ne: null },
-      date: { $regex: `^${mois}` }
-    };
+    // Tous les pointages travaillés (chantier non null)
+    const filtrePointage = { admin: req.utilisateur._id, chantier: { $ne: null } };
     if (ouvrierId) filtrePointage.ouvrier = ouvrierId;
     if (responsableId) filtrePointage.responsable = responsableId;
+    const pointages = await Pointage.find(filtrePointage).sort({ date: 1 });
 
-    const pointages = await Pointage.find(filtrePointage);
+    // Grouper par semaine (lundi → dimanche), clé = lundiStr
+    const parSemaine = {};
+    pointages.forEach(p => {
+      const d = new Date(p.date + 'T12:00:00');
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      const lundi = new Date(d);
+      lundi.setDate(d.getDate() + diff);
+      const lundiStr = lundi.toISOString().split('T')[0];
+      if (!parSemaine[lundiStr]) parSemaine[lundiStr] = { jours: 0 };
+      parSemaine[lundiStr].jours += p.demiJournee ? 0.5 : 1;
+    });
 
-    let totalJours = 0;
-    pointages.forEach(p => { totalJours += p.demiJournee ? 0.5 : 1; });
-    const montantTotal = totalJours * tarif;
-
-    // Bornes du mois
-    const [annee, moisNum] = mois.split('-').map(Number);
-    const lastDay = new Date(annee, moisNum, 0).getDate();
-    const dateDebut = `${mois}-01`;
-    const dateFin = `${mois}-${String(lastDay).padStart(2, '0')}`;
-
-    // Paiement existant pour ce mois
-    const filtrePaiement = {
-      admin: req.utilisateur._id,
-      dateDebut: { $regex: `^${mois}` }
-    };
+    // Paiements existants indexés par dateDebut (= lundiStr)
+    const filtrePaiement = { admin: req.utilisateur._id };
     if (ouvrierId) filtrePaiement.ouvrier = ouvrierId;
     if (responsableId) filtrePaiement.responsable = responsableId;
+    const paiements = await PaiementOuvrier.find(filtrePaiement);
+    const paiementMap = {};
+    paiements.forEach(p => { paiementMap[p.dateDebut] = p; });
 
+    const formatD = (str) => {
+      const date = new Date(str + 'T12:00:00');
+      return date.getDate() + ' ' + date.toLocaleDateString('fr-FR', { month: 'short' });
+    };
+
+    const semainesArr = Object.keys(parSemaine).sort().reverse();
+    const resume = semainesArr.map(lundiStr => {
+      const data = parSemaine[lundiStr];
+      const montantDu = data.jours * tarif;
+      const lundi = new Date(lundiStr + 'T12:00:00');
+      const dimanche = new Date(lundi);
+      dimanche.setDate(lundi.getDate() + 6);
+      const dimancheStr = dimanche.toISOString().split('T')[0];
+      const paiement = paiementMap[lundiStr];
+      const montantPaye = paiement?.montantPaye || 0;
+      const montantRestant = Math.max(0, montantDu - montantPaye);
+      let statut = 'Non payé';
+      if (montantRestant <= 0 && montantDu > 0) statut = 'Payé';
+      else if (montantPaye > 0) statut = 'Partiel';
+      return {
+        lundiStr, dimancheStr,
+        label: formatD(lundiStr) + ' - ' + formatD(dimancheStr),
+        joursTravailes: data.jours, tarif,
+        montantDu, montantPaye, montantRestant, statut,
+        paiementId: paiement?._id || null,
+        datePaiement: paiement?.datePaiement || null
+      };
+    });
+
+    const totalDu = resume.reduce((s, r) => s + r.montantDu, 0);
+    const totalPaye = resume.reduce((s, r) => s + r.montantPaye, 0);
+    res.json({ resume, totalDu, totalPaye, totalRestant: Math.max(0, totalDu - totalPaye) });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// POST /api/paiements-ouvriers/regler — Régler une semaine donnée (lundiStr)
+const reglerPaiement = async (req, res) => {
+  try {
+    const { ouvrierId, responsableId, lundiStr, montant } = req.body;
+    if (!montant || Number(montant) <= 0) {
+      return res.status(400).json({ message: 'Montant invalide' });
+    }
+    if (!lundiStr) {
+      return res.status(400).json({ message: 'Semaine requise (lundiStr)' });
+    }
+
+    const lundi = new Date(lundiStr + 'T12:00:00');
+    const dimanche = new Date(lundi);
+    dimanche.setDate(lundi.getDate() + 6);
+    const dimancheStr = dimanche.toISOString().split('T')[0];
+
+    // Chercher paiement existant pour cette semaine (dateDebut = lundiStr)
+    const filtre = { admin: req.utilisateur._id, dateDebut: lundiStr };
+    if (ouvrierId) filtre.ouvrier = ouvrierId;
+    if (responsableId) filtre.responsable = responsableId;
+
+    let paiement = await PaiementOuvrier.findOne(filtre);
     const montantNum = Number(montant);
-    let paiement = await PaiementOuvrier.findOne(filtrePaiement);
 
-    if (!paiement) {
-      const montantPaye = Math.min(montantNum, montantTotal);
-      const montantRestant = Math.max(0, montantTotal - montantPaye);
-      paiement = await PaiementOuvrier.create({
-        dateDebut,
-        dateFin,
-        montantTotal,
-        montantPaye,
-        montantRestant,
-        statutPaiement: montantRestant === 0 ? 'Payé' : (montantPaye > 0 ? 'Partiel' : 'Non payé'),
-        datePaiement: new Date(),
-        ouvrier: ouvrierId || null,
-        responsable: responsableId || null,
-        pointages: pointages.map(p => p._id),
-        admin: req.utilisateur._id
-      });
-    } else {
-      paiement.montantTotal = montantTotal;
-      paiement.montantPaye = Math.min(paiement.montantPaye + montantNum, montantTotal);
-      paiement.montantRestant = Math.max(0, montantTotal - paiement.montantPaye);
+    if (paiement) {
+      paiement.montantPaye = Math.min(paiement.montantPaye + montantNum, paiement.montantTotal);
+      paiement.montantRestant = Math.max(0, paiement.montantTotal - paiement.montantPaye);
+      paiement.statutPaiement = paiement.montantRestant <= 0 ? 'Payé' : 'Partiel';
       paiement.datePaiement = new Date();
-      paiement.pointages = pointages.map(p => p._id);
-      if (paiement.montantRestant === 0) {
-        paiement.statutPaiement = 'Payé';
-      } else if (paiement.montantPaye > 0) {
-        paiement.statutPaiement = 'Partiel';
-      } else {
-        paiement.statutPaiement = 'Non payé';
-      }
       await paiement.save();
+    } else {
+      // Calculer montant total depuis les pointages de la semaine
+      const filtreP = {
+        admin: req.utilisateur._id,
+        chantier: { $ne: null },
+        date: { $gte: lundiStr, $lte: dimancheStr }
+      };
+      if (ouvrierId) filtreP.ouvrier = ouvrierId;
+      if (responsableId) filtreP.responsable = responsableId;
+      const pts = await Pointage.find(filtreP);
+
+      let tarif = 0;
+      if (ouvrierId) { const o = await Ouvrier.findById(ouvrierId); tarif = o?.tarifJournalier || 0; }
+      if (responsableId) { const r = await Utilisateur.findById(responsableId); tarif = r?.tarifJournalier || 0; }
+
+      let totalJours = 0;
+      pts.forEach(p => { totalJours += p.demiJournee ? 0.5 : 1; });
+      const montantTotal = totalJours * tarif;
+
+      paiement = await PaiementOuvrier.create({
+        dateDebut: lundiStr, dateFin: dimancheStr,
+        montantTotal,
+        montantPaye: Math.min(montantNum, montantTotal),
+        montantRestant: Math.max(0, montantTotal - montantNum),
+        statutPaiement: montantNum >= montantTotal ? 'Payé' : 'Partiel',
+        datePaiement: new Date(),
+        ouvrier: ouvrierId || null, responsable: responsableId || null,
+        pointages: pts.map(p => p._id), admin: req.utilisateur._id
+      });
     }
 
     await paiement.populate('ouvrier', 'nom prenom tarifJournalier');
     await paiement.populate('responsable', 'nom prenom tarifJournalier');
-
-    res.json({ message: 'Paiement enregistré', paiement });
+    res.json({ message: 'Règlement enregistré', paiement });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

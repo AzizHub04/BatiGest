@@ -34,7 +34,18 @@ app.set('io', io);
 
 // Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('✅ MongoDB connecté'))
+  .then(async () => {
+    console.log('✅ MongoDB connecté');
+
+    // Drop old sparse indexes and create new partial indexes for Pointage
+    const Pointage = require('./models/Pointage');
+    await Pointage.syncIndexes();
+    console.log('✅ Pointage indexes synced');
+
+    // Clean up existing documents with null ouvrier/responsable fields
+    await Pointage.updateMany({ ouvrier: null }, { $unset: { ouvrier: '' } });
+    await Pointage.updateMany({ responsable: null }, { $unset: { responsable: '' } });
+  })
   .catch((err) => console.log('❌ Erreur MongoDB:', err));
 
 // Socket.io - Connexion
