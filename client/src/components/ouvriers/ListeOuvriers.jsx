@@ -149,100 +149,46 @@ const ListeOuvriers = () => {
         </button>
       </div>
 
-      {/* Tableau */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      {/* Desktop table */}
+      <div className="hidden sm:block bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Ouvrier
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Téléphone
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Tarif/jour
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Statut
-              </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Actions
-              </th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Ouvrier</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Téléphone</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Tarif/jour</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Statut</th>
+              <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody>
             {ouvriersFiltres.length === 0 ? (
-              <tr>
-                <td
-                  colSpan="5"
-                  className="text-center py-8 text-sm text-gray-400"
-                >
-                  Aucun ouvrier trouvé
-                </td>
-              </tr>
+              <tr><td colSpan="5" className="text-center py-8 text-sm text-gray-400">Aucun ouvrier trouvé</td></tr>
             ) : (
               ouvriersFiltres.map((o) => {
                 const ss = statutStyle(o.statut);
                 return (
-                  <tr
-                    key={o._id}
-                    className="border-b border-gray-50 hover:bg-gray-50"
-                    style={{ transition: "background-color 0.1s" }}
-                  >
+                  <tr key={o._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <div
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                          style={{ backgroundColor: "#dc5539" }}
-                        >
-                          {o.prenom?.[0]}
-                          {o.nom?.[0]}
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#dc5539" }}>
+                          {o.prenom?.[0]}{o.nom?.[0]}
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-800">
-                            {o.prenom} {o.nom}
-                          </p>
-                        </div>
+                        <p className="text-sm font-medium text-gray-800">{o.prenom} {o.nom}</p>
                       </div>
                     </td>
-                    <td className="px-5 py-3 text-sm text-gray-600">
-                      {o.telephone || "—"}
-                    </td>
-                    <td className="px-5 py-3 text-sm font-medium text-gray-800">
-                      {o.tarifJournalier} DT
-                    </td>
+                    <td className="px-5 py-3 text-sm text-gray-600">{o.telephone || "—"}</td>
+                    <td className="px-5 py-3 text-sm font-medium text-gray-800">{o.tarifJournalier} DT</td>
                     <td className="px-5 py-3">
-                      <span
-                        className="text-xs px-2 py-0.5 rounded-full font-medium"
-                        style={{ backgroundColor: ss.bg, color: ss.color }}
-                      >
-                        {o.statut}
-                      </span>
+                      <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: ss.bg, color: ss.color }}>{o.statut}</span>
                     </td>
                     <td className="px-5 py-3">
                       <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => openEdit(o)}
-                          className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50"
-                          style={{ transition: "all 0.15s" }}
-                        >
-                          <EditIcon
-                            width={16}
-                            height={16}
-                            color="currentColor"
-                          />
+                        <button onClick={() => openEdit(o)} className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50" style={{ transition: "all 0.15s" }}>
+                          <EditIcon width={16} height={16} color="currentColor" />
                         </button>
-                        <button
-                          onClick={() => setDeleteConfirm(o._id)}
-                          className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50"
-                          style={{ transition: "all 0.15s" }}
-                        >
-                          <TrashIcon
-                            width={16}
-                            height={16}
-                            color="currentColor"
-                          />
+                        <button onClick={() => setDeleteConfirm(o._id)} className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50" style={{ transition: "all 0.15s" }}>
+                          <TrashIcon width={16} height={16} color="currentColor" />
                         </button>
                       </div>
                     </td>
@@ -252,6 +198,48 @@ const ListeOuvriers = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile cards */}
+      <div className="block sm:hidden space-y-3">
+        {ouvriersFiltres.length === 0 ? (
+          <p className="text-center py-8 text-sm text-gray-400">Aucun ouvrier trouvé</p>
+        ) : (
+          ouvriersFiltres.map((o) => {
+            const ss = statutStyle(o.statut);
+            return (
+              <div key={o._id} className="bg-white border border-gray-100 rounded-xl p-4">
+                {/* Header: avatar + nom + statut */}
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold" style={{ backgroundColor: "#dc5539" }}>
+                      {o.prenom?.[0]}{o.nom?.[0]}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">{o.prenom} {o.nom}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{o.telephone || "—"}</p>
+                    </div>
+                  </div>
+                  <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: ss.bg, color: ss.color }}>{o.statut}</span>
+                </div>
+                {/* Tarif */}
+                <div className="flex items-center justify-between text-xs mb-3">
+                  <span className="text-gray-400">Tarif / jour</span>
+                  <span className="text-gray-800 font-semibold">{o.tarifJournalier} DT</span>
+                </div>
+                {/* Actions */}
+                <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+                  <button onClick={() => openEdit(o)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg">
+                    <EditIcon width={12} height={12} color="currentColor" /> Modifier
+                  </button>
+                  <button onClick={() => setDeleteConfirm(o._id)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg">
+                    <TrashIcon width={12} height={12} color="currentColor" /> Supprimer
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* Modal */}

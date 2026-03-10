@@ -186,89 +186,40 @@ const Responsables = () => {
           </div>
         </div>
 
-        {/* Tableau */}
-        <table className="w-full">
+        {/* Desktop table */}
+        <table className="hidden sm:table w-full">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
-                Nom
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
-                Prénom
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
-                Email
-              </th>
-              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
-                Chantier Assigné
-              </th>
-              <th className="text-right py-3 px-4 text-xs font-semibold text-gray-400 uppercase">
-                Actions
-              </th>
+              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">Nom</th>
+              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">Prénom</th>
+              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">Email</th>
+              <th className="text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase">Chantier Assigné</th>
+              <th className="text-right py-3 px-4 text-xs font-semibold text-gray-400 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredResponsables.length === 0 ? (
-              <tr>
-                <td
-                  colSpan="5"
-                  className="text-center py-12 text-gray-400 text-sm"
-                >
-                  Aucun responsable trouvé
-                </td>
-              </tr>
+              <tr><td colSpan="5" className="text-center py-12 text-gray-400 text-sm">Aucun responsable trouvé</td></tr>
             ) : (
               filteredResponsables.map((r) => (
-                <tr
-                  key={r._id}
-                  className="border-b border-gray-50 hover:bg-gray-50"
-                  style={{ transition: "background-color 0.1s" }}
-                >
-                  <td className="py-3.5 px-4 text-sm text-gray-800 font-medium">
-                    {r.nom}
-                  </td>
-                  <td className="py-3.5 px-4 text-sm text-gray-600">
-                    {r.prenom}
-                  </td>
-                  <td className="py-3.5 px-4 text-sm text-gray-500">
-                    {r.email}
-                  </td>
+                <tr key={r._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
+                  <td className="py-3.5 px-4 text-sm text-gray-800 font-medium">{r.nom}</td>
+                  <td className="py-3.5 px-4 text-sm text-gray-600">{r.prenom}</td>
+                  <td className="py-3.5 px-4 text-sm text-gray-500">{r.email}</td>
                   <td className="py-3.5 px-4">
                     {getChantierAssigne(r._id) ? (
-                      <span
-                        className="text-xs px-2.5 py-1 rounded-full font-medium"
-                        style={{
-                          backgroundColor: "#dc55391a",
-                          color: "#dc5539",
-                        }}
-                      >
-                        {getChantierAssigne(r._id)}
-                      </span>
+                      <span className="text-xs px-2.5 py-1 rounded-full font-medium" style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}>{getChantierAssigne(r._id)}</span>
                     ) : (
                       <span className="text-xs text-gray-400">Non assigné</span>
                     )}
                   </td>
                   <td className="py-3.5 px-4">
                     <div className="flex items-center justify-end gap-2">
-                      {/* Modifier */}
-                      <button
-                        onClick={() => openEdit(r)}
-                        className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50"
-                        style={{ transition: "all 0.15s" }}
-                      >
+                      <button onClick={() => openEdit(r)} className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50" style={{ transition: "all 0.15s" }}>
                         <EditIcon width={16} height={16} color="currentColor" />
                       </button>
-                      {/* Supprimer */}
-                      <button
-                        onClick={() => setDeleteConfirm(r._id)}
-                        className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50"
-                        style={{ transition: "all 0.15s" }}
-                      >
-                        <TrashIcon
-                          width={16}
-                          height={16}
-                          color="currentColor"
-                        />
+                      <button onClick={() => setDeleteConfirm(r._id)} className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50" style={{ transition: "all 0.15s" }}>
+                        <TrashIcon width={16} height={16} color="currentColor" />
                       </button>
                     </div>
                   </td>
@@ -277,6 +228,46 @@ const Responsables = () => {
             )}
           </tbody>
         </table>
+
+        {/* Mobile cards */}
+        <div className="block sm:hidden space-y-3 p-1">
+          {filteredResponsables.length === 0 ? (
+            <p className="text-center py-12 text-gray-400 text-sm">Aucun responsable trouvé</p>
+          ) : (
+            filteredResponsables.map((r) => (
+              <div key={r._id} className="border border-gray-100 rounded-xl p-4">
+                {/* Header: avatar + nom prénom + chantier badge */}
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold" style={{ backgroundColor: "#dc5539" }}>
+                      {r.prenom?.[0]}{r.nom?.[0]}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">{r.prenom} {r.nom}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{r.email}</p>
+                    </div>
+                  </div>
+                  {getChantierAssigne(r._id) ? (
+                    <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}>
+                      {getChantierAssigne(r._id)}
+                    </span>
+                  ) : (
+                    <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold bg-gray-100 text-gray-400">Non assigné</span>
+                  )}
+                </div>
+                {/* Actions */}
+                <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+                  <button onClick={() => openEdit(r)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg">
+                    <EditIcon width={12} height={12} color="currentColor" /> Modifier
+                  </button>
+                  <button onClick={() => setDeleteConfirm(r._id)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg">
+                    <TrashIcon width={12} height={12} color="currentColor" /> Supprimer
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {/* Modal Créer/Modifier */}

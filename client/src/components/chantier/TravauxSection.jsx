@@ -165,8 +165,9 @@ const TravauxSection = ({
                   key={t._id}
                   className="border border-gray-100 rounded-xl overflow-hidden"
                 >
+                  {/* ── Desktop row (hidden on mobile) ── */}
                   <div
-                    className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+                    className="hidden sm:flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
                     style={{ transition: "background-color 0.1s" }}
                     onClick={() => setTravailOpen(isOpen ? null : t._id)}
                   >
@@ -281,6 +282,145 @@ const TravauxSection = ({
                       </span>
                     </div>
                   </div>
+
+                  {/* ── Mobile card (hidden on desktop) ── */}
+                  <div className="block sm:hidden">
+                    <div
+                      className="p-4 cursor-pointer"
+                      onClick={() => setTravailOpen(isOpen ? null : t._id)}
+                    >
+                      {/* Card header: icon + title + status badge */}
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center"
+                            style={{ backgroundColor: "#dc55391a" }}
+                          >
+                            <GridIcon width={18} height={18} color="#dc5539" />
+                          </div>
+                          <span className="text-sm font-semibold text-gray-800 leading-tight">
+                            {t.titre}
+                          </span>
+                        </div>
+                        {t.nbTaches > 0 ? (
+                          <span
+                            className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold"
+                            style={{
+                              backgroundColor: etatStyle.bg,
+                              color: etatStyle.color,
+                            }}
+                          >
+                            {t.etat}
+                          </span>
+                        ) : (
+                          <select
+                            value={t.etat}
+                            onChange={async (e) => {
+                              e.stopPropagation();
+                              try {
+                                await modifierTravail({
+                                  id: t._id,
+                                  etat: e.target.value,
+                                }).unwrap();
+                              } catch (err) {
+                                console.error(err);
+                              }
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold border-0 cursor-pointer"
+                            style={{
+                              backgroundColor: etatStyle.bg,
+                              color: etatStyle.color,
+                              outline: "none",
+                            }}
+                          >
+                            {TRAVAIL_ETATS.map((etat) => (
+                              <option key={etat} value={etat}>
+                                {etat}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+
+                      {/* Progress + tâches count */}
+                      <div className="ml-12 space-y-2">
+                        {t.nbTaches > 0 && (
+                          <div>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs text-gray-400">
+                                {t.nbTaches} t\u00e2ches
+                              </span>
+                              <span className="text-xs font-semibold text-gray-600">
+                                {t.avancement}%
+                              </span>
+                            </div>
+                            <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${t.avancement}%`,
+                                  backgroundColor: "#dc5539",
+                                  transition: "width 0.3s",
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )}
+                        {t.nbTaches === 0 && (
+                          <span className="text-xs text-gray-400">
+                            Aucune t\u00e2che
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Card footer: actions + chevron */}
+                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openEdit(t);
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg"
+                            style={{ transition: "opacity 0.15s" }}
+                          >
+                            <EditIcon width={12} height={12} color="currentColor" />
+                            Modifier
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDeleteConfirm(t._id);
+                            }}
+                            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg"
+                            style={{ transition: "opacity 0.15s" }}
+                          >
+                            <TrashIcon width={12} height={12} color="currentColor" />
+                            Supprimer
+                          </button>
+                        </div>
+                        <span
+                          className="text-gray-400 text-xs font-medium flex items-center gap-1"
+                          style={{
+                            transition: "transform 0.15s",
+                          }}
+                        >
+                          T\u00e2ches
+                          <span
+                            style={{
+                              display: "inline-flex",
+                              transform: isOpen ? "rotate(90deg)" : "rotate(0)",
+                              transition: "transform 0.15s",
+                            }}
+                          >
+                            <ChevronRightIcon />
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
                   {isOpen && <TachesList travailId={t._id} />}
                 </div>
               );

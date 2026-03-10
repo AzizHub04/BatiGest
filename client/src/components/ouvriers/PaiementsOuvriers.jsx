@@ -384,165 +384,55 @@ const PaiementsOuvriers = () => {
             </div>
           </div>
 
-          {/* ── Tableau automatique par semaine ─────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          {/* ── Desktop table ─────────────────────────── */}
+          <div className="hidden sm:block bg-white rounded-2xl border border-gray-100 overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100">
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                    Semaine
-                  </th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                    Jours
-                  </th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                    Montant dû
-                  </th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                    Payé
-                  </th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                    Restant
-                  </th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                    Statut
-                  </th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                    Date paiement
-                  </th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                    Actions
-                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Semaine</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Jours</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Montant dû</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Payé</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Restant</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Statut</th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Date paiement</th>
+                  <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {autoLoading ? (
-                  <tr>
-                    <td
-                      colSpan="8"
-                      className="text-center py-8 text-sm text-gray-400"
-                    >
-                      Chargement…
-                    </td>
-                  </tr>
+                  <tr><td colSpan="8" className="text-center py-8 text-sm text-gray-400">Chargement…</td></tr>
                 ) : resumeFiltre.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="8"
-                      className="text-center py-8 text-sm text-gray-400"
-                    >
-                      Aucun pointage pour ce mois
-                    </td>
-                  </tr>
+                  <tr><td colSpan="8" className="text-center py-8 text-sm text-gray-400">Aucun pointage pour ce mois</td></tr>
                 ) : (
                   resumeFiltre.map((s) => {
                     const ss = statutStyle(s.statut);
                     return (
-                      <tr
-                        key={s.lundiStr}
-                        className="border-b border-gray-50 hover:bg-gray-50"
-                        style={{ transition: "background-color 0.1s" }}
-                      >
-                        <td className="px-5 py-3 text-sm font-medium text-gray-700">
-                          {s.label}
-                        </td>
-                        <td className="px-5 py-3 text-sm text-gray-600">
-                          {s.joursTravailes} j
-                        </td>
-                        <td className="px-5 py-3 text-sm font-medium text-gray-800">
-                          {s.montantDu} DT
-                        </td>
-                        <td
-                          className="px-5 py-3 text-sm font-medium"
-                          style={{ color: "#16a34a" }}
-                        >
-                          {s.montantPaye} DT
-                        </td>
-                        <td
-                          className="px-5 py-3 text-sm font-medium"
-                          style={{
-                            color: s.montantRestant > 0 ? "#dc2626" : "#16a34a",
-                          }}
-                        >
-                          {s.montantRestant} DT
-                        </td>
+                      <tr key={s.lundiStr} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
+                        <td className="px-5 py-3 text-sm font-medium text-gray-700">{s.label}</td>
+                        <td className="px-5 py-3 text-sm text-gray-600">{s.joursTravailes} j</td>
+                        <td className="px-5 py-3 text-sm font-medium text-gray-800">{s.montantDu} DT</td>
+                        <td className="px-5 py-3 text-sm font-medium" style={{ color: "#16a34a" }}>{s.montantPaye} DT</td>
+                        <td className="px-5 py-3 text-sm font-medium" style={{ color: s.montantRestant > 0 ? "#dc2626" : "#16a34a" }}>{s.montantRestant} DT</td>
                         <td className="px-5 py-3">
-                          <span
-                            className="text-xs px-2 py-0.5 rounded-full font-medium"
-                            style={{ backgroundColor: ss.bg, color: ss.color }}
-                          >
-                            {s.statut}
-                          </span>
+                          <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: ss.bg, color: ss.color }}>{s.statut}</span>
                         </td>
                         <td className="px-5 py-3 text-sm text-gray-500">
-                          {s.datePaiement
-                            ? formatDate(
-                                typeof s.datePaiement === "string"
-                                  ? s.datePaiement
-                                  : new Date(s.datePaiement)
-                                      .toISOString()
-                                      .split("T")[0],
-                              )
-                            : "—"}
+                          {s.datePaiement ? formatDate(typeof s.datePaiement === "string" ? s.datePaiement : new Date(s.datePaiement).toISOString().split("T")[0]) : "—"}
                         </td>
                         <td className="px-5 py-3 text-right">
                           <div className="flex items-center justify-end gap-2">
                             {s.montantRestant > 0 && (
-                              <button
-                                onClick={() => {
-                                  setReglerModal({
-                                    lundiStr: s.lundiStr,
-                                    label: s.label,
-                                    montantRestant: s.montantRestant,
-                                  });
-                                  setReglerMontant(String(s.montantRestant));
-                                  setErreur("");
-                                }}
-                                className="px-3 py-1.5 text-xs font-medium text-white rounded-lg"
-                                style={{ backgroundColor: "#16a34a" }}
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.backgroundColor =
-                                    "#15803d")
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.backgroundColor =
-                                    "#16a34a")
-                                }
-                              >
+                              <button onClick={() => { setReglerModal({ lundiStr: s.lundiStr, label: s.label, montantRestant: s.montantRestant }); setReglerMontant(String(s.montantRestant)); setErreur(""); }} className="px-3 py-1.5 text-xs font-medium text-white rounded-lg" style={{ backgroundColor: "#16a34a" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#15803d")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#16a34a")}>
                                 Régler
                               </button>
                             )}
                             {s.paiementId && (
                               <>
-                                {/* Modifier */}
-                                <button
-                                  title="Modifier"
-                                  onClick={() => {
-                                    setModifierModal({
-                                      id: s.paiementId,
-                                      label: s.label,
-                                      montantTotal: s.montantDu,
-                                      montantPaye: s.montantPaye,
-                                    });
-                                    setModifierMontant(String(s.montantPaye));
-                                    setErreur("");
-                                  }}
-                                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50"
-                                >
+                                <button onClick={() => { setModifierModal({ id: s.paiementId, label: s.label, montantTotal: s.montantDu, montantPaye: s.montantPaye }); setModifierMontant(String(s.montantPaye)); setErreur(""); }} className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">
                                   <EditIcon width={14} height={14} color="currentColor" />
                                 </button>
-                                {/* Supprimer */}
-                                <button
-                                  title="Supprimer"
-                                  onClick={() =>
-                                    setConfirmSuppr({
-                                      id: s.paiementId,
-                                      label: s.label,
-                                    })
-                                  }
-                                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-red-50"
-                                  style={{ color: "#dc5539" }}
-                                >
+                                <button onClick={() => setConfirmSuppr({ id: s.paiementId, label: s.label })} className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-red-50" style={{ color: "#dc5539" }}>
                                   <TrashIcon width={14} height={14} color="currentColor" />
                                 </button>
                               </>
@@ -555,6 +445,70 @@ const PaiementsOuvriers = () => {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* ── Mobile cards ─────────────────────────── */}
+          <div className="block sm:hidden space-y-3">
+            {autoLoading ? (
+              <p className="text-center py-8 text-sm text-gray-400">Chargement…</p>
+            ) : resumeFiltre.length === 0 ? (
+              <p className="text-center py-8 text-sm text-gray-400">Aucun pointage pour ce mois</p>
+            ) : (
+              resumeFiltre.map((s) => {
+                const ss = statutStyle(s.statut);
+                return (
+                  <div key={s.lundiStr} className="bg-white border border-gray-100 rounded-xl p-4">
+                    {/* Header: semaine label + statut badge */}
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">{s.label}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{s.joursTravailes} jour{s.joursTravailes > 1 ? "s" : ""} travaillé{s.joursTravailes > 1 ? "s" : ""}</p>
+                      </div>
+                      <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: ss.bg, color: ss.color }}>{s.statut}</span>
+                    </div>
+                    {/* Amounts grid */}
+                    <div className="grid grid-cols-3 gap-2 mb-3">
+                      <div className="bg-gray-50 rounded-lg p-2 text-center">
+                        <p className="text-[10px] text-gray-400">Dû</p>
+                        <p className="text-sm font-bold text-gray-800 mt-0.5">{s.montantDu} DT</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-2 text-center">
+                        <p className="text-[10px] text-gray-400">Payé</p>
+                        <p className="text-sm font-bold mt-0.5" style={{ color: "#16a34a" }}>{s.montantPaye} DT</p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-2 text-center">
+                        <p className="text-[10px] text-gray-400">Restant</p>
+                        <p className="text-sm font-bold mt-0.5" style={{ color: s.montantRestant > 0 ? "#dc2626" : "#16a34a" }}>{s.montantRestant} DT</p>
+                      </div>
+                    </div>
+                    {/* Date paiement */}
+                    {s.datePaiement && (
+                      <p className="text-xs text-gray-400 mb-3">
+                        Payé le {formatDate(typeof s.datePaiement === "string" ? s.datePaiement : new Date(s.datePaiement).toISOString().split("T")[0])}
+                      </p>
+                    )}
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+                      {s.montantRestant > 0 && (
+                        <button onClick={() => { setReglerModal({ lundiStr: s.lundiStr, label: s.label, montantRestant: s.montantRestant }); setReglerMontant(String(s.montantRestant)); setErreur(""); }} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-white rounded-lg" style={{ backgroundColor: "#16a34a" }}>
+                          Régler
+                        </button>
+                      )}
+                      {s.paiementId && (
+                        <>
+                          <button onClick={() => { setModifierModal({ id: s.paiementId, label: s.label, montantTotal: s.montantDu, montantPaye: s.montantPaye }); setModifierMontant(String(s.montantPaye)); setErreur(""); }} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg">
+                            <EditIcon width={12} height={12} color="currentColor" /> Modifier
+                          </button>
+                          <button onClick={() => setConfirmSuppr({ id: s.paiementId, label: s.label })} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg">
+                            <TrashIcon width={12} height={12} color="currentColor" /> Supprimer
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </>
       )}

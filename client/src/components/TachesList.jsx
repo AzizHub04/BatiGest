@@ -97,9 +97,9 @@ const TachesList = ({ travailId }) => {
   }, [refetchTaches]);
 
   return (
-    <div className="ml-6 mt-2 mb-4">
+    <div className="sm:ml-6 mt-2 mb-4">
       <Alert type={succes?.type} message={succes?.message} />
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-2 px-3 sm:px-0">
         <span className="text-xs font-semibold text-gray-400 uppercase">
           Tâches ({taches.length})
         </span>
@@ -113,69 +113,136 @@ const TachesList = ({ travailId }) => {
       </div>
 
       {taches.length === 0 ? (
-        <p className="text-xs text-gray-400 italic">Aucune tâche</p>
+        <p className="text-xs text-gray-400 italic px-3 sm:px-0">Aucune tâche</p>
       ) : (
         <div className="space-y-1.5">
           {taches.map((t) => {
             const ps = prioriteStyle(t.priorite);
             const ss = statutStyle(t.statut);
             return (
-              <div
-                key={t._id}
-                className="flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50 hover:bg-gray-100"
-                style={{ transition: "background-color 0.1s" }}
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  <select
-                    value={t.statut}
-                    onChange={async (e) => {
-                      try {
-                        await changerStatut({
-                          id: t._id,
-                          statut: e.target.value,
-                        }).unwrap();
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
-                    className="text-[10px] px-1.5 py-0.5 rounded-full font-medium border-0 cursor-pointer"
-                    style={{
-                      backgroundColor: ss.bg,
-                      color: ss.color,
-                      outline: "none",
-                    }}
-                  >
-                    <option value="Non commencé">Non commencé</option>
-                    <option value="En cours">En cours</option>
-                    <option value="Terminé">Terminé</option>
-                  </select>
-                  <span className="text-sm text-gray-700">{t.titre}</span>
-                  <span
-                    className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
-                    style={{ backgroundColor: ps.bg, color: ps.color }}
-                  >
-                    {t.priorite}
-                  </span>
+              <div key={t._id}>
+                {/* ── Desktop row (hidden on mobile) ── */}
+                <div
+                  className="hidden sm:flex items-center justify-between py-2 px-3 rounded-lg bg-gray-50 hover:bg-gray-100"
+                  style={{ transition: "background-color 0.1s" }}
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    <select
+                      value={t.statut}
+                      onChange={async (e) => {
+                        try {
+                          await changerStatut({
+                            id: t._id,
+                            statut: e.target.value,
+                          }).unwrap();
+                        } catch (err) {
+                          console.error(err);
+                        }
+                      }}
+                      className="text-[10px] px-1.5 py-0.5 rounded-full font-medium border-0 cursor-pointer"
+                      style={{
+                        backgroundColor: ss.bg,
+                        color: ss.color,
+                        outline: "none",
+                      }}
+                    >
+                      <option value="Non commencé">Non commencé</option>
+                      <option value="En cours">En cours</option>
+                      <option value="Terminé">Terminé</option>
+                    </select>
+                    <span className="text-sm text-gray-700">{t.titre}</span>
+                    <span
+                      className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
+                      style={{ backgroundColor: ps.bg, color: ps.color }}
+                    >
+                      {t.priorite}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => openEdit(t)}
+                      className="p-1 text-gray-400 hover:text-blue-500"
+                      style={{ transition: "color 0.15s" }}
+                    >
+                      <EditIcon width={14} height={14} color="currentColor" />
+                    </button>
+                    <button
+                      onClick={async () => {
+                        await supprimerTache(t._id).unwrap();
+                        setSucces({ type: "delete", message: "Tâche supprimée" });
+                        setTimeout(() => setSucces(null), 3000);
+                      }}
+                      className="p-1 text-gray-400 hover:text-red-500"
+                      style={{ transition: "color 0.15s" }}
+                    >
+                      <TrashIcon width={14} height={14} color="currentColor" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => openEdit(t)}
-                    className="p-1 text-gray-400 hover:text-blue-500"
-                    style={{ transition: "color 0.15s" }}
-                  >
-                    <EditIcon width={14} height={14} color="currentColor" />
-                  </button>
-                  <button
-                    onClick={async () => {
-                      await supprimerTache(t._id).unwrap();
-                      setSucces({ type: "delete", message: "Tâche supprimée" });
-                      setTimeout(() => setSucces(null), 3000);
-                    }}
-                    className="p-1 text-gray-400 hover:text-red-500"
-                    style={{ transition: "color 0.15s" }}
-                  >
-                    <TrashIcon width={14} height={14} color="currentColor" />
-                  </button>
+
+                {/* ── Mobile card (hidden on desktop) ── */}
+                <div
+                  className="block sm:hidden mx-3 rounded-xl border border-gray-100 bg-gray-50 p-3"
+                  style={{ transition: "background-color 0.1s" }}
+                >
+                  {/* Title + priority badge */}
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <span className="text-sm font-medium text-gray-800 leading-tight">
+                      {t.titre}
+                    </span>
+                    <span
+                      className="shrink-0 text-[10px] px-2 py-0.5 rounded-full font-semibold"
+                      style={{ backgroundColor: ps.bg, color: ps.color }}
+                    >
+                      {t.priorite}
+                    </span>
+                  </div>
+                  {/* Status select + actions */}
+                  <div className="flex items-center justify-between">
+                    <select
+                      value={t.statut}
+                      onChange={async (e) => {
+                        try {
+                          await changerStatut({
+                            id: t._id,
+                            statut: e.target.value,
+                          }).unwrap();
+                        } catch (err) {
+                          console.error(err);
+                        }
+                      }}
+                      className="text-[11px] px-2.5 py-1 rounded-full font-semibold border-0 cursor-pointer"
+                      style={{
+                        backgroundColor: ss.bg,
+                        color: ss.color,
+                        outline: "none",
+                      }}
+                    >
+                      <option value="Non commencé">Non commencé</option>
+                      <option value="En cours">En cours</option>
+                      <option value="Terminé">Terminé</option>
+                    </select>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => openEdit(t)}
+                        className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50"
+                        style={{ transition: "all 0.15s" }}
+                      >
+                        <EditIcon width={13} height={13} color="currentColor" />
+                      </button>
+                      <button
+                        onClick={async () => {
+                          await supprimerTache(t._id).unwrap();
+                          setSucces({ type: "delete", message: "Tâche supprimée" });
+                          setTimeout(() => setSucces(null), 3000);
+                        }}
+                        className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50"
+                        style={{ transition: "all 0.15s" }}
+                      >
+                        <TrashIcon width={13} height={13} color="currentColor" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             );

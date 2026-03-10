@@ -360,97 +360,90 @@ const ChantierDetail = () => {
           </div>
 
           {!coutsData?.couts || coutsData.couts.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-8">
-              Aucune opération
-            </p>
+            <p className="text-sm text-gray-400 text-center py-8">Aucune opération</p>
           ) : (
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
-                    Type
-                  </th>
-                  <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
-                    Description
-                  </th>
-                  <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
-                    Mode
-                  </th>
-                  <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
-                    Date
-                  </th>
-                  <th className="text-right py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
-                    Montant
-                  </th>
-                  <th className="text-right py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
+            <>
+              {/* Desktop table */}
+              <div className="hidden sm:block">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-100">
+                      <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Type</th>
+                      <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Description</th>
+                      <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Mode</th>
+                      <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Date</th>
+                      <th className="text-right py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Montant</th>
+                      <th className="text-right py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {coutsData.couts.map((c) => (
+                      <tr key={c._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
+                        <td className="py-3 px-3">
+                          <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: c.type === "Dépense" ? "#fee2e2" : "#dcfce7", color: c.type === "Dépense" ? "#dc2626" : "#16a34a" }}>{c.type}</span>
+                        </td>
+                        <td className="py-3 px-3 text-sm text-gray-600">{c.description || "—"}</td>
+                        <td className="py-3 px-3 text-sm text-gray-500">{c.modePaiement}</td>
+                        <td className="py-3 px-3 text-sm text-gray-500">{formatDate(c.createdAt)}</td>
+                        <td className="py-3 px-3 text-sm font-semibold text-right" style={{ color: c.type === "Dépense" ? "#dc2626" : "#16a34a" }}>
+                          {c.type === "Dépense" ? "-" : "+"}{formatMontant(c.montant)}
+                        </td>
+                        <td className="py-3 px-3">
+                          <div className="flex items-center justify-end gap-1">
+                            <button onClick={() => openEditCout(c)} className="p-1 text-gray-400 hover:text-blue-500">
+                              <EditIcon width={14} height={14} color="currentColor" />
+                            </button>
+                            <button onClick={async () => { await supprimerCout(c._id).unwrap(); setSucces({ type: "delete", message: "Opération supprimée" }); setTimeout(() => setSucces(null), 3000); }} className="p-1 text-gray-400 hover:text-red-500">
+                              <TrashIcon width={14} height={14} color="currentColor" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile cards */}
+              <div className="block sm:hidden space-y-3 p-1">
                 {coutsData.couts.map((c) => (
-                  <tr
-                    key={c._id}
-                    className="border-b border-gray-50 hover:bg-gray-50"
-                    style={{ transition: "background-color 0.1s" }}
-                  >
-                    <td className="py-3 px-3">
-                      <span
-                        className="text-xs px-2 py-0.5 rounded-full font-medium"
-                        style={{
-                          backgroundColor:
-                            c.type === "Dépense" ? "#fee2e2" : "#dcfce7",
-                          color: c.type === "Dépense" ? "#dc2626" : "#16a34a",
-                        }}
-                      >
+                  <div key={c._id} className="border border-gray-100 rounded-xl p-4">
+                    {/* Header: montant + type badge */}
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div>
+                        <p className="text-lg font-bold" style={{ color: c.type === "Dépense" ? "#dc2626" : "#16a34a" }}>
+                          {c.type === "Dépense" ? "-" : "+"}{formatMontant(c.montant)}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-0.5">{c.description || "—"}</p>
+                      </div>
+                      <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: c.type === "Dépense" ? "#fee2e2" : "#dcfce7", color: c.type === "Dépense" ? "#dc2626" : "#16a34a" }}>
                         {c.type}
                       </span>
-                    </td>
-                    <td className="py-3 px-3 text-sm text-gray-600">
-                      {c.description || "—"}
-                    </td>
-                    <td className="py-3 px-3 text-sm text-gray-500">
-                      {c.modePaiement}
-                    </td>
-                    <td className="py-3 px-3 text-sm text-gray-500">
-                      {formatDate(c.createdAt)}
-                    </td>
-                    <td
-                      className="py-3 px-3 text-sm font-semibold text-right"
-                      style={{
-                        color: c.type === "Dépense" ? "#dc2626" : "#16a34a",
-                      }}
-                    >
-                      {c.type === "Dépense" ? "-" : "+"}
-                      {formatMontant(c.montant)}
-                    </td>
-                    <td className="py-3 px-3">
-                      <div className="flex items-center justify-end gap-1">
-                        <button
-                          onClick={() => openEditCout(c)}
-                          className="p-1 text-gray-400 hover:text-blue-500"
-                        >
-                          <EditIcon width={14} height={14} color="currentColor" />
-                        </button>
-                        <button
-                          onClick={async () => {
-                            await supprimerCout(c._id).unwrap();
-                            setSucces({
-                              type: "delete",
-                              message: "Opération supprimée",
-                            });
-                            setTimeout(() => setSucces(null), 3000);
-                          }}
-                          className="p-1 text-gray-400 hover:text-red-500"
-                        >
-                          <TrashIcon width={14} height={14} color="currentColor" />
-                        </button>
+                    </div>
+                    {/* Details */}
+                    <div className="grid grid-cols-2 gap-2 text-xs mb-3">
+                      <div>
+                        <p className="text-gray-400">Mode</p>
+                        <p className="text-gray-700 font-medium mt-0.5">{c.modePaiement}</p>
                       </div>
-                    </td>
-                  </tr>
+                      <div>
+                        <p className="text-gray-400">Date</p>
+                        <p className="text-gray-700 font-medium mt-0.5">{formatDate(c.createdAt)}</p>
+                      </div>
+                    </div>
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+                      <button onClick={() => openEditCout(c)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg">
+                        <EditIcon width={12} height={12} color="currentColor" /> Modifier
+                      </button>
+                      <button onClick={async () => { await supprimerCout(c._id).unwrap(); setSucces({ type: "delete", message: "Opération supprimée" }); setTimeout(() => setSucces(null), 3000); }} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg">
+                        <TrashIcon width={12} height={12} color="currentColor" /> Supprimer
+                      </button>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </>
           )}
         </div>
       )}

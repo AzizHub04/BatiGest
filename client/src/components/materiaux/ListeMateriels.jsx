@@ -143,108 +143,50 @@ const ListeMateriels = () => {
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      {/* Desktop table */}
+      <div className="hidden sm:block bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Matériel
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Catégorie
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Unité
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                En stock
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Dehors
-              </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Actions
-              </th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Matériel</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Catégorie</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Unité</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">En stock</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Dehors</th>
+              <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filtres.length === 0 ? (
-              <tr>
-                <td
-                  colSpan="6"
-                  className="text-center py-8 text-sm text-gray-400"
-                >
-                  Aucun matériel trouvé
-                </td>
-              </tr>
+              <tr><td colSpan="6" className="text-center py-8 text-sm text-gray-400">Aucun matériel trouvé</td></tr>
             ) : (
               filtres.map((m) => (
-                <tr
-                  key={m._id}
-                  className="border-b border-gray-50 hover:bg-gray-50"
-                  style={{ transition: "background-color 0.1s" }}
-                >
+                <tr key={m._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
-                      <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center"
-                        style={{ backgroundColor: "#dc55391a" }}
-                      >
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#dc55391a" }}>
                         <BoxIcon width={16} height={16} color="#dc5539" />
                       </div>
-                      <span className="text-sm font-medium text-gray-800">
-                        {m.nom}
-                      </span>
+                      <span className="text-sm font-medium text-gray-800">{m.nom}</span>
                     </div>
                   </td>
                   <td className="px-5 py-3">
-                    <span
-                      className="text-xs px-2 py-0.5 rounded-full font-medium"
-                      style={{ backgroundColor: "#f3f4f6", color: "#6b7280" }}
-                    >
-                      {m.categorie}
-                    </span>
+                    <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: "#f3f4f6", color: "#6b7280" }}>{m.categorie}</span>
                   </td>
                   <td className="px-5 py-3 text-sm text-gray-600">{m.unite}</td>
                   <td className="px-5 py-3">
-                    <span
-                      className="text-sm font-semibold"
-                      style={{
-                        color: m.quantiteStock > 0 ? "#16a34a" : "#dc2626",
-                      }}
-                    >
-                      {m.quantiteStock}
-                    </span>
+                    <span className="text-sm font-semibold" style={{ color: m.quantiteStock > 0 ? "#16a34a" : "#dc2626" }}>{m.quantiteStock}</span>
                   </td>
                   <td className="px-5 py-3">
-                    <span
-                      className="text-sm font-semibold"
-                      style={{
-                        color: m.quantiteDehors > 0 ? "#d97706" : "#9ca3af",
-                      }}
-                    >
-                      {m.quantiteDehors}
-                    </span>
+                    <span className="text-sm font-semibold" style={{ color: m.quantiteDehors > 0 ? "#d97706" : "#9ca3af" }}>{m.quantiteDehors}</span>
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => openEdit(m)}
-                        className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50"
-                        style={{ transition: "all 0.15s" }}
-                      >
+                      <button onClick={() => openEdit(m)} className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50" style={{ transition: "all 0.15s" }}>
                         <EditIcon width={16} height={16} color="currentColor" />
                       </button>
-                      <button
-                        onClick={() => setDeleteConfirm(m._id)}
-                        className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50"
-                        style={{ transition: "all 0.15s" }}
-                      >
-                        <TrashIcon
-                          width={16}
-                          height={16}
-                          color="currentColor"
-                        />
+                      <button onClick={() => setDeleteConfirm(m._id)} className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50" style={{ transition: "all 0.15s" }}>
+                        <TrashIcon width={16} height={16} color="currentColor" />
                       </button>
                     </div>
                   </td>
@@ -253,6 +195,51 @@ const ListeMateriels = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile cards */}
+      <div className="block sm:hidden space-y-3">
+        {filtres.length === 0 ? (
+          <p className="text-center py-8 text-sm text-gray-400">Aucun matériel trouvé</p>
+        ) : (
+          filtres.map((m) => (
+            <div key={m._id} className="bg-white border border-gray-100 rounded-xl p-4">
+              {/* Header: icon + nom + catégorie */}
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center" style={{ backgroundColor: "#dc55391a" }}>
+                    <BoxIcon width={16} height={16} color="#dc5539" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800">{m.nom}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{m.unite}</p>
+                  </div>
+                </div>
+                <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: "#f3f4f6", color: "#6b7280" }}>{m.categorie}</span>
+              </div>
+              {/* Stock info */}
+              <div className="grid grid-cols-2 gap-3 mb-3 text-xs">
+                <div className="bg-gray-50 rounded-lg p-2.5">
+                  <p className="text-gray-400">En stock</p>
+                  <p className="text-base font-bold mt-0.5" style={{ color: m.quantiteStock > 0 ? "#16a34a" : "#dc2626" }}>{m.quantiteStock}</p>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-2.5">
+                  <p className="text-gray-400">Dehors</p>
+                  <p className="text-base font-bold mt-0.5" style={{ color: m.quantiteDehors > 0 ? "#d97706" : "#9ca3af" }}>{m.quantiteDehors}</p>
+                </div>
+              </div>
+              {/* Actions */}
+              <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+                <button onClick={() => openEdit(m)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg">
+                  <EditIcon width={12} height={12} color="currentColor" /> Modifier
+                </button>
+                <button onClick={() => setDeleteConfirm(m._id)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg">
+                  <TrashIcon width={12} height={12} color="currentColor" /> Supprimer
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {modalOpen && (

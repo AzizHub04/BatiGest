@@ -178,117 +178,50 @@ const MouvementsMateriels = () => {
         </button>
       </div>
 
-      {/* Tableau */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      {/* Desktop table */}
+      <div className="hidden sm:block bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Date
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Type
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Matériel
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Quantité
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Chantier
-              </th>
-              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Note
-              </th>
-              <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase">
-                Actions
-              </th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Date</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Type</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Matériel</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Quantité</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Chantier</th>
+              <th className="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Note</th>
+              <th className="text-right px-5 py-3 text-xs font-semibold text-gray-400 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody>
             {mouvements.length === 0 ? (
-              <tr>
-                <td
-                  colSpan="7"
-                  className="text-center py-8 text-sm text-gray-400"
-                >
-                  Aucun mouvement trouvé
-                </td>
-              </tr>
+              <tr><td colSpan="7" className="text-center py-8 text-sm text-gray-400">Aucun mouvement trouvé</td></tr>
             ) : (
               mouvements.map((mv) => {
                 const isSortie = mv.typeMouvement === "Sortie";
                 return (
-                  <tr
-                    key={mv._id}
-                    className="border-b border-gray-50 hover:bg-gray-50"
-                    style={{ transition: "background-color 0.1s" }}
-                  >
-                    <td className="px-5 py-3 text-sm text-gray-700">
-                      {formatDate(mv.dateMouvement)}
-                    </td>
+                  <tr key={mv._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
+                    <td className="px-5 py-3 text-sm text-gray-700">{formatDate(mv.dateMouvement)}</td>
                     <td className="px-5 py-3">
-                      <span
-                        className="text-xs px-2.5 py-1 rounded-full font-medium flex items-center gap-1.5 w-fit"
-                        style={{
-                          backgroundColor: isSortie ? "#fee2e2" : "#dcfce7",
-                          color: isSortie ? "#dc2626" : "#16a34a",
-                        }}
-                      >
-                        {isSortie ? (
-                          <ArrowDownIcon width={12} height={12} color="currentColor" />
-                        ) : (
-                          <ArrowUpIcon width={12} height={12} color="currentColor" />
-                        )}
+                      <span className="text-xs px-2.5 py-1 rounded-full font-medium flex items-center gap-1.5 w-fit" style={{ backgroundColor: isSortie ? "#fee2e2" : "#dcfce7", color: isSortie ? "#dc2626" : "#16a34a" }}>
+                        {isSortie ? <ArrowDownIcon width={12} height={12} color="currentColor" /> : <ArrowUpIcon width={12} height={12} color="currentColor" />}
                         {mv.typeMouvement}
                       </span>
                     </td>
+                    <td className="px-5 py-3"><span className="text-sm font-medium text-gray-800">{mv.materiel?.nom}</span></td>
                     <td className="px-5 py-3">
-                      <span className="text-sm font-medium text-gray-800">
-                        {mv.materiel?.nom}
+                      <span className="text-sm font-semibold" style={{ color: isSortie ? "#dc2626" : "#16a34a" }}>
+                        {isSortie ? "-" : "+"}{mv.quantite} {mv.materiel?.unite}
                       </span>
                     </td>
-                    <td className="px-5 py-3">
-                      <span
-                        className="text-sm font-semibold"
-                        style={{ color: isSortie ? "#dc2626" : "#16a34a" }}
-                      >
-                        {isSortie ? "-" : "+"}
-                        {mv.quantite} {mv.materiel?.unite}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-sm text-gray-600">
-                      {mv.chantier?.nom || "—"}
-                    </td>
-                    <td className="px-5 py-3 text-sm text-gray-400">
-                      {mv.note || "—"}
-                    </td>
+                    <td className="px-5 py-3 text-sm text-gray-600">{mv.chantier?.nom || "—"}</td>
+                    <td className="px-5 py-3 text-sm text-gray-400">{mv.note || "—"}</td>
                     <td className="px-5 py-3">
                       <div className="flex items-center justify-end">
-                        <button
-                          onClick={() => openEdit(mv)}
-                          className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50"
-                          style={{ transition: "all 0.15s" }}
-                          title="Modifier"
-                        >
-                          <EditIcon
-                            width={16}
-                            height={16}
-                            color="currentColor"
-                          />
+                        <button onClick={() => openEdit(mv)} className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50" style={{ transition: "all 0.15s" }}>
+                          <EditIcon width={16} height={16} color="currentColor" />
                         </button>
-                        <button
-                          onClick={() => setDeleteConfirm(mv._id)}
-                          className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50"
-                          style={{ transition: "all 0.15s" }}
-                          title="Annuler ce mouvement"
-                        >
-                          <TrashIcon
-                            width={16}
-                            height={16}
-                            color="currentColor"
-                          />
+                        <button onClick={() => setDeleteConfirm(mv._id)} className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50" style={{ transition: "all 0.15s" }}>
+                          <TrashIcon width={16} height={16} color="currentColor" />
                         </button>
                       </div>
                     </td>
@@ -298,6 +231,60 @@ const MouvementsMateriels = () => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile cards */}
+      <div className="block sm:hidden space-y-3">
+        {mouvements.length === 0 ? (
+          <p className="text-center py-8 text-sm text-gray-400">Aucun mouvement trouvé</p>
+        ) : (
+          mouvements.map((mv) => {
+            const isSortie = mv.typeMouvement === "Sortie";
+            return (
+              <div key={mv._id} className="bg-white border border-gray-100 rounded-xl p-4">
+                {/* Header: matériel + type badge */}
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800">{mv.materiel?.nom}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{formatDate(mv.dateMouvement)}</p>
+                  </div>
+                  <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold flex items-center gap-1" style={{ backgroundColor: isSortie ? "#fee2e2" : "#dcfce7", color: isSortie ? "#dc2626" : "#16a34a" }}>
+                    {isSortie ? <ArrowDownIcon width={10} height={10} color="currentColor" /> : <ArrowUpIcon width={10} height={10} color="currentColor" />}
+                    {mv.typeMouvement}
+                  </span>
+                </div>
+                {/* Details grid */}
+                <div className="grid grid-cols-2 gap-2 text-xs mb-3">
+                  <div>
+                    <p className="text-gray-400">Quantité</p>
+                    <p className="font-bold mt-0.5" style={{ color: isSortie ? "#dc2626" : "#16a34a" }}>
+                      {isSortie ? "-" : "+"}{mv.quantite} {mv.materiel?.unite}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400">Chantier</p>
+                    <p className="text-gray-700 font-medium mt-0.5">{mv.chantier?.nom || "—"}</p>
+                  </div>
+                  {mv.note && (
+                    <div className="col-span-2">
+                      <p className="text-gray-400">Note</p>
+                      <p className="text-gray-600 mt-0.5">{mv.note}</p>
+                    </div>
+                  )}
+                </div>
+                {/* Actions */}
+                <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
+                  <button onClick={() => openEdit(mv)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg">
+                    <EditIcon width={12} height={12} color="currentColor" /> Modifier
+                  </button>
+                  <button onClick={() => setDeleteConfirm(mv._id)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg">
+                    <TrashIcon width={12} height={12} color="currentColor" /> Supprimer
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* Modal nouveau mouvement */}
