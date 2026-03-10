@@ -26,6 +26,7 @@ const CellulePointage = ({
   onPointage,
   onSupprimer,
   abreviation,
+  isActiveWeek,
 }) => {
   const [open, setOpen] = useState(false);
   const [hover, setHover] = useState(null);
@@ -99,6 +100,12 @@ const CellulePointage = ({
     };
   }, [open]);
 
+  const cellBg = jour.dimanche
+    ? "#fee2e2"
+    : isActiveWeek
+      ? "#fff5f3"
+      : "transparent";
+
   return (
     <div
       style={{
@@ -108,8 +115,9 @@ const CellulePointage = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: jour.dimanche ? "#fee2e2" : "transparent",
+        backgroundColor: cellBg,
         flexShrink: 0,
+        transition: "background-color 0.2s",
       }}
     >
       <button
@@ -386,6 +394,7 @@ const FichePointage = () => {
   const [mois, setMois] = useState(
     `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`,
   );
+  const [activeSemaine, setActiveSemaine] = useState(null);
 
   const { data: ouvriers = [] } = useGetOuvriersQuery();
   const { data: responsables = [] } = useGetResponsablesQuery();
@@ -412,7 +421,7 @@ const FichePointage = () => {
     return result;
   }, [mois]);
 
-  /* semaines 1-based (debut=1 signifie jours[0]) pour compatibilité */
+  /* semaines 1-based */
   const semaines = useMemo(() => {
     const [annee, m] = mois.split("-").map(Number);
     const result = [];
@@ -426,6 +435,44 @@ const FichePointage = () => {
     }
     return result;
   }, [jours, mois]);
+
+  /* Jours groupés par semaine */
+  const joursSemaine = useMemo(() => {
+    return semaines.map((s) => {
+      const list = [];
+      for (let j = s.debut; j <= s.fin; j++) {
+        list.push(jours[j - 1]);
+      }
+      return list;
+    });
+  }, [semaines, jours]);
+
+  /* Offset x de chaque semaine dans la zone scrollable */
+  const semaineOffsets = useMemo(() => {
+    const offsets = [];
+    let x = 0;
+    joursSemaine.forEach((js, i) => {
+      offsets.push(x);
+      x += js.length * 42;
+      if (i < joursSemaine.length - 1) x += 2; // séparateur
+    });
+    return offsets;
+  }, [joursSemaine]);
+
+  /* Auto-sélectionner la semaine du jour courant au chargement */
+  useEffect(() => {
+    const today = new Date();
+    const todayMois = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
+    if (mois === todayMois) {
+      const todayDay = today.getDate();
+      const idx = semaines.findIndex(
+        (s) => s.debut <= todayDay && s.fin >= todayDay,
+      );
+      setActiveSemaine(idx >= 0 ? idx : 0);
+    } else {
+      setActiveSemaine(0);
+    }
+  }, [mois, semaines]);
 
   const personnes = useMemo(() => {
     const list = [];
@@ -483,6 +530,21 @@ const FichePointage = () => {
 
   const centerRef = useRef(null);
 
+  /* Scroll → met à jour la semaine active */
+  const handleCenterScroll = () => {
+    if (!centerRef.current || semaineOffsets.length === 0) return;
+    const { scrollLeft, clientWidth } = centerRef.current;
+    const center = scrollLeft + clientWidth / 2;
+    let found = 0;
+    for (let i = semaineOffsets.length - 1; i >= 0; i--) {
+      if (center >= semaineOffsets[i]) {
+        found = i;
+        break;
+      }
+    }
+    setActiveSemaine(found);
+  };
+
   const handlePointage = async (personne, date, chantierId, demiJournee) => {
     const data = { date };
     if (personne.type === "ouvrier") data.ouvrierId = personne.id;
@@ -526,18 +588,7 @@ const FichePointage = () => {
     );
   };
 
-  const scrollToToday = () => {
-    const el = centerRef.current?.querySelector(
-      `[data-jour="${new Date().getDate()}"]`,
-    );
-    if (el)
-      el.scrollIntoView({
-        inline: "center",
-        behavior: "smooth",
-        block: "nearest",
-      });
-  };
-  const scrollToSemaine = (i) => {
+  const scrollToSemaine = (i, newActive = true) => {
     const s = semaines[i];
     if (s) {
       const el = centerRef.current?.querySelector(`[data-jour="${s.debut}"]`);
@@ -548,28 +599,53 @@ const FichePointage = () => {
           block: "nearest",
         });
     }
+    if (newActive) setActiveSemaine(i);
   };
 
-  /* Jours groupés par semaine pour les séparateurs visuels dans la zone centre */
-  const joursSemaine = useMemo(() => {
-    return semaines.map((s) => {
-      const list = [];
-      for (let j = s.debut; j <= s.fin; j++) {
-        list.push(jours[j - 1]);
-      }
-      return list;
-    });
-  }, [semaines, jours]);
+  const scrollToToday = () => {
+    const today = new Date();
+    const todayMois = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
+    if (mois !== todayMois) {
+      setMois(todayMois);
+      return;
+    }
+    const el = centerRef.current?.querySelector(
+      `[data-jour="${today.getDate()}"]`,
+    );
+    if (el)
+      el.scrollIntoView({
+        inline: "center",
+        behavior: "smooth",
+        block: "nearest",
+      });
+    const todayDay = today.getDate();
+    const idx = semaines.findIndex(
+      (s) => s.debut <= todayDay && s.fin >= todayDay,
+    );
+    if (idx >= 0) setActiveSemaine(idx);
+  };
 
-  /* Largeur totale forcée = cellules + séparateurs → force le débordement et affiche la scrollbar */
+  /* Largeur totale */
   const totalWidth = jours.length * 42 + (joursSemaine.length - 1) * 2 + 1;
-  const semainesWidth = semaines.length * 68;
+
+  /* Style commun pour les boutons de navigation */
+  const activeNavBtn = {
+    backgroundColor: "#dc5539",
+    color: "white",
+    border: "none",
+  };
+  const inactiveNavBtn = {
+    backgroundColor: "white",
+    color: "#4b5563",
+    border: "1px solid #e5e7eb",
+  };
 
   return (
     <div>
       {/* ── Header navigation ─────────────────────────────────────────── */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        {/* Sélecteur de mois */}
+        <div className="flex items-center gap-2">
           <button
             onClick={prevMois}
             className="p-2 rounded-lg hover:bg-gray-100 text-gray-500"
@@ -577,7 +653,7 @@ const FichePointage = () => {
             <ChevronLeftIcon width={16} height={16} color="currentColor" />
           </button>
           <h3
-            className="text-lg font-bold text-gray-800 min-w-[180px] text-center"
+            className="text-base sm:text-lg font-bold text-gray-800 min-w-35 sm:min-w-45 text-center"
             style={{ textTransform: "capitalize" }}
           >
             {nomMois}
@@ -589,17 +665,16 @@ const FichePointage = () => {
             <ChevronRightIcon width={16} height={16} color="currentColor" />
           </button>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+
+        {/* Raccourcis semaines — scrollable horizontalement sur mobile */}
+        <div
+          className="flex items-center gap-1.5 overflow-x-auto pb-0.5"
+          style={{ scrollbarWidth: "none" }}
+        >
           <button
             onClick={scrollToToday}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg text-white"
-            style={{ backgroundColor: "#dc5539" }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = "#c44a30")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = "#dc5539")
-            }
+            className="px-2.5 py-1.5 text-xs font-semibold rounded-lg shrink-0 transition-colors"
+            style={activeSemaine === 1 ? activeNavBtn : inactiveNavBtn}
           >
             Aujourd'hui
           </button>
@@ -607,7 +682,8 @@ const FichePointage = () => {
             <button
               key={i}
               onClick={() => scrollToSemaine(i)}
-              className="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+              className="px-2.5 py-1.5 text-xs font-semibold rounded-lg shrink-0 transition-colors"
+              style={activeSemaine === i ? activeNavBtn : inactiveNavBtn}
             >
               S{i + 1}
             </button>
@@ -619,7 +695,8 @@ const FichePointage = () => {
                 `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}`,
               );
             }}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg shrink-0"
+            style={inactiveNavBtn}
           >
             Mois actuel
           </button>
@@ -627,9 +704,12 @@ const FichePointage = () => {
       </div>
 
       {/* ── Légende ────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-4 mb-3 text-xs text-gray-500 flex-wrap">
+      <div
+        className="flex items-center gap-3 mb-3 text-xs text-gray-500 flex-wrap overflow-x-auto pb-1"
+        style={{ scrollbarWidth: "none" }}
+      >
         {chantiers.map((c) => (
-          <span key={c._id} className="flex items-center gap-1.5">
+          <span key={c._id} className="flex items-center gap-1.5 shrink-0">
             <span
               className="px-1.5 h-5 rounded text-[9px] font-bold flex items-center justify-center text-white"
               style={{ backgroundColor: "#dc5539" }}
@@ -639,7 +719,7 @@ const FichePointage = () => {
             {c.nom}
           </span>
         ))}
-        <span className="flex items-center gap-1.5">
+        <span className="flex items-center gap-1.5 shrink-0">
           <span
             className="px-1.5 h-5 rounded text-[9px] font-bold flex items-center justify-center text-white"
             style={{ backgroundColor: "#f59e0b" }}
@@ -648,7 +728,7 @@ const FichePointage = () => {
           </span>
           Demi journée
         </span>
-        <span className="flex items-center gap-1.5">
+        <span className="flex items-center gap-1.5 shrink-0">
           <span className="px-1.5 h-5 rounded text-[9px] font-bold flex items-center justify-center bg-gray-200 text-gray-500">
             ✕
           </span>
@@ -657,17 +737,116 @@ const FichePointage = () => {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════
-           TABLEAU 3 ZONES :  NOMS (fixe) | DATES (scroll) | SEMAINES (fixe)
+           MOBILE : cartes par personne (semaine active seulement)
          ══════════════════════════════════════════════════════════════════ */}
-      <div
-        className="bg-white rounded-2xl border border-gray-100 overflow-hidden"
-        style={{ display: "flex" }}
-      >
-        {/* ════ ZONE GAUCHE : Noms (fixe, ne scroll pas) ════ */}
+      <div className="block sm:hidden space-y-3">
+        {personnes.length === 0 ? (
+          <p className="text-sm text-gray-400 italic text-center py-6">
+            Aucun ouvrier actif
+          </p>
+        ) : (
+          personnes.map((p) => {
+            const chantiersP = getChantiersForPersonne(p);
+            const semaineActive = semaines[activeSemaine] ?? semaines[0];
+            const joursActifs = semaineActive
+              ? (joursSemaine[activeSemaine] ?? [])
+              : [];
+            const total = semaineActive
+              ? calculerTotalSemaine(p, semaineActive)
+              : 0;
+            return (
+              <div
+                key={p.id}
+                className="bg-white rounded-2xl border border-gray-100"
+                style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
+              >
+                {/* Card header */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                  <div className="flex items-center gap-2.5">
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0"
+                      style={{
+                        backgroundColor:
+                          p.type === "responsable" ? "#2563eb" : "#dc5539",
+                      }}
+                    >
+                      {p.prenom?.[0]}
+                      {p.nom?.[0]}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800 leading-tight">
+                        {p.prenom} {p.nom}
+                      </p>
+                      <p className="text-[10px] text-gray-400">
+                        {p.type === "responsable" ? "Responsable" : "Ouvrier"} ·{" "}
+                        {p.tarif} DT/j
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p
+                      className="text-sm font-bold"
+                      style={{ color: total > 0 ? "#dc5539" : "#d1d5db" }}
+                    >
+                      {total > 0 ? `${total} DT` : "—"}
+                    </p>
+                    <p className="text-[10px] text-gray-400">
+                      S{(activeSemaine ?? 0) + 1} · {semaineActive?.debut}–
+                      {semaineActive?.fin}
+                    </p>
+                  </div>
+                </div>
+                {/* Days grid */}
+                <div
+                  className="flex items-end px-3 py-3 gap-1.5 overflow-x-auto"
+                  style={{ scrollbarWidth: "none" }}
+                >
+                  {joursActifs.map((j) => (
+                    <div
+                      key={j.jour}
+                      className="flex flex-col items-center gap-1 shrink-0"
+                      style={{ minWidth: 38 }}
+                    >
+                      <span
+                        className="text-[9px] font-medium uppercase"
+                        style={{ color: j.dimanche ? "#dc2626" : "#9ca3af" }}
+                      >
+                        {j.jourNom}
+                      </span>
+                      <span
+                        className="text-[10px] font-bold"
+                        style={{ color: j.dimanche ? "#dc2626" : "#374151" }}
+                      >
+                        {j.jour}
+                      </span>
+                      <CellulePointage
+                        personne={p}
+                        jour={j}
+                        pointageMap={pointageMap}
+                        chantiers={chantiersP}
+                        onPointage={handlePointage}
+                        onSupprimer={handleSupprimerPointage}
+                        abreviation={abreviation}
+                        isActiveWeek={false}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════
+           DESKTOP : TABLEAU 3 ZONES : NOMS | DATES (scroll) | SEMAINES
+         ══════════════════════════════════════════════════════════════════ */}
+      <div className="hidden sm:flex bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        {/* ════ ZONE GAUCHE : Noms (fixe) ════ */}
         <div
           style={{
             flexShrink: 0,
-            width: 175,
+            width: 150,
             borderRight: "2px solid #e5e7eb",
             backgroundColor: "white",
             zIndex: 2,
@@ -711,10 +890,10 @@ const FichePointage = () => {
                   height: H_ROW,
                   display: "flex",
                   alignItems: "center",
-                  padding: "0 12px",
+                  padding: "0 10px",
                   borderBottom: "1px solid #f3f4f6",
                   boxSizing: "border-box",
-                  gap: 8,
+                  gap: 7,
                 }}
               >
                 <div
@@ -741,7 +920,7 @@ const FichePointage = () => {
                     fontWeight: 500,
                     color: "#1f2937",
                     whiteSpace: "nowrap",
-                    fontSize: 12,
+                    fontSize: 11,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                   }}
@@ -752,11 +931,11 @@ const FichePointage = () => {
                   <span
                     style={{
                       fontSize: 9,
-                      padding: "2px 6px",
+                      padding: "2px 5px",
                       borderRadius: 999,
                       backgroundColor: "#eff6ff",
                       color: "#2563eb",
-                      fontWeight: 500,
+                      fontWeight: 600,
                       flexShrink: 0,
                     }}
                   >
@@ -768,9 +947,10 @@ const FichePointage = () => {
           )}
         </div>
 
-        {/* ════ ZONE CENTRE : Dates (scrollbar horizontal ICI) ════ */}
+        {/* ════ ZONE CENTRE : Dates (scrollbar horizontal) ════ */}
         <div
           ref={centerRef}
+          onScroll={handleCenterScroll}
           style={{
             overflowX: "auto",
             overflowY: "hidden",
@@ -808,10 +988,13 @@ const FichePointage = () => {
                       color: j.dimanche ? "#dc2626" : "#6b7280",
                       backgroundColor: j.dimanche
                         ? "#fee2e2"
-                        : si % 2 === 0
-                          ? "white"
-                          : "#fafafa",
+                        : si === activeSemaine
+                          ? "#fff5f3"
+                          : si % 2 === 0
+                            ? "white"
+                            : "#fafafa",
                       boxSizing: "border-box",
+                      transition: "background-color 0.2s",
                     }}
                   >
                     <div>{j.jourNom}</div>
@@ -819,7 +1002,11 @@ const FichePointage = () => {
                       style={{
                         fontWeight: 700,
                         fontSize: 10,
-                        color: j.dimanche ? "#dc2626" : "#374151",
+                        color: j.dimanche
+                          ? "#dc2626"
+                          : si === activeSemaine
+                            ? "#dc5539"
+                            : "#374151",
                       }}
                     >
                       {j.jour}
@@ -833,8 +1020,12 @@ const FichePointage = () => {
                       width: 2,
                       minWidth: 2,
                       flexShrink: 0,
-                      backgroundColor: "#d1d5db",
+                      backgroundColor:
+                        si === activeSemaine || si + 1 === activeSemaine
+                          ? "#dc5539"
+                          : "#d1d5db",
                       height: H_HEAD,
+                      transition: "background-color 0.2s",
                     }}
                   />
                 )}
@@ -882,6 +1073,7 @@ const FichePointage = () => {
                           onPointage={handlePointage}
                           onSupprimer={handleSupprimerPointage}
                           abreviation={abreviation}
+                          isActiveWeek={si === activeSemaine}
                         />
                       ))}
                       {si < joursSemaine.length - 1 && (
@@ -890,8 +1082,12 @@ const FichePointage = () => {
                             width: 2,
                             minWidth: 2,
                             flexShrink: 0,
-                            backgroundColor: "#d1d5db",
+                            backgroundColor:
+                              si === activeSemaine || si + 1 === activeSemaine
+                                ? "#dc5539"
+                                : "#d1d5db",
                             height: H_ROW,
+                            transition: "background-color 0.2s",
                           }}
                         />
                       )}
@@ -903,7 +1099,7 @@ const FichePointage = () => {
           )}
         </div>
 
-        {/* ════ ZONE DROITE : Semaines (fixe, ne scroll pas) ════ */}
+        {/* ════ ZONE DROITE : Semaines (fixe) ════ */}
         <div
           style={{
             flexShrink: 0,
@@ -924,9 +1120,10 @@ const FichePointage = () => {
             {semaines.map((s, i) => (
               <div
                 key={i}
+                onClick={() => scrollToSemaine(i)}
                 style={{
-                  width: 68,
-                  minWidth: 68,
+                  width: 64,
+                  minWidth: 64,
                   height: H_HEAD,
                   display: "flex",
                   flexDirection: "column",
@@ -934,12 +1131,26 @@ const FichePointage = () => {
                   justifyContent: "center",
                   fontWeight: 600,
                   fontSize: 11,
-                  color: "#4b5563",
+                  cursor: "pointer",
+                  color: i === activeSemaine ? "#dc5539" : "#4b5563",
+                  backgroundColor:
+                    i === activeSemaine ? "#fff5f3" : "transparent",
                   boxSizing: "border-box",
+                  transition: "all 0.2s",
+                  borderBottom:
+                    i === activeSemaine
+                      ? "2px solid #dc5539"
+                      : "2px solid transparent",
                 }}
               >
                 <div>S{i + 1}</div>
-                <div style={{ fontSize: 8, color: "#9ca3af", fontWeight: 400 }}>
+                <div
+                  style={{
+                    fontSize: 8,
+                    color: i === activeSemaine ? "#dc5539" : "#9ca3af",
+                    fontWeight: 400,
+                  }}
+                >
                   {jours[s.debut - 1]?.jour}–{jours[s.fin - 1]?.jour}
                 </div>
               </div>
@@ -976,16 +1187,24 @@ const FichePointage = () => {
                     <div
                       key={i}
                       style={{
-                        width: 68,
-                        minWidth: 68,
+                        width: 64,
+                        minWidth: 64,
                         height: H_ROW,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         fontWeight: 600,
                         fontSize: 11,
-                        color: total > 0 ? "#1f2937" : "#d1d5db",
+                        color:
+                          i === activeSemaine && total > 0
+                            ? "#dc5539"
+                            : total > 0
+                              ? "#1f2937"
+                              : "#d1d5db",
+                        backgroundColor:
+                          i === activeSemaine ? "#fff5f3" : "transparent",
                         boxSizing: "border-box",
+                        transition: "all 0.2s",
                       }}
                     >
                       {total > 0 ? `${total} DT` : "\u2014"}
