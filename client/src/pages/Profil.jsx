@@ -8,6 +8,7 @@ import {
   useLogoutMutation,
 } from "../services/authApiSlice";
 import { setUtilisateur, clearUtilisateur } from "../services/authSlice";
+import { API_BASE_URL } from "../config/constants";
 import Alert from "../components/Alert";
 
 const Profil = () => {
@@ -121,15 +122,12 @@ const Profil = () => {
   const handleResetByEmail = async () => {
     try {
       const { forgotPassword } = await import("../services/authApiSlice");
-      const response = await fetch(
-        "http://localhost:5000/api/auth/forgot-password",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ email: utilisateur.email }),
-        },
-      );
+      const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email: utilisateur.email }),
+      });
       const data = await response.json();
       if (response.ok) {
         setSuccesMdp("Email de réinitialisation envoyé à " + utilisateur.email);

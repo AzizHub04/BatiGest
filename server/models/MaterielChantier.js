@@ -4,27 +4,35 @@ const materielChantierSchema = new mongoose.Schema({
   quantite: {
     type: Number,
     required: [true, 'La quantité est obligatoire'],
-    min: 0
+    min: 1
   },
   dateMouvement: {
-    type: Date,
-    default: Date.now
+    type: String,
+    default: () => new Date().toISOString().split('T')[0]
   },
   typeMouvement: {
     type: String,
-    enum: ['Entrée', 'Sortie'],
+    enum: ['Sortie', 'Entrée'],
     required: [true, 'Le type de mouvement est obligatoire']
   },
-  // Relation "utiliser" : mouvement lié à un Matériel
+  note: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   materiel: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Materiel',
     required: true
   },
-  // Relation "utiliser" : mouvement lié à un Chantier
   chantier: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Chantier',
+    required: true
+  },
+  admin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Utilisateur',
     required: true
   }
 }, { timestamps: true });

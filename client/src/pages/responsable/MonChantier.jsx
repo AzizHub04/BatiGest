@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useGetChantierByResponsableQuery } from "../../services/chantierApiSlice";
 import socket from "../../services/socket";
+import { useGetMateriauxChantierQuery } from "../../services/mouvementApiSlice";
+import { useGetOuvriersPresentQuery } from "../../services/pointageApiSlice";
 
 const MonChantier = () => {
   const { utilisateur } = useSelector((state) => state.auth);
@@ -10,6 +12,10 @@ const MonChantier = () => {
     isLoading,
     refetch,
   } = useGetChantierByResponsableQuery(utilisateur?.id);
+  const { data: materiauxChantier = [], refetch: refetchMateriaux } =
+    useGetMateriauxChantierQuery(chantier?._id, { skip: !chantier });
+  const { data: ouvriersPresents = [], refetch: refetchOuvriers } =
+    useGetOuvriersPresentQuery(chantier?._id, { skip: !chantier });
 
   const etatStyle = (etat) => {
     switch (etat) {
@@ -58,12 +64,20 @@ const MonChantier = () => {
       socket.on("tache-updated", () => {
         refetch();
       });
+      socket.on("pointage-updated", () => {
+        refetchOuvriers();
+      });
+      socket.on("mouvement-updated", () => {
+        refetchMateriaux();
+      });
     }
 
     return () => {
       socket.off("chantier-updated");
       socket.off("travail-updated");
       socket.off("tache-updated");
+      socket.off("pointage-updated");
+      socket.off("mouvement-updated");
     };
   }, [chantier, refetch]);
 
@@ -261,6 +275,229 @@ const MonChantier = () => {
               {formatDate(chantier.dateFinPrevue)}
             </p>
           </div>
+        </div>
+      </div>
+      {/* ── Matériaux & Ouvriers ──────────────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* ══ Bloc Matériaux disponibles ══ */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: "#dc55391a" }}
+            >
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="#dc5539"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <h3 className="text-sm font-bold text-gray-800">
+              Matériaux sur le chantier
+            </h3>
+            <span
+              className="text-xs px-2 py-0.5 rounded-full font-medium"
+              style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+            >
+              {materiauxChantier.length}
+            </span>
+          </div>
+
+          {materiauxChantier.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8">
+              <svg
+                width="32"
+                height="32"
+                fill="none"
+                stroke="#d1d5db"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+              <p className="text-xs text-gray-400 mt-2">
+                Aucun matériel affecté
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {materiauxChantier.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between p-3 rounded-xl"
+                  style={{ backgroundColor: "#f9fafb" }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-8 h-8 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: "#dbeafe" }}
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="#2563eb"
+                        strokeWidth="1.5"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">
+                        {item.materiel?.nom}
+                      </p>
+                      <p className="text-[10px] text-gray-400">
+                        {item.materiel?.categorie}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p
+                      className="text-sm font-bold"
+                      style={{ color: "#dc5539" }}
+                    >
+                      {item.quantite} {item.materiel?.unite}
+                    </p>
+                    <p className="text-[10px] text-gray-400">
+                      Depuis{" "}
+                      {new Date(
+                        item.dernierMouvement + "T12:00:00",
+                      ).toLocaleDateString("fr-FR", {
+                        day: "numeric",
+                        month: "short",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ══ Bloc Ouvriers présents ══ */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: "#16a34a1a" }}
+            >
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="#16a34a"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <h3 className="text-sm font-bold text-gray-800">
+              Ouvriers sur le chantier
+            </h3>
+            <span
+              className="text-xs px-2 py-0.5 rounded-full font-medium"
+              style={{ backgroundColor: "#16a34a1a", color: "#16a34a" }}
+            >
+              {ouvriersPresents.length}
+            </span>
+          </div>
+
+          {ouvriersPresents.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8">
+              <svg
+                width="32"
+                height="32"
+                fill="none"
+                stroke="#d1d5db"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+              </svg>
+              <p className="text-xs text-gray-400 mt-2">
+                Aucun ouvrier ce mois
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {ouvriersPresents.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between p-3 rounded-xl"
+                  style={{ backgroundColor: "#f9fafb" }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
+                      style={{
+                        backgroundColor:
+                          item.type === "responsable" ? "#2563eb" : "#dc5539",
+                      }}
+                    >
+                      {item.personne?.prenom?.[0]}
+                      {item.personne?.nom?.[0]}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-sm font-medium text-gray-800">
+                          {item.personne?.prenom} {item.personne?.nom}
+                        </p>
+                        {item.type === "responsable" && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">
+                            R
+                          </span>
+                        )}
+                      </div>
+                      {item.personne?.telephone && (
+                        <p className="text-[10px] text-gray-400">
+                          {item.personne.telephone}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center gap-1.5">
+                      {item.presentAujourdhui ? (
+                        <span
+                          className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                          style={{
+                            backgroundColor: "#dcfce7",
+                            color: "#16a34a",
+                          }}
+                        >
+                          Présent
+                        </span>
+                      ) : (
+                        <span
+                          className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                          style={{
+                            backgroundColor: "#f3f4f6",
+                            color: "#6b7280",
+                          }}
+                        >
+                          Absent
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-gray-400 mt-0.5">
+                      {item.joursTotal} jour{item.joursTotal > 1 ? "s" : ""} ce
+                      mois
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

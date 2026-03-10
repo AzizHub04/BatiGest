@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { clearUtilisateur } from "./services/authSlice";
+import { API_BASE_URL } from "./config/constants";
 import Login from "./pages/Login";
 import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
@@ -24,6 +25,7 @@ import { useEffect, useState } from "react";
 import TravauxTaches from "./pages/responsable/TravauxTaches";
 import NotesChantier from "./pages/responsable/NotesChantier";
 import Ouvriers from "./pages/admin/Ouvriers";
+import Materiaux from "./pages/admin/Materiaux";
 
 function App() {
   const { utilisateur } = useSelector((state) => state.auth);
@@ -34,7 +36,7 @@ function App() {
     const verifier = async () => {
       if (utilisateur) {
         try {
-          const res = await fetch("http://localhost:5000/api/auth/session", {
+          const res = await fetch(`${API_BASE_URL}/auth/session`, {
             credentials: "include",
           });
           if (!res.ok) {
@@ -137,7 +139,7 @@ function App() {
           <Route path="chantiers" element={<Chantiers />} />
           <Route path="chantiers/:id" element={<ChantierDetail />} />
           <Route path="ouvriers" element={<Ouvriers />} />
-          <Route path="materiaux" element={<div>Materiaux (à venir)</div>} />
+          <Route path="materiaux" element={<Materiaux />} />
         </Route>
         <Route
           path="/responsable"

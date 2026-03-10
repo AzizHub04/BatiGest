@@ -685,8 +685,8 @@ const FichePointage = () => {
            TABLEAU 3 ZONES :  NOMS (fixe) | DATES (scroll) | SEMAINES (fixe)
          ══════════════════════════════════════════════════════════════════ */}
       <div
-        className="bg-white rounded-2xl border border-gray-100"
-        style={{ display: "flex", width: "100%" }}
+        className="bg-white rounded-2xl border border-gray-100 overflow-hidden"
+        style={{ display: "flex" }}
       >
         {/* ════ ZONE GAUCHE : Noms (fixe, ne scroll pas) ════ */}
         <div

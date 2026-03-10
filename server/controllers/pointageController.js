@@ -74,6 +74,10 @@ const setPointage = async (req, res) => {
       .populate('responsable', 'nom prenom tarifJournalier')
       .populate('chantier', 'nom');
 
+    if (chantierFinal) {
+      const io = req.app.get('io');
+      io.to(`chantier-${chantierFinal}`).emit('pointage-updated');
+    }
     res.json(pointage);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -91,7 +95,53 @@ const supprimerPointage = async (req, res) => {
 
     await Pointage.findOneAndDelete(filtre);
 
+    const io = req.app.get('io');
+    io.emit('pointage-updated');
+    
     res.json({ message: 'Pointage supprimé' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// GET /api/pointages/chantier/:chantierId/presents — ouvriers présents aujourd'hui ou ce mois
+const getOuvriersPresents = async (req, res) => {
+  try {
+    const { chantierId } = req.params;
+    const today = new Date().toISOString().split('T')[0];
+    const moisActuel = today.substring(0, 7);
+
+    // Pointages du mois en cours pour ce chantier
+    const pointages = await Pointage.find({
+      chantier: chantierId,
+      date: { $regex: `^${moisActuel}` }
+    })
+    .populate('ouvrier', 'nom prenom telephone tarifJournalier')
+    .populate('responsable', 'nom prenom telephone');
+
+    // Grouper par personne
+    const personneMap = {};
+    pointages.forEach(p => {
+      const personne = p.ouvrier || p.responsable;
+      if (!personne) return;
+      const pid = String(personne._id);
+      const type = p.ouvrier ? 'ouvrier' : 'responsable';
+
+      if (!personneMap[pid]) {
+        personneMap[pid] = {
+          personne,
+          type,
+          joursTotal: 0,
+          presentAujourdhui: false
+        };
+      }
+      personneMap[pid].joursTotal += p.demiJournee ? 0.5 : 1;
+      if (p.date === today) {
+        personneMap[pid].presentAujourdhui = true;
+      }
+    });
+
+    res.json(Object.values(personneMap));
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -100,5 +150,6 @@ const supprimerPointage = async (req, res) => {
 module.exports = {
   getPointages,
   setPointage,
-  supprimerPointage
+  supprimerPointage,
+  getOuvriersPresents
 };

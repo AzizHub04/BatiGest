@@ -14,6 +14,10 @@ export const pointageApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({ url: '/pointages', method: 'DELETE', body: data }),
       invalidatesTags: ['Pointage', 'PaiementOuvrier'],
     }),
+    getOuvriersPresent: builder.query({
+      query: (chantierId) => `/pointages/chantier/${chantierId}/presents`,
+      providesTags: ['Pointage'],
+    }),
   }),
 });
 
@@ -21,4 +25,5 @@ export const {
   useGetPointagesQuery,
   useSetPointageMutation,
   useSupprimerPointageMutation,
+  useGetOuvriersPresentQuery,
 } = pointageApiSlice;
