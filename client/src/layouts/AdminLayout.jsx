@@ -4,6 +4,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../services/authApiSlice";
 import { clearUtilisateur } from "../services/authSlice";
 import NotificationBell from "../components/NotificationBell";
+import {
+  PhoneIcon,
+  DashboardIcon,
+  PeopleIcon,
+  BuildingIcon,
+  UserPlusIcon,
+  PackageIcon,
+  ChevronLeftIcon,
+  ChevronDownIcon,
+} from "../components/icons/SvgIcons";
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -24,93 +34,27 @@ const AdminLayout = () => {
     {
       path: "/admin/dashboard",
       label: "Dashboard",
-      icon: (
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <rect x="3" y="3" width="7" height="7" rx="1.5" />
-          <rect x="14" y="3" width="7" height="7" rx="1.5" />
-          <rect x="3" y="14" width="7" height="7" rx="1.5" />
-          <rect x="14" y="14" width="7" height="7" rx="1.5" />
-        </svg>
-      ),
+      icon: <DashboardIcon width={20} height={20} color="currentColor" />,
     },
     {
       path: "/admin/responsables",
       label: "Responsables",
-      icon: (
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      ),
+      icon: <PeopleIcon width={20} height={20} color="currentColor" />,
     },
     {
       path: "/admin/chantiers",
       label: "Chantiers",
-      icon: (
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <rect x="3" y="3" width="18" height="18" rx="2" />
-          <path d="M9 21V9h6v12" />
-          <path d="M3 9h18" />
-        </svg>
-      ),
+      icon: <BuildingIcon width={20} height={20} color="currentColor" />,
     },
     {
       path: "/admin/ouvriers",
       label: "Ouvriers",
-      icon: (
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M4 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
-          <circle cx="10" cy="7" r="4" />
-          <path d="M17.5 7.5h4M19.5 5.5v4" />
-        </svg>
-      ),
+      icon: <UserPlusIcon width={20} height={20} color="currentColor" />,
     },
     {
       path: "/admin/materiaux",
       label: "Matériaux",
-      icon: (
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-          <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" />
-        </svg>
-      ),
+      icon: <PackageIcon width={20} height={20} color="currentColor" />,
     },
   ];
 
@@ -139,55 +83,7 @@ const AdminLayout = () => {
             className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: "#dc5539" }}
           >
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-              <rect
-                x="3"
-                y="2"
-                width="18"
-                height="20"
-                rx="2"
-                stroke="white"
-                strokeWidth="1.5"
-              />
-              <rect
-                x="7"
-                y="5"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="14"
-                y="5"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="7"
-                y="10"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="14"
-                y="10"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <path
-                d="M9 22v-5h6v5"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
+            <PhoneIcon width={18} height={18} color="white" strokeW={1.5} />
           </div>
           {sidebarOpen && (
             <span className="font-extrabold text-gray-800 text-lg">
@@ -238,20 +134,15 @@ const AdminLayout = () => {
           className="h-12 flex items-center gap-2 px-5 border-t border-gray-100 text-sm text-gray-400 hover:text-gray-600"
           style={{ transition: "color 0.15s" }}
         >
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
+          <span
             style={{
+              display: "inline-flex",
               transform: sidebarOpen ? "rotate(0)" : "rotate(180deg)",
               transition: "transform 0.2s",
             }}
           >
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
+            <ChevronLeftIcon width={18} height={18} color="currentColor" />
+          </span>
           {sidebarOpen && "Réduire"}
         </button>
       </aside>
@@ -296,16 +187,7 @@ const AdminLayout = () => {
                   </p>
                   <p className="text-xs text-gray-400">Administrateur</p>
                 </div>
-                <svg
-                  width="16"
-                  height="16"
-                  fill="none"
-                  stroke="#9ca3af"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
+                <ChevronDownIcon width={16} height={16} color="#9ca3af" />
               </button>
 
               {profileOpen && (

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForgotPasswordMutation } from "../services/authApiSlice";
+import { PhoneIcon, LoadingSpinner } from "../components/icons/SvgIcons";
 import Alert from "../components/Alert";
 
 const ForgotPassword = () => {
@@ -29,55 +30,7 @@ const ForgotPassword = () => {
             className="w-10 h-10 rounded-xl flex items-center justify-center"
             style={{ backgroundColor: "#dc5539" }}
           >
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-              <rect
-                x="3"
-                y="2"
-                width="18"
-                height="20"
-                rx="2"
-                stroke="white"
-                strokeWidth="1.5"
-              />
-              <rect
-                x="7"
-                y="5"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="14"
-                y="5"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="7"
-                y="10"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="14"
-                y="10"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <path
-                d="M9 22v-5h6v5"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
+            <PhoneIcon width={20} height={20} color="white" strokeW={1.5} />
           </div>
           <span className="font-extrabold text-gray-800 text-xl">BatiGest</span>
         </div>
@@ -130,25 +83,7 @@ const ForgotPassword = () => {
               >
                 {isLoading ? (
                   <>
-                    <svg
-                      className="animate-spin h-4 w-4 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                      />
-                    </svg>
+                    <LoadingSpinner size={4} color="white" />
                     Envoi en cours...
                   </>
                 ) : (

@@ -9,6 +9,7 @@ import {
 } from "../services/authApiSlice";
 import { setUtilisateur, clearUtilisateur } from "../services/authSlice";
 import { API_BASE_URL } from "../config/constants";
+import { EyeIcon, EyeOffIcon, TrashIcon } from "../components/icons/SvgIcons";
 import Alert from "../components/Alert";
 
 const Profil = () => {
@@ -149,29 +150,9 @@ const Profil = () => {
       style={{ transition: "color 0.15s" }}
     >
       {visible ? (
-        <svg
-          width="18"
-          height="18"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-          <line x1="1" y1="1" x2="23" y2="23" />
-        </svg>
+        <EyeOffIcon width={18} height={18} />
       ) : (
-        <svg
-          width="18"
-          height="18"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-          <circle cx="12" cy="12" r="3" />
-        </svg>
+        <EyeIcon width={18} height={18} />
       )}
     </button>
   );
@@ -479,16 +460,7 @@ const Profil = () => {
               className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
               style={{ backgroundColor: "#dc26261a" }}
             >
-              <svg
-                width="24"
-                height="24"
-                fill="none"
-                stroke="#dc2626"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-              </svg>
+              <TrashIcon width={24} height={24} color="#dc2626" />
             </div>
             <h3 className="text-lg font-bold text-gray-800 text-center mb-2">
               Supprimer votre compte ?

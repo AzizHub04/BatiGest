@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ListeMateriels from "../../components/materiaux/ListeMateriels";
 import MouvementsMateriels from "../../components/materiaux/MouvementsMateriels";
+import { BoxIcon, SwapIcon } from "../../components/icons/SvgIcons";
 
 const Materiaux = () => {
   const [onglet, setOnglet] = useState("liste");
@@ -9,34 +10,12 @@ const Materiaux = () => {
     {
       id: "liste",
       label: "Liste des matériaux",
-      icon: (
-        <svg
-          width="16"
-          height="16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-        </svg>
-      ),
+      icon: <BoxIcon width={16} height={16} color="currentColor" />,
     },
     {
       id: "mouvements",
       label: "Mouvements",
-      icon: (
-        <svg
-          width="16"
-          height="16"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-        </svg>
-      ),
+      icon: <SwapIcon width={16} height={16} color="currentColor" />,
     },
   ];
 

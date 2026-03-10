@@ -3,6 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useConfirmDeleteMutation } from "../services/authApiSlice";
 import { clearUtilisateur } from "../services/authSlice";
+import {
+  PhoneIcon,
+  LoadingSpinner,
+  CheckIcon,
+  CloseIcon,
+} from "../components/icons/SvgIcons";
 
 const ConfirmDelete = () => {
   const { token } = useParams();
@@ -37,55 +43,7 @@ const ConfirmDelete = () => {
             className="w-10 h-10 rounded-xl flex items-center justify-center"
             style={{ backgroundColor: "#dc5539" }}
           >
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-              <rect
-                x="3"
-                y="2"
-                width="18"
-                height="20"
-                rx="2"
-                stroke="white"
-                strokeWidth="1.5"
-              />
-              <rect
-                x="7"
-                y="5"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="14"
-                y="5"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="7"
-                y="10"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="14"
-                y="10"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <path
-                d="M9 22v-5h6v5"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
+            <PhoneIcon width={20} height={20} color="white" strokeW={1.5} />
           </div>
           <span className="font-extrabold text-gray-800 text-xl">BatiGest</span>
         </div>
@@ -93,27 +51,10 @@ const ConfirmDelete = () => {
         <div className="bg-white rounded-2xl border border-gray-100 p-6 text-center">
           {status === "loading" && (
             <>
-              <svg
-                className="animate-spin h-8 w-8 mx-auto mb-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                style={{ color: "#dc5539" }}
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                />
-              </svg>
-              <p className="text-sm text-gray-500">Suppression en cours...</p>
+              <LoadingSpinner size={8} color="#dc5539" />
+              <p className="text-sm text-gray-500 mt-2">
+                Suppression en cours...
+              </p>
             </>
           )}
 
@@ -123,17 +64,7 @@ const ConfirmDelete = () => {
                 className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
                 style={{ backgroundColor: "#dcfce7" }}
               >
-                <svg
-                  width="24"
-                  height="24"
-                  fill="none"
-                  stroke="#16a34a"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="m9 12 2 2 4-4" />
-                </svg>
+                <CheckIcon width={24} height={24} color="#16a34a" />
               </div>
               <h2 className="text-lg font-bold text-gray-800 mb-2">
                 Compte supprimé
@@ -151,18 +82,7 @@ const ConfirmDelete = () => {
                 className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
                 style={{ backgroundColor: "#dc55391a" }}
               >
-                <svg
-                  width="24"
-                  height="24"
-                  fill="none"
-                  stroke="#dc5539"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="15" y1="9" x2="9" y2="15" />
-                  <line x1="9" y1="9" x2="15" y2="15" />
-                </svg>
+                <CloseIcon width={24} height={24} color="#dc5539" />
               </div>
               <h2 className="text-lg font-bold text-gray-800 mb-2">Erreur</h2>
               <p className="text-sm text-gray-500 mb-4">{message}</p>

@@ -1,3 +1,5 @@
+import { TrashIcon } from "./icons/SvgIcons";
+
 const ConfirmDelete = ({ isOpen, onClose, onConfirm, title, message }) => {
   if (!isOpen) return null;
 
@@ -14,16 +16,7 @@ const ConfirmDelete = ({ isOpen, onClose, onConfirm, title, message }) => {
           className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
           style={{ backgroundColor: "#dc55391a" }}
         >
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            stroke="#dc5539"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
-          >
-            <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-          </svg>
+          <TrashIcon width={24} height={24} color="#dc5539" />
         </div>
         <h3 className="text-lg font-bold text-gray-800 mb-2">{title}</h3>
         <p className="text-sm text-gray-500 mb-6">{message}</p>

@@ -9,6 +9,7 @@ import {
   useSupprimerToutNotificationsMutation,
 } from "../services/notificationApiSlice";
 import socket from "../services/socket";
+import { BellIcon, XIcon, DocumentIcon } from "./icons/SvgIcons";
 
 const NotificationBell = () => {
   const navigate = useNavigate();
@@ -58,10 +59,10 @@ const NotificationBell = () => {
     }
     setOpen(false);
     if (notif.note && notif.chantier) {
-      if (utilisateur?.role === 'admin') {
+      if (utilisateur?.role === "admin") {
         navigate(`/admin/chantiers/${notif.chantier._id}`);
       } else {
-        navigate('/responsable/notes');
+        navigate("/responsable/notes");
       }
     }
   };
@@ -87,25 +88,6 @@ const NotificationBell = () => {
     return date.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
   };
 
-  const noteIcon = (
-    <div
-      className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-      style={{ backgroundColor: "#dc55391a" }}
-    >
-      <svg
-        width="14"
-        height="14"
-        fill="none"
-        stroke="#dc5539"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-      >
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-        <polyline points="14 2 14 8 20 8" />
-      </svg>
-    </div>
-  );
-
   return (
     <div className="relative">
       <button
@@ -113,17 +95,7 @@ const NotificationBell = () => {
         className="relative p-2 text-gray-400 hover:text-gray-600"
         style={{ transition: "color 0.15s" }}
       >
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
+        <BellIcon width={20} height={20} color="currentColor" />
         {nonLues > 0 && (
           <span
             className="absolute top-1 right-1 min-w-[16px] h-4 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"
@@ -169,17 +141,7 @@ const NotificationBell = () => {
             <div className="max-h-80 overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8">
-                  <svg
-                    width="32"
-                    height="32"
-                    fill="none"
-                    stroke="#d1d5db"
-                    strokeWidth="1.5"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                  </svg>
+                  <BellIcon width={32} height={32} color="#d1d5db" />
                   <p className="text-xs text-gray-400 mt-2">
                     Aucune notification
                   </p>
@@ -198,7 +160,12 @@ const NotificationBell = () => {
                         : "3px solid #dc5539",
                     }}
                   >
-                    {noteIcon}
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: "#dc55391a" }}
+                    >
+                      <DocumentIcon width={14} height={14} color="#dc5539" />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-gray-800">
                         {n.titre}
@@ -235,17 +202,7 @@ const NotificationBell = () => {
                         className="p-1 text-gray-300 hover:text-red-500"
                         style={{ transition: "color 0.15s" }}
                       >
-                        <svg
-                          width="12"
-                          height="12"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          viewBox="0 0 24 24"
-                        >
-                          <line x1="18" y1="6" x2="6" y2="18" />
-                          <line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
+                        <XIcon width={12} height={12} color="currentColor" />
                       </button>
                     </div>
                   </div>

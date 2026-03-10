@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "../icons/SvgIcons";
 import { useGetOuvriersQuery } from "../../services/ouvrierApiSlice";
 import {
   useGetPointagesQuery,
@@ -237,17 +238,9 @@ const CellulePointage = ({
                     {c.nom}
                   </span>
                 </span>
-                <svg
-                  width="10"
-                  height="10"
-                  fill="none"
-                  stroke="#9ca3af"
-                  strokeWidth="2.5"
-                  viewBox="0 0 24 24"
-                  style={{ flexShrink: 0 }}
-                >
-                  <path d="M9 18l6-6-6-6" />
-                </svg>
+                <span style={{ flexShrink: 0, display: "inline-flex" }}>
+                  <ChevronRightIcon width={10} height={10} color="#9ca3af" />
+                </span>
               </div>
               {hover === c._id && (
                 <div
@@ -581,16 +574,7 @@ const FichePointage = () => {
             onClick={prevMois}
             className="p-2 rounded-lg hover:bg-gray-100 text-gray-500"
           >
-            <svg
-              width="16"
-              height="16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
+            <ChevronLeftIcon width={16} height={16} color="currentColor" />
           </button>
           <h3
             className="text-lg font-bold text-gray-800 min-w-[180px] text-center"
@@ -602,16 +586,7 @@ const FichePointage = () => {
             onClick={nextMois}
             className="p-2 rounded-lg hover:bg-gray-100 text-gray-500"
           >
-            <svg
-              width="16"
-              height="16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M9 18l6-6-6-6" />
-            </svg>
+            <ChevronRightIcon width={16} height={16} color="currentColor" />
           </button>
         </div>
         <div className="flex items-center gap-2 flex-wrap">

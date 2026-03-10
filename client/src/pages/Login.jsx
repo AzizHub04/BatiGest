@@ -4,6 +4,31 @@ import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../services/authApiSlice";
 import { setUtilisateur } from "../services/authSlice";
 import { Link } from "react-router-dom";
+import {
+  PhoneIcon,
+  CloseIcon,
+  MailIcon,
+  LockIcon,
+  EyeIcon,
+  EyeOffIcon,
+  LoadingSpinner,
+  BrickIcon,
+  HammerIcon,
+  CraneIcon,
+  HelmetIcon,
+  WrenchIcon,
+  CementIcon,
+  RuleIcon,
+  GearIcon,
+  SawIcon,
+  TruckIcon,
+  WallIcon,
+  PipeIcon,
+  PaintIcon,
+  BeamIcon,
+  LadderIcon,
+  BoltIcon,
+} from "../components/icons/SvgIcons";
 
 const floatStyles = `
   @keyframes drift1 {
@@ -34,387 +59,6 @@ const floatStyles = `
     75% { transform: translate(4px, -10px) rotate(2deg); }
   }
 `;
-
-const brickSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <rect
-      x="2"
-      y="8"
-      width="16"
-      height="10"
-      rx="1"
-      stroke="white"
-      strokeWidth="1.2"
-    />
-    <rect
-      x="22"
-      y="8"
-      width="16"
-      height="10"
-      rx="1"
-      stroke="white"
-      strokeWidth="1.2"
-    />
-    <rect
-      x="12"
-      y="22"
-      width="16"
-      height="10"
-      rx="1"
-      stroke="white"
-      strokeWidth="1.2"
-    />
-  </svg>
-);
-
-const hammerSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <rect
-      x="16"
-      y="4"
-      width="12"
-      height="8"
-      rx="2"
-      stroke="white"
-      strokeWidth="1.2"
-    />
-    <line
-      x1="22"
-      y1="12"
-      x2="22"
-      y2="36"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const craneSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <line
-      x1="10"
-      y1="36"
-      x2="10"
-      y2="6"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <line
-      x1="10"
-      y1="6"
-      x2="34"
-      y2="6"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <line
-      x1="34"
-      y1="6"
-      x2="34"
-      y2="16"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <line
-      x1="6"
-      y1="36"
-      x2="14"
-      y2="36"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <line
-      x1="10"
-      y1="20"
-      x2="18"
-      y2="6"
-      stroke="white"
-      strokeWidth="1"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const helmetSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <path
-      d="M8 24c0-8 5-14 12-14s12 6 12 14"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <line
-      x1="4"
-      y1="24"
-      x2="36"
-      y2="24"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <line
-      x1="6"
-      y1="28"
-      x2="34"
-      y2="28"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const wrenchSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <path
-      d="M28 6a8 8 0 0 0-11 11L9 25l6 6 8-8a8 8 0 0 0 5-17z"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const cementSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <rect
-      x="8"
-      y="14"
-      width="24"
-      height="20"
-      rx="2"
-      stroke="white"
-      strokeWidth="1.2"
-    />
-    <path d="M8 20h24" stroke="white" strokeWidth="1" />
-    <path
-      d="M14 8h12l2 6H12l2-6z"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const ruleSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <rect
-      x="6"
-      y="10"
-      width="28"
-      height="20"
-      rx="1"
-      stroke="white"
-      strokeWidth="1.2"
-    />
-    <line x1="12" y1="10" x2="12" y2="18" stroke="white" strokeWidth="1" />
-    <line x1="18" y1="10" x2="18" y2="15" stroke="white" strokeWidth="1" />
-    <line x1="24" y1="10" x2="24" y2="18" stroke="white" strokeWidth="1" />
-    <line x1="30" y1="10" x2="30" y2="15" stroke="white" strokeWidth="1" />
-  </svg>
-);
-
-const gearSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <circle cx="20" cy="20" r="6" stroke="white" strokeWidth="1.2" />
-    <circle
-      cx="20"
-      cy="20"
-      r="12"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeDasharray="4 3"
-    />
-  </svg>
-);
-
-const sawSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <path
-      d="M6 28L28 6"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M28 6l6 6-22 22-6-6z"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinejoin="round"
-    />
-    <path d="M10 24l8-8" stroke="white" strokeWidth="1" />
-  </svg>
-);
-
-const truckSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <rect
-      x="3"
-      y="12"
-      width="20"
-      height="16"
-      rx="1"
-      stroke="white"
-      strokeWidth="1.2"
-    />
-    <path
-      d="M23 18h8l4 6v4h-12v-10z"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinejoin="round"
-    />
-    <circle cx="11" cy="30" r="3" stroke="white" strokeWidth="1.2" />
-    <circle cx="31" cy="30" r="3" stroke="white" strokeWidth="1.2" />
-  </svg>
-);
-
-const wallSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <rect
-      x="4"
-      y="4"
-      width="32"
-      height="8"
-      rx="1"
-      stroke="white"
-      strokeWidth="1"
-    />
-    <rect
-      x="4"
-      y="14"
-      width="14"
-      height="8"
-      rx="1"
-      stroke="white"
-      strokeWidth="1"
-    />
-    <rect
-      x="22"
-      y="14"
-      width="14"
-      height="8"
-      rx="1"
-      stroke="white"
-      strokeWidth="1"
-    />
-    <rect
-      x="4"
-      y="24"
-      width="32"
-      height="8"
-      rx="1"
-      stroke="white"
-      strokeWidth="1"
-    />
-  </svg>
-);
-
-const pipeSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <path
-      d="M8 8v12h10v12"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M4 8h8M14 20h8M18 32h8"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const paintSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <rect
-      x="6"
-      y="6"
-      width="22"
-      height="12"
-      rx="2"
-      stroke="white"
-      strokeWidth="1.2"
-    />
-    <path d="M14 18v4h6v-4" stroke="white" strokeWidth="1.2" />
-    <path
-      d="M17 22v12"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const beamSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <path
-      d="M4 14h32M4 26h32"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M10 14v12M20 14v12M30 14v12"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <path
-      d="M4 14l6-8h20l6 8"
-      stroke="white"
-      strokeWidth="1"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const ladderSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <line
-      x1="12"
-      y1="4"
-      x2="12"
-      y2="36"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <line
-      x1="28"
-      y1="4"
-      x2="28"
-      y2="36"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-    />
-    <line x1="12" y1="10" x2="28" y2="10" stroke="white" strokeWidth="1" />
-    <line x1="12" y1="18" x2="28" y2="18" stroke="white" strokeWidth="1" />
-    <line x1="12" y1="26" x2="28" y2="26" stroke="white" strokeWidth="1" />
-    <line x1="12" y1="34" x2="28" y2="34" stroke="white" strokeWidth="1" />
-  </svg>
-);
-
-const boltSvg = (
-  <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" opacity="0.2">
-    <path
-      d="M22 4L12 22h8l-4 14L30 18h-8l4-14z"
-      stroke="white"
-      strokeWidth="1.2"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -479,140 +123,140 @@ const Login = () => {
       top: "3%",
       right: "8%",
       w: 65,
-      svg: craneSvg,
+      component: CraneIcon,
       anim: "drift1 9s ease-in-out infinite",
     },
     {
       top: "12%",
       left: "8%",
       w: 42,
-      svg: brickSvg,
+      component: BrickIcon,
       anim: "drift2 11s ease-in-out infinite",
     },
     {
       top: "28%",
       right: "18%",
       w: 50,
-      svg: helmetSvg,
+      component: HelmetIcon,
       anim: "drift3 8s ease-in-out infinite",
     },
     {
       top: "55%",
       right: "6%",
       w: 45,
-      svg: hammerSvg,
+      component: HammerIcon,
       anim: "drift4 10s ease-in-out infinite",
     },
     {
       bottom: "10%",
       right: "22%",
       w: 55,
-      svg: wrenchSvg,
+      component: WrenchIcon,
       anim: "drift5 7s ease-in-out infinite",
     },
     {
       bottom: "30%",
       left: "5%",
       w: 44,
-      svg: cementSvg,
+      component: CementIcon,
       anim: "drift1 12s ease-in-out infinite 1s",
     },
     {
       top: "6%",
       right: "38%",
       w: 32,
-      svg: gearSvg,
+      component: GearIcon,
       anim: "drift3 9s ease-in-out infinite 0.5s",
     },
     {
       top: "42%",
       left: "10%",
       w: 38,
-      svg: ruleSvg,
+      component: RuleIcon,
       anim: "drift2 10s ease-in-out infinite 2s",
     },
     {
       bottom: "5%",
       left: "22%",
       w: 40,
-      svg: brickSvg,
+      component: BrickIcon,
       anim: "drift5 11s ease-in-out infinite 1.5s",
     },
     {
       top: "72%",
       right: "14%",
       w: 35,
-      svg: gearSvg,
+      component: GearIcon,
       anim: "drift4 8s ease-in-out infinite 0.8s",
     },
     {
       top: "20%",
       right: "4%",
       w: 30,
-      svg: boltSvg,
+      component: BoltIcon,
       anim: "drift1 7s ease-in-out infinite 1.2s",
     },
     {
       bottom: "45%",
       right: "32%",
       w: 34,
-      svg: helmetSvg,
+      component: HelmetIcon,
       anim: "drift2 9s ease-in-out infinite 2.5s",
     },
     {
       top: "5%",
       left: "28%",
       w: 48,
-      svg: truckSvg,
+      component: TruckIcon,
       anim: "drift3 10s ease-in-out infinite 0.3s",
     },
     {
       top: "38%",
       right: "35%",
       w: 42,
-      svg: wallSvg,
+      component: WallIcon,
       anim: "drift5 8s ease-in-out infinite 1.8s",
     },
     {
       bottom: "18%",
       left: "15%",
       w: 36,
-      svg: pipeSvg,
+      component: PipeIcon,
       anim: "drift4 11s ease-in-out infinite 0.6s",
     },
     {
       top: "65%",
       left: "6%",
       w: 50,
-      svg: ladderSvg,
+      component: LadderIcon,
       anim: "drift1 9s ease-in-out infinite 2.2s",
     },
     {
       bottom: "3%",
       right: "8%",
       w: 38,
-      svg: paintSvg,
+      component: PaintIcon,
       anim: "drift2 7s ease-in-out infinite 1.4s",
     },
     {
       top: "85%",
       left: "30%",
       w: 32,
-      svg: sawSvg,
+      component: SawIcon,
       anim: "drift3 10s ease-in-out infinite 0.9s",
     },
     {
       top: "15%",
       right: "25%",
       w: 28,
-      svg: beamSvg,
+      component: BeamIcon,
       anim: "drift5 12s ease-in-out infinite 1.7s",
     },
     {
       bottom: "55%",
       left: "25%",
       w: 30,
-      svg: wrenchSvg,
+      component: WrenchIcon,
       anim: "drift4 8s ease-in-out infinite 2.8s",
     },
   ];
@@ -643,7 +287,7 @@ const Login = () => {
                 animation: ic.anim,
               }}
             >
-              {ic.svg}
+              <ic.component />
             </div>
           ))}
 
@@ -663,55 +307,7 @@ const Login = () => {
                   border: "1px solid rgba(255,255,255,0.1)",
                 }}
               >
-                <svg width="26" height="26" fill="none" viewBox="0 0 24 24">
-                  <rect
-                    x="3"
-                    y="2"
-                    width="18"
-                    height="20"
-                    rx="2"
-                    stroke="white"
-                    strokeWidth="1.5"
-                  />
-                  <rect
-                    x="7"
-                    y="5"
-                    width="3"
-                    height="3"
-                    rx="0.5"
-                    fill="rgba(255,255,255,0.7)"
-                  />
-                  <rect
-                    x="14"
-                    y="5"
-                    width="3"
-                    height="3"
-                    rx="0.5"
-                    fill="rgba(255,255,255,0.7)"
-                  />
-                  <rect
-                    x="7"
-                    y="10"
-                    width="3"
-                    height="3"
-                    rx="0.5"
-                    fill="rgba(255,255,255,0.7)"
-                  />
-                  <rect
-                    x="14"
-                    y="10"
-                    width="3"
-                    height="3"
-                    rx="0.5"
-                    fill="rgba(255,255,255,0.7)"
-                  />
-                  <path
-                    d="M9 22v-5h6v5"
-                    stroke="white"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <PhoneIcon width={26} height={26} color="white" strokeW={1.5} />
               </div>
               <span
                 className="font-extrabold text-3xl tracking-tight"
@@ -808,55 +404,7 @@ const Login = () => {
                 className="w-10 h-10 rounded-xl flex items-center justify-center"
                 style={{ backgroundColor: "#dc5539" }}
               >
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-                  <rect
-                    x="3"
-                    y="2"
-                    width="18"
-                    height="20"
-                    rx="2"
-                    stroke="white"
-                    strokeWidth="1.5"
-                  />
-                  <rect
-                    x="7"
-                    y="5"
-                    width="3"
-                    height="3"
-                    rx="0.5"
-                    fill="rgba(255,255,255,0.7)"
-                  />
-                  <rect
-                    x="14"
-                    y="5"
-                    width="3"
-                    height="3"
-                    rx="0.5"
-                    fill="rgba(255,255,255,0.7)"
-                  />
-                  <rect
-                    x="7"
-                    y="10"
-                    width="3"
-                    height="3"
-                    rx="0.5"
-                    fill="rgba(255,255,255,0.7)"
-                  />
-                  <rect
-                    x="14"
-                    y="10"
-                    width="3"
-                    height="3"
-                    rx="0.5"
-                    fill="rgba(255,255,255,0.7)"
-                  />
-                  <path
-                    d="M9 22v-5h6v5"
-                    stroke="white"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <PhoneIcon width={20} height={20} color="white" strokeW={1.5} />
               </div>
               <span className="font-extrabold text-gray-800 text-xl">
                 BatiGest
@@ -880,18 +428,7 @@ const Login = () => {
                   border: "1px solid #dc55394d",
                 }}
               >
-                <svg
-                  width="18"
-                  height="18"
-                  fill="none"
-                  stroke="#dc5539"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="15" y1="9" x2="9" y2="15" />
-                  <line x1="9" y1="9" x2="15" y2="15" />
-                </svg>
+                <CloseIcon width={18} height={18} color="#dc5539" />
                 <p className="text-sm" style={{ color: "#dc5539" }}>
                   {erreur}
                 </p>
@@ -905,17 +442,7 @@ const Login = () => {
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-                    <svg
-                      width="18"
-                      height="18"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <rect x="2" y="4" width="20" height="16" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
+                    <MailIcon width={18} height={18} color="currentColor" />
                   </span>
                   <input
                     type="email"
@@ -946,17 +473,7 @@ const Login = () => {
                 </label>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-                    <svg
-                      width="18"
-                      height="18"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <rect x="3" y="11" width="18" height="11" rx="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
+                    <LockIcon width={18} height={18} color="currentColor" />
                   </span>
                   <input
                     type={voirMdp ? "text" : "password"}
@@ -985,29 +502,9 @@ const Login = () => {
                     style={{ transition: "color 0.15s" }}
                   >
                     {voirMdp ? (
-                      <svg
-                        width="18"
-                        height="18"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                        <line x1="1" y1="1" x2="23" y2="23" />
-                      </svg>
+                      <EyeOffIcon width={18} height={18} />
                     ) : (
-                      <svg
-                        width="18"
-                        height="18"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                        <circle cx="12" cy="12" r="3" />
-                      </svg>
+                      <EyeIcon width={18} height={18} />
                     )}
                   </button>
                 </div>
@@ -1041,26 +538,8 @@ const Login = () => {
               >
                 {isLoading ? (
                   <>
-                    <svg
-                      className="animate-spin h-4 w-4 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                      />
-                    </svg>
-                    Connexion en cours...
+                    <LoadingSpinner size={4} color="white" />
+                    Connexion...
                   </>
                 ) : (
                   "Se connecter"

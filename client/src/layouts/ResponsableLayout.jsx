@@ -4,6 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../services/authApiSlice";
 import { clearUtilisateur } from "../services/authSlice";
 import NotificationBell from "../components/NotificationBell";
+import {
+  PhoneIcon,
+  HouseIcon,
+  CheckSquareIcon,
+  NoteIcon,
+  ChevronLeftIcon,
+  ChevronDownIcon,
+} from "../components/icons/SvgIcons";
 
 const ResponsableLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -24,55 +32,17 @@ const ResponsableLayout = () => {
     {
       path: "/responsable/chantier",
       label: "Mon chantier",
-      icon: (
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          <polyline points="9 22 9 12 15 12 15 22" />
-        </svg>
-      ),
+      icon: <HouseIcon width={20} height={20} color="currentColor" />,
     },
     {
       path: "/responsable/travaux",
       label: "Travaux & Tâches",
-      icon: (
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M9 11l3 3L22 4" />
-          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-        </svg>
-      ),
+      icon: <CheckSquareIcon width={20} height={20} color="currentColor" />,
     },
     {
       path: "/responsable/notes",
       label: "Notes",
-      icon: (
-        <svg
-          width="20"
-          height="20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <polyline points="14 2 14 8 20 8" />
-          <line x1="16" y1="13" x2="8" y2="13" />
-          <line x1="16" y1="17" x2="8" y2="17" />
-        </svg>
-      ),
+      icon: <NoteIcon width={20} height={20} color="currentColor" />,
     },
   ];
 
@@ -108,55 +78,7 @@ const ResponsableLayout = () => {
             className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: "#dc5539" }}
           >
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-              <rect
-                x="3"
-                y="2"
-                width="18"
-                height="20"
-                rx="2"
-                stroke="white"
-                strokeWidth="1.5"
-              />
-              <rect
-                x="7"
-                y="5"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="14"
-                y="5"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="7"
-                y="10"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <rect
-                x="14"
-                y="10"
-                width="3"
-                height="3"
-                rx="0.5"
-                fill="rgba(255,255,255,0.7)"
-              />
-              <path
-                d="M9 22v-5h6v5"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
+            <PhoneIcon width={18} height={18} color="white" strokeW={1.5} />
           </div>
           {sidebarOpen && (
             <span className="font-extrabold text-gray-800 text-lg">
@@ -205,20 +127,15 @@ const ResponsableLayout = () => {
           className="h-12 flex items-center gap-2 px-5 border-t border-gray-100 text-sm text-gray-400 hover:text-gray-600"
           style={{ transition: "color 0.15s" }}
         >
-          <svg
-            width="18"
-            height="18"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
+          <span
             style={{
+              display: "inline-flex",
               transform: sidebarOpen ? "rotate(0)" : "rotate(180deg)",
               transition: "transform 0.2s",
             }}
           >
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
+            <ChevronLeftIcon width={18} height={18} color="currentColor" />
+          </span>
           {sidebarOpen && "Réduire"}
         </button>
       </aside>
@@ -263,16 +180,7 @@ const ResponsableLayout = () => {
                   </p>
                   <p className="text-xs text-gray-400">Responsable</p>
                 </div>
-                <svg
-                  width="16"
-                  height="16"
-                  fill="none"
-                  stroke="#9ca3af"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
+                <ChevronDownIcon width={16} height={16} color="#9ca3af" />
               </button>
 
               {profileOpen && (
