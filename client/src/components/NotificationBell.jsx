@@ -108,13 +108,13 @@ const NotificationBell = () => {
 
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="fixed inset-0 z-90" onClick={() => setOpen(false)} />
           <div
-            className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl border border-gray-100 z-50 overflow-hidden"
-            style={{ boxShadow: "0 8px 24px rgba(0,0,0,0.1)" }}
+            className="fixed right-4 top-17 w-80 bg-white rounded-2xl border border-gray-100 z-100 overflow-hidden"
+            style={{ boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+            <div className="flex z-50 items-center justify-between px-4 py-3 border-b border-gray-100">
               <h4 className="text-sm font-bold text-gray-800">Notifications</h4>
               <div className="flex items-center gap-3">
                 {nonLues > 0 && (

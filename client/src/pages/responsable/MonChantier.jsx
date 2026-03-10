@@ -120,16 +120,16 @@ const MonChantier = () => {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">{chantier.nom}</h2>
-            <div className="flex items-center gap-2 mt-1">
-              <LocationIcon width={16} height={16} color="#9ca3af" />
-              <p className="text-sm text-gray-500">{chantier.localisation}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 truncate">{chantier.nom}</h2>
+            <div className="flex items-center gap-1.5 mt-1">
+              <LocationIcon width={14} height={14} color="#9ca3af" />
+              <p className="text-sm text-gray-500 truncate">{chantier.localisation}</p>
             </div>
           </div>
           <span
-            className="text-xs px-3 py-1.5 rounded-full font-medium"
+            className="shrink-0 text-xs px-3 py-1.5 rounded-full font-semibold"
             style={{ backgroundColor: es.bg, color: es.color }}
           >
             {chantier.etat}
@@ -137,23 +137,23 @@ const MonChantier = () => {
         </div>
       </div>
 
-      {/* Cartes */}
-      <div className="grid grid-cols-2 gap-6 mb-8">
+      {/* Cartes — 1 col on mobile, 2 on sm+ */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {/* Progression */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <div className="flex items-center gap-4">
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl shrink-0 flex items-center justify-center"
               style={{ backgroundColor: "#dc55391a" }}
             >
-              <ChartIcon width={24} height={24} color="#dc5539" />
+              <ChartIcon width={20} height={20} color="#dc5539" />
             </div>
-            <div className="flex-1">
-              <p className="text-sm text-gray-400 mb-1">Progression</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-gray-400 mb-0.5">Progression</p>
               <p className="text-2xl font-bold text-gray-800">{avancement}%</p>
             </div>
           </div>
-          <div className="mt-4 w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+          <div className="mt-3 sm:mt-4 w-full h-2 sm:h-2.5 bg-gray-100 rounded-full overflow-hidden">
             <div
               className="h-full rounded-full"
               style={{
@@ -166,23 +166,23 @@ const MonChantier = () => {
         </div>
 
         {/* Délai estimé */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6">
-          <div className="flex items-center gap-4">
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl shrink-0 flex items-center justify-center"
               style={{ backgroundColor: "#dbeafe" }}
             >
-              <CalendarIcon width={24} height={24} color="#2563eb" />
+              <CalendarIcon width={20} height={20} color="#2563eb" />
             </div>
-            <div>
-              <p className="text-sm text-gray-400 mb-1">Délai estimé</p>
-              <p className="text-2xl font-bold text-gray-800">
+            <div className="min-w-0">
+              <p className="text-xs text-gray-400 mb-0.5">Délai estimé</p>
+              <p className="text-base sm:text-lg font-bold text-gray-800 leading-snug">
                 {formatDate(chantier.dateFinPrevue)}
               </p>
             </div>
           </div>
-          <div className="mt-4 flex items-center gap-2">
-            <ClockIcon width={14} height={14} color="#9ca3af" />
+          <div className="mt-3 sm:mt-4 flex items-center gap-2">
+            <ClockIcon width={13} height={13} color="#9ca3af" />
             <p className="text-xs text-gray-400">
               Début : {formatDate(chantier.dateDebut)}
             </p>
@@ -191,25 +191,25 @@ const MonChantier = () => {
       </div>
 
       {/* Résumé rapide */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <h3 className="text-lg font-bold text-gray-800 mb-4">
+      <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6">
+        <h3 className="text-sm sm:text-base font-bold text-gray-800 mb-3 sm:mb-4">
           Informations du chantier
         </h3>
-        <div className="grid grid-cols-3 gap-6">
-          <div>
-            <p className="text-xs text-gray-400 mb-1">Responsable</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
+          <div className="flex sm:block items-center justify-between border-b sm:border-b-0 border-gray-50 pb-2 sm:pb-0 last:border-0 last:pb-0">
+            <p className="text-xs text-gray-400">Responsable</p>
             <p className="text-sm font-medium text-gray-800">
               {utilisateur?.prenom} {utilisateur?.nom}
             </p>
           </div>
-          <div>
-            <p className="text-xs text-gray-400 mb-1">Date de début</p>
+          <div className="flex sm:block items-center justify-between border-b sm:border-b-0 border-gray-50 pb-2 sm:pb-0">
+            <p className="text-xs text-gray-400">Date de début</p>
             <p className="text-sm font-medium text-gray-800">
               {formatDate(chantier?.dateDebut)}
             </p>
           </div>
-          <div>
-            <p className="text-xs text-gray-400 mb-1">Date de fin prévue</p>
+          <div className="flex sm:block items-center justify-between">
+            <p className="text-xs text-gray-400">Date de fin prévue</p>
             <p className="text-sm font-medium text-gray-800">
               {formatDate(chantier.dateFinPrevue)}
             </p>
