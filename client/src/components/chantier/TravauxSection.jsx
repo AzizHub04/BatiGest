@@ -16,8 +16,15 @@ import {
   ChevronRightIcon,
 } from "../icons/SvgIcons";
 import socket from "../../services/socket";
+import BadgeSelect from "../BadgeSelect";
 
 const TRAVAIL_ETATS = ["Non commenc\u00e9", "En cours", "Termin\u00e9"];
+
+const TRAVAIL_ETAT_OPTIONS = [
+  { value: "Non commencé", bg: "#f3f4f6", color: "#6b7280" },
+  { value: "En cours",     bg: "#dbeafe", color: "#2563eb" },
+  { value: "Terminé",      bg: "#dcfce7", color: "#16a34a" },
+];
 
 const travailEtatStyle = (etat) => {
   switch (etat) {
@@ -194,33 +201,18 @@ const TravauxSection = ({
                               {t.etat}
                             </span>
                           ) : (
-                            <select
+                            <BadgeSelect
                               value={t.etat}
-                              onChange={async (e) => {
-                                e.stopPropagation();
+                              onChange={async (val) => {
                                 try {
-                                  await modifierTravail({
-                                    id: t._id,
-                                    etat: e.target.value,
-                                  }).unwrap();
+                                  await modifierTravail({ id: t._id, etat: val }).unwrap();
                                 } catch (err) {
                                   console.error(err);
                                 }
                               }}
-                              onClick={(e) => e.stopPropagation()}
-                              className="text-[10px] px-2 py-0.5 rounded-full font-medium border-0 cursor-pointer"
-                              style={{
-                                backgroundColor: etatStyle.bg,
-                                color: etatStyle.color,
-                                outline: "none",
-                              }}
-                            >
-                              {TRAVAIL_ETATS.map((etat) => (
-                                <option key={etat} value={etat}>
-                                  {etat}
-                                </option>
-                              ))}
-                            </select>
+                              options={TRAVAIL_ETAT_OPTIONS}
+                              stopPropagation
+                            />
                           )}
                           <span className="text-xs text-gray-400">
                             {t.nbTaches > 0
@@ -313,33 +305,18 @@ const TravauxSection = ({
                             {t.etat}
                           </span>
                         ) : (
-                          <select
+                          <BadgeSelect
                             value={t.etat}
-                            onChange={async (e) => {
-                              e.stopPropagation();
+                            onChange={async (val) => {
                               try {
-                                await modifierTravail({
-                                  id: t._id,
-                                  etat: e.target.value,
-                                }).unwrap();
+                                await modifierTravail({ id: t._id, etat: val }).unwrap();
                               } catch (err) {
                                 console.error(err);
                               }
                             }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold border-0 cursor-pointer"
-                            style={{
-                              backgroundColor: etatStyle.bg,
-                              color: etatStyle.color,
-                              outline: "none",
-                            }}
-                          >
-                            {TRAVAIL_ETATS.map((etat) => (
-                              <option key={etat} value={etat}>
-                                {etat}
-                              </option>
-                            ))}
-                          </select>
+                            options={TRAVAIL_ETAT_OPTIONS}
+                            stopPropagation
+                          />
                         )}
                       </div>
 

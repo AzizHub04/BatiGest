@@ -10,6 +10,13 @@ import Alert from "../components/Alert";
 import { useEffect } from "react";
 import socket from "../services/socket";
 import { EditIcon, TrashIcon } from "./icons/SvgIcons";
+import BadgeSelect from "./BadgeSelect";
+
+const STATUT_TACHE_OPTIONS = [
+  { value: "Non commencé", bg: "#f3f4f6", color: "#6b7280" },
+  { value: "En cours",     bg: "#dbeafe", color: "#2563eb" },
+  { value: "Terminé",      bg: "#dcfce7", color: "#16a34a" },
+];
 
 const TachesList = ({ travailId }) => {
   const { data: taches = [], refetch: refetchTaches } =
@@ -127,29 +134,17 @@ const TachesList = ({ travailId }) => {
                   style={{ transition: "background-color 0.1s" }}
                 >
                   <div className="flex items-center gap-3 flex-1">
-                    <select
+                    <BadgeSelect
                       value={t.statut}
-                      onChange={async (e) => {
+                      onChange={async (val) => {
                         try {
-                          await changerStatut({
-                            id: t._id,
-                            statut: e.target.value,
-                          }).unwrap();
+                          await changerStatut({ id: t._id, statut: val }).unwrap();
                         } catch (err) {
                           console.error(err);
                         }
                       }}
-                      className="text-[10px] px-1.5 py-0.5 rounded-full font-medium border-0 cursor-pointer"
-                      style={{
-                        backgroundColor: ss.bg,
-                        color: ss.color,
-                        outline: "none",
-                      }}
-                    >
-                      <option value="Non commencé">Non commencé</option>
-                      <option value="En cours">En cours</option>
-                      <option value="Terminé">Terminé</option>
-                    </select>
+                      options={STATUT_TACHE_OPTIONS}
+                    />
                     <span className="text-sm text-gray-700">{t.titre}</span>
                     <span
                       className="text-[10px] px-1.5 py-0.5 rounded-full font-medium"
@@ -199,29 +194,17 @@ const TachesList = ({ travailId }) => {
                   </div>
                   {/* Status select + actions */}
                   <div className="flex items-center justify-between">
-                    <select
+                    <BadgeSelect
                       value={t.statut}
-                      onChange={async (e) => {
+                      onChange={async (val) => {
                         try {
-                          await changerStatut({
-                            id: t._id,
-                            statut: e.target.value,
-                          }).unwrap();
+                          await changerStatut({ id: t._id, statut: val }).unwrap();
                         } catch (err) {
                           console.error(err);
                         }
                       }}
-                      className="text-[11px] px-2.5 py-1 rounded-full font-semibold border-0 cursor-pointer"
-                      style={{
-                        backgroundColor: ss.bg,
-                        color: ss.color,
-                        outline: "none",
-                      }}
-                    >
-                      <option value="Non commencé">Non commencé</option>
-                      <option value="En cours">En cours</option>
-                      <option value="Terminé">Terminé</option>
-                    </select>
+                      options={STATUT_TACHE_OPTIONS}
+                    />
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => openEdit(t)}

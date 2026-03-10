@@ -20,6 +20,15 @@ import {
   EyeIcon,
   TrashIcon,
 } from "../../components/icons/SvgIcons";
+import BadgeSelect from "../../components/BadgeSelect";
+
+const CHANTIER_ETAT_OPTIONS = [
+  { value: "Planifié", bg: "#dbeafe", color: "#2563eb" },
+  { value: "En cours", bg: "#dcfce7", color: "#16a34a" },
+  { value: "En retard", bg: "#fee2e2", color: "#dc2626" },
+  { value: "Terminé", bg: "#f3e8ff", color: "#9333ea" },
+  { value: "Suspendu", bg: "#fef3c7", color: "#d97706" },
+];
 
 const Chantiers = () => {
   const {
@@ -216,7 +225,7 @@ const Chantiers = () => {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-800">Chantiers</h2>
           <div className="flex items-center gap-3">
-            <div className="relative">
+            <div className="flex flex-row gap-4 items-center  relative">
               <SearchIcon
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 width={16}
@@ -251,63 +260,142 @@ const Chantiers = () => {
         </div>
 
         {/* Desktop table */}
-        <div className="hidden sm:block overflow-x-auto">
+        <div className="hidden sm:block ">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Nom</th>
-                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Localisation</th>
-                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Responsable</th>
-                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Dates</th>
-                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">État</th>
-                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Avancement</th>
-                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Budget</th>
-                <th className="text-right py-3 px-3 text-xs font-semibold text-gray-400 uppercase">Actions</th>
+                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
+                  Nom
+                </th>
+                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
+                  Localisation
+                </th>
+                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
+                  Responsable
+                </th>
+                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
+                  Dates
+                </th>
+                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
+                  État
+                </th>
+                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
+                  Avancement
+                </th>
+                <th className="text-left py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
+                  Budget
+                </th>
+                <th className="text-right py-3 px-3 text-xs font-semibold text-gray-400 uppercase">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredChantiers.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="text-center py-12 text-gray-400 text-sm">Aucun chantier trouvé</td>
+                  <td
+                    colSpan="8"
+                    className="text-center py-12 text-gray-400 text-sm"
+                  >
+                    Aucun chantier trouvé
+                  </td>
                 </tr>
               ) : (
                 filteredChantiers.map((c) => {
                   const es = etatStyle(c.etat);
                   return (
-                    <tr key={c._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
-                      <td className="py-3.5 px-3 text-sm text-gray-800 font-medium">{c.nom}</td>
-                      <td className="py-3.5 px-3 text-sm text-gray-500">{c.localisation}</td>
-                      <td className="py-3.5 px-3 text-sm text-gray-600">
-                        {c.responsable ? `${c.responsable.prenom} ${c.responsable.nom}` : <span className="text-gray-400">—</span>}
+                    <tr
+                      key={c._id}
+                      className="border-b border-gray-50 hover:bg-gray-50"
+                      style={{ transition: "background-color 0.1s" }}
+                    >
+                      <td className="py-3.5 px-3 text-sm text-gray-800 font-medium">
+                        {c.nom}
                       </td>
-                      <td className="py-3.5 px-3 text-sm text-gray-500">{formatDate(c.dateDebut)} → {formatDate(c.dateFinPrevue)}</td>
+                      <td className="py-3.5 px-3 text-sm text-gray-500">
+                        {c.localisation}
+                      </td>
+                      <td className="py-3.5 px-3 text-sm text-gray-600">
+                        {c.responsable ? (
+                          `${c.responsable.prenom} ${c.responsable.nom}`
+                        ) : (
+                          <span className="text-gray-400">—</span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-3 text-sm text-gray-500">
+                        {formatDate(c.dateDebut)} →{" "}
+                        {formatDate(c.dateFinPrevue)}
+                      </td>
                       <td className="py-3.5 px-3">
-                        <select value={c.etat} onChange={(e) => handleEtat(c._id, e.target.value)} className="text-xs px-2 py-1 rounded-full font-medium border-0 cursor-pointer" style={{ backgroundColor: es.bg, color: es.color, outline: "none" }}>
-                          {["Planifié","En cours","En retard","Terminé","Suspendu"].map((e) => <option key={e} value={e}>{e}</option>)}
-                        </select>
+                        <BadgeSelect
+                          value={c.etat}
+                          onChange={(val) => handleEtat(c._id, val)}
+                          options={CHANTIER_ETAT_OPTIONS}
+                        />
                       </td>
                       <td className="py-3.5 px-3">
                         <div className="flex items-center gap-2">
                           <div className="w-20 h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div className="h-full rounded-full" style={{ width: `${c.avancement || 0}%`, backgroundColor: avancementColor(c.avancement || 0), transition: "width 0.3s" }} />
+                            <div
+                              className="h-full rounded-full"
+                              style={{
+                                width: `${c.avancement || 0}%`,
+                                backgroundColor: avancementColor(
+                                  c.avancement || 0,
+                                ),
+                                transition: "width 0.3s",
+                              }}
+                            />
                           </div>
-                          <span className="text-xs text-gray-500 font-medium">{c.avancement || 0}%</span>
+                          <span className="text-xs text-gray-500 font-medium">
+                            {c.avancement || 0}%
+                          </span>
                         </div>
                       </td>
                       <td className="py-3.5 px-3">
-                        <div className="text-sm text-gray-800 font-semibold">{formatMontant(c.budget)}</div>
-                        <div className="text-xs text-gray-400">Dépensé: {formatMontant(c.totalDepense || 0)}</div>
+                        <div className="text-sm text-gray-800 font-semibold">
+                          {formatMontant(c.budget)}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          Dépensé: {formatMontant(c.totalDepense || 0)}
+                        </div>
                       </td>
                       <td className="py-3.5 px-3">
                         <div className="flex items-center justify-end gap-1.5">
-                          <button onClick={() => openEdit(c)} className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50" style={{ transition: "all 0.15s" }}>
-                            <EditIcon width={16} height={16} color="currentColor" />
+                          <button
+                            onClick={() => openEdit(c)}
+                            className="p-1.5 text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-50"
+                            style={{ transition: "all 0.15s" }}
+                          >
+                            <EditIcon
+                              width={16}
+                              height={16}
+                              color="currentColor"
+                            />
                           </button>
-                          <button onClick={() => navigate(`/admin/chantiers/${c._id}`)} className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100" style={{ transition: "all 0.15s" }}>
-                            <EyeIcon width={16} height={16} color="currentColor" />
+                          <button
+                            onClick={() =>
+                              navigate(`/admin/chantiers/${c._id}`)
+                            }
+                            className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg hover:bg-gray-100"
+                            style={{ transition: "all 0.15s" }}
+                          >
+                            <EyeIcon
+                              width={16}
+                              height={16}
+                              color="currentColor"
+                            />
                           </button>
-                          <button onClick={() => setDeleteConfirm(c._id)} className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50" style={{ transition: "all 0.15s" }}>
-                            <TrashIcon width={16} height={16} color="currentColor" />
+                          <button
+                            onClick={() => setDeleteConfirm(c._id)}
+                            className="p-1.5 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50"
+                            style={{ transition: "all 0.15s" }}
+                          >
+                            <TrashIcon
+                              width={16}
+                              height={16}
+                              color="currentColor"
+                            />
                           </button>
                         </div>
                       </td>
@@ -322,65 +410,101 @@ const Chantiers = () => {
         {/* Mobile cards */}
         <div className="block sm:hidden space-y-3 p-1">
           {filteredChantiers.length === 0 ? (
-            <p className="text-center py-12 text-gray-400 text-sm">Aucun chantier trouvé</p>
+            <p className="text-center py-12 text-gray-400 text-sm">
+              Aucun chantier trouvé
+            </p>
           ) : (
             filteredChantiers.map((c) => {
               const es = etatStyle(c.etat);
               return (
-                <div key={c._id} className="border border-gray-100 rounded-xl p-4">
+                <div
+                  key={c._id}
+                  className="border border-gray-100 rounded-xl p-4"
+                >
                   {/* Header: nom + état */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
-                      <p className="text-sm font-semibold text-gray-800">{c.nom}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{c.localisation}</p>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {c.nom}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {c.localisation}
+                      </p>
                     </div>
-                    <select
+                    <BadgeSelect
                       value={c.etat}
-                      onChange={(e) => handleEtat(c._id, e.target.value)}
-                      className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold border-0 cursor-pointer"
-                      style={{ backgroundColor: es.bg, color: es.color, outline: "none" }}
-                    >
-                      {["Planifié","En cours","En retard","Terminé","Suspendu"].map((e) => <option key={e} value={e}>{e}</option>)}
-                    </select>
+                      onChange={(val) => handleEtat(c._id, val)}
+                      options={CHANTIER_ETAT_OPTIONS}
+                    />
                   </div>
                   {/* Info grid */}
                   <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-3 text-xs">
                     <div>
                       <p className="text-gray-400">Responsable</p>
                       <p className="text-gray-700 font-medium mt-0.5">
-                        {c.responsable ? `${c.responsable.prenom} ${c.responsable.nom}` : "—"}
+                        {c.responsable
+                          ? `${c.responsable.prenom} ${c.responsable.nom}`
+                          : "—"}
                       </p>
                     </div>
                     <div>
                       <p className="text-gray-400">Budget</p>
-                      <p className="text-gray-800 font-semibold mt-0.5">{formatMontant(c.budget)}</p>
-                      <p className="text-gray-400">Dépensé: {formatMontant(c.totalDepense || 0)}</p>
+                      <p className="text-gray-800 font-semibold mt-0.5">
+                        {formatMontant(c.budget)}
+                      </p>
+                      <p className="text-gray-400">
+                        Dépensé: {formatMontant(c.totalDepense || 0)}
+                      </p>
                     </div>
                     <div className="col-span-2">
                       <p className="text-gray-400">Dates</p>
-                      <p className="text-gray-600 mt-0.5">{formatDate(c.dateDebut)} → {formatDate(c.dateFinPrevue)}</p>
+                      <p className="text-gray-600 mt-0.5">
+                        {formatDate(c.dateDebut)} →{" "}
+                        {formatDate(c.dateFinPrevue)}
+                      </p>
                     </div>
                   </div>
                   {/* Progress */}
                   <div className="mb-3">
                     <div className="flex justify-between items-center mb-1">
                       <span className="text-xs text-gray-400">Avancement</span>
-                      <span className="text-xs font-semibold text-gray-600">{c.avancement || 0}%</span>
+                      <span className="text-xs font-semibold text-gray-600">
+                        {c.avancement || 0}%
+                      </span>
                     </div>
                     <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: `${c.avancement || 0}%`, backgroundColor: avancementColor(c.avancement || 0), transition: "width 0.3s" }} />
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${c.avancement || 0}%`,
+                          backgroundColor: avancementColor(c.avancement || 0),
+                          transition: "width 0.3s",
+                        }}
+                      />
                     </div>
                   </div>
                   {/* Actions */}
                   <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
-                    <button onClick={() => openEdit(c)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg">
-                      <EditIcon width={12} height={12} color="currentColor" /> Modifier
+                    <button
+                      onClick={() => openEdit(c)}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg"
+                    >
+                      <EditIcon width={12} height={12} color="currentColor" />{" "}
+                      Modifier
                     </button>
-                    <button onClick={() => navigate(`/admin/chantiers/${c._id}`)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-lg">
-                      <EyeIcon width={12} height={12} color="currentColor" /> Détails
+                    <button
+                      onClick={() => navigate(`/admin/chantiers/${c._id}`)}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 rounded-lg"
+                    >
+                      <EyeIcon width={12} height={12} color="currentColor" />{" "}
+                      Détails
                     </button>
-                    <button onClick={() => setDeleteConfirm(c._id)} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg">
-                      <TrashIcon width={12} height={12} color="currentColor" /> Supprimer
+                    <button
+                      onClick={() => setDeleteConfirm(c._id)}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg"
+                    >
+                      <TrashIcon width={12} height={12} color="currentColor" />{" "}
+                      Supprimer
                     </button>
                   </div>
                 </div>
