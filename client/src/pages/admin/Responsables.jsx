@@ -10,13 +10,13 @@ import Alert from "../../components/Alert";
 import ConfirmDelete from "../../components/ConfirmDelete";
 import {
   LoadingSpinner,
-  SearchIcon,
   PlusIcon,
   EyeIcon,
   EyeOffIcon,
   EditIcon,
   TrashIcon,
 } from "../../components/icons/SvgIcons";
+import SearchInput from "../../components/SearchInput";
 
 const Responsables = () => {
   const { data: responsables = [], isLoading } = useGetResponsablesQuery();
@@ -150,24 +150,11 @@ const Responsables = () => {
           <h2 className="text-xl font-bold text-gray-800">Responsables</h2>
           <div className="flex items-center gap-3">
             {/* Recherche */}
-            <div className="relative">
-              <SearchIcon
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                width={16}
-                height={16}
-                color="currentColor"
-              />
-              <input
-                type="text"
-                placeholder="Rechercher..."
-                value={recherche}
-                onChange={(e) => setRecherche(e.target.value)}
-                className="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm w-56"
-                style={{ outline: "none", transition: "border-color 0.15s" }}
-                onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
-                onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
-              />
-            </div>
+            <SearchInput
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
+              className="w-56"
+            />
 
             {/* Bouton créer */}
             <button

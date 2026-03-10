@@ -14,13 +14,13 @@ import { useEffect } from "react";
 import socket from "../../services/socket";
 import {
   LoadingSpinner,
-  SearchIcon,
   PlusIcon,
   EditIcon,
   EyeIcon,
   TrashIcon,
 } from "../../components/icons/SvgIcons";
 import BadgeSelect from "../../components/BadgeSelect";
+import SearchInput from "../../components/SearchInput";
 
 const CHANTIER_ETAT_OPTIONS = [
   { value: "Planifié", bg: "#dbeafe", color: "#2563eb" },
@@ -225,24 +225,11 @@ const Chantiers = () => {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-800">Chantiers</h2>
           <div className="flex items-center gap-3">
-            <div className="flex flex-row gap-4 items-center  relative">
-              <SearchIcon
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                width={16}
-                height={16}
-                color="currentColor"
-              />
-              <input
-                type="text"
-                placeholder="Rechercher..."
-                value={recherche}
-                onChange={(e) => setRecherche(e.target.value)}
-                className="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm w-56"
-                style={{ outline: "none", transition: "border-color 0.15s" }}
-                onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
-                onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
-              />
-            </div>
+            <SearchInput
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
+              className="w-56"
+            />
             <button
               onClick={openCreate}
               className="flex items-center gap-2 px-4 py-2 text-white rounded-xl text-sm font-medium"

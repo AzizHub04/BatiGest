@@ -9,12 +9,12 @@ import Alert from "../Alert";
 import ConfirmDelete from "../ConfirmDelete";
 import {
   LoadingSpinner,
-  SearchIcon,
   PlusIcon,
   BoxIcon,
   EditIcon,
   TrashIcon,
 } from "../icons/SvgIcons";
+import SearchInput from "../SearchInput";
 
 const ListeMateriels = () => {
   const { data: materiels = [], isLoading } = useGetMaterielsQuery();
@@ -110,24 +110,12 @@ const ListeMateriels = () => {
       <Alert type={succes?.type} message={succes?.message} />
 
       <div className="flex items-center justify-between mb-4">
-        <div className="relative">
-          <SearchIcon
-            className="absolute left-3 top-1/2 -translate-y-1/2"
-            width={16}
-            height={16}
-            color="#9ca3af"
-          />
-          <input
-            type="text"
-            placeholder="Rechercher un matériel..."
-            value={recherche}
-            onChange={(e) => setRecherche(e.target.value)}
-            className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm w-72"
-            style={{ outline: "none", transition: "border-color 0.15s" }}
-            onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
-            onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
-          />
-        </div>
+        <SearchInput
+          value={recherche}
+          onChange={(e) => setRecherche(e.target.value)}
+          placeholder="Rechercher un matériel..."
+          className="w-72"
+        />
         <button
           onClick={openCreate}
           className="flex items-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium"
