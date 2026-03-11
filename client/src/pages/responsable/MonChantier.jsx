@@ -302,91 +302,68 @@ const MonChantier = () => {
               <PeopleIcon width={16} height={16} color="#16a34a" />
             </div>
             <h3 className="text-sm font-bold text-gray-800">
-              Ouvriers sur le chantier
+              Ouvriers présents aujourd'hui
             </h3>
             <span
               className="text-xs px-2 py-0.5 rounded-full font-medium"
               style={{ backgroundColor: "#16a34a1a", color: "#16a34a" }}
             >
-              {ouvriersPresents.length}
+              {ouvriersPresents.filter((o) => o.presentAujourdhui).length}
             </span>
           </div>
 
-          {ouvriersPresents.length === 0 ? (
+          {ouvriersPresents.filter((o) => o.presentAujourdhui).length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8">
               <PeopleIcon width={32} height={32} color="#d1d5db" />
               <p className="text-xs text-gray-400 mt-2">
-                Aucun ouvrier ce mois
+                Aucun ouvrier présent aujourd'hui
               </p>
             </div>
           ) : (
             <div className="space-y-2 max-h-64 overflow-y-auto">
-              {ouvriersPresents.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between p-3 rounded-xl"
-                  style={{ backgroundColor: "#f9fafb" }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
-                      style={{
-                        backgroundColor:
-                          item.type === "responsable" ? "#2563eb" : "#dc5539",
-                      }}
-                    >
-                      {item.personne?.prenom?.[0]}
-                      {item.personne?.nom?.[0]}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <p className="text-sm font-medium text-gray-800">
-                          {item.personne?.prenom} {item.personne?.nom}
-                        </p>
-                        {item.type === "responsable" && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">
-                            R
-                          </span>
+              {ouvriersPresents
+                .filter((o) => o.presentAujourdhui)
+                .map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between p-3 rounded-xl"
+                    style={{ backgroundColor: "#f9fafb" }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
+                        style={{
+                          backgroundColor:
+                            item.type === "responsable" ? "#2563eb" : "#dc5539",
+                        }}
+                      >
+                        {item.personne?.prenom?.[0]}
+                        {item.personne?.nom?.[0]}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-medium text-gray-800">
+                            {item.personne?.prenom} {item.personne?.nom}
+                          </p>
+                          {item.type === "responsable" && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">
+                              R
+                            </span>
+                          )}
+                        </div>
+                        {item.personne?.telephone && (
+                          <p className="text-[10px] text-gray-400">
+                            {item.personne.telephone}
+                          </p>
                         )}
                       </div>
-                      {item.personne?.telephone && (
-                        <p className="text-[10px] text-gray-400">
-                          {item.personne.telephone}
-                        </p>
-                      )}
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center gap-1.5">
-                      {item.presentAujourdhui ? (
-                        <span
-                          className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                          style={{
-                            backgroundColor: "#dcfce7",
-                            color: "#16a34a",
-                          }}
-                        >
-                          Présent
-                        </span>
-                      ) : (
-                        <span
-                          className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                          style={{
-                            backgroundColor: "#f3f4f6",
-                            color: "#6b7280",
-                          }}
-                        >
-                          Absent
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[10px] text-gray-400 mt-0.5">
+                    <p className="text-[10px] text-gray-400">
                       {item.joursTotal} jour{item.joursTotal > 1 ? "s" : ""} ce
                       mois
                     </p>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           )}
         </div>
