@@ -27,6 +27,7 @@ const CellulePointage = ({
   onSupprimer,
   abreviation,
   isActiveWeek,
+  isToday,
 }) => {
   const [open, setOpen] = useState(false);
   const [hover, setHover] = useState(null);
@@ -102,9 +103,11 @@ const CellulePointage = ({
 
   const cellBg = jour.dimanche
     ? "#fee2e2"
-    : isActiveWeek
-      ? "#fff5f3"
-      : "transparent";
+    : isToday
+      ? "#eff6ff"
+      : isActiveWeek
+        ? "#fff5f3"
+        : "transparent";
 
   return (
     <div
@@ -529,9 +532,17 @@ const FichePointage = () => {
   };
 
   const centerRef = useRef(null);
+  const isProgrammaticScroll = useRef(false);
 
-  /* Scroll → met à jour la semaine active */
+  /* Aujourd'hui en chaîne YYYY-MM-DD */
+  const todayDateStr = useMemo(() => {
+    const t = new Date();
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+  }, []);
+
+  /* Scroll → met à jour la semaine active (ignoré pendant un scroll programmatique) */
   const handleCenterScroll = () => {
+    if (isProgrammaticScroll.current) return;
     if (!centerRef.current || semaineOffsets.length === 0) return;
     const { scrollLeft, clientWidth } = centerRef.current;
     const center = scrollLeft + clientWidth / 2;
@@ -591,6 +602,7 @@ const FichePointage = () => {
   const scrollToSemaine = (i, newActive = true) => {
     const s = semaines[i];
     if (s) {
+      isProgrammaticScroll.current = true;
       const el = centerRef.current?.querySelector(`[data-jour="${s.debut}"]`);
       if (el)
         el.scrollIntoView({
@@ -598,6 +610,7 @@ const FichePointage = () => {
           behavior: "smooth",
           block: "nearest",
         });
+      setTimeout(() => { isProgrammaticScroll.current = false; }, 700);
     }
     if (newActive) setActiveSemaine(i);
   };
@@ -609,6 +622,7 @@ const FichePointage = () => {
       setMois(todayMois);
       return;
     }
+    isProgrammaticScroll.current = true;
     const el = centerRef.current?.querySelector(
       `[data-jour="${today.getDate()}"]`,
     );
@@ -623,6 +637,7 @@ const FichePointage = () => {
       (s) => s.debut <= todayDay && s.fin >= todayDay,
     );
     if (idx >= 0) setActiveSemaine(idx);
+    setTimeout(() => { isProgrammaticScroll.current = false; }, 700);
   };
 
   /* Largeur totale */
@@ -809,13 +824,18 @@ const FichePointage = () => {
                     >
                       <span
                         className="text-[9px] font-medium uppercase"
-                        style={{ color: j.dimanche ? "#dc2626" : "#9ca3af" }}
+                        style={{ color: j.date === todayDateStr ? "#2563eb" : j.dimanche ? "#dc2626" : "#9ca3af" }}
                       >
                         {j.jourNom}
                       </span>
                       <span
-                        className="text-[10px] font-bold"
-                        style={{ color: j.dimanche ? "#dc2626" : "#374151" }}
+                        className="text-[10px] font-bold flex items-center justify-center rounded-full"
+                        style={{
+                          width: 18,
+                          height: 18,
+                          backgroundColor: j.date === todayDateStr ? "#2563eb" : "transparent",
+                          color: j.date === todayDateStr ? "white" : j.dimanche ? "#dc2626" : "#374151",
+                        }}
                       >
                         {j.jour}
                       </span>
@@ -828,6 +848,7 @@ const FichePointage = () => {
                         onSupprimer={handleSupprimerPointage}
                         abreviation={abreviation}
                         isActiveWeek={false}
+                        isToday={j.date === todayDateStr}
                       />
                     </div>
                   ))}
@@ -988,25 +1009,38 @@ const FichePointage = () => {
                       color: j.dimanche ? "#dc2626" : "#6b7280",
                       backgroundColor: j.dimanche
                         ? "#fee2e2"
-                        : si === activeSemaine
-                          ? "#fff5f3"
-                          : si % 2 === 0
-                            ? "white"
-                            : "#fafafa",
+                        : j.date === todayDateStr
+                          ? "#eff6ff"
+                          : si === activeSemaine
+                            ? "#fff5f3"
+                            : si % 2 === 0
+                              ? "white"
+                              : "#fafafa",
                       boxSizing: "border-box",
                       transition: "background-color 0.2s",
                     }}
                   >
-                    <div>{j.jourNom}</div>
+                    <div style={{ color: j.date === todayDateStr ? "#2563eb" : j.dimanche ? "#dc2626" : "#6b7280" }}>
+                      {j.jourNom}
+                    </div>
                     <div
                       style={{
+                        width: 18,
+                        height: 18,
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                         fontWeight: 700,
                         fontSize: 10,
-                        color: j.dimanche
-                          ? "#dc2626"
-                          : si === activeSemaine
-                            ? "#dc5539"
-                            : "#374151",
+                        backgroundColor: j.date === todayDateStr ? "#2563eb" : "transparent",
+                        color: j.date === todayDateStr
+                          ? "white"
+                          : j.dimanche
+                            ? "#dc2626"
+                            : si === activeSemaine
+                              ? "#dc5539"
+                              : "#374151",
                       }}
                     >
                       {j.jour}
@@ -1074,6 +1108,7 @@ const FichePointage = () => {
                           onSupprimer={handleSupprimerPointage}
                           abreviation={abreviation}
                           isActiveWeek={si === activeSemaine}
+                          isToday={j.date === todayDateStr}
                         />
                       ))}
                       {si < joursSemaine.length - 1 && (
