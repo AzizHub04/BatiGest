@@ -99,7 +99,11 @@ const NotesSection = ({
   const handleEdit = async (id) => {
     if (!editTitre.trim() || !editContenu.trim()) return;
     try {
-      await modifierNote({ id, titre: editTitre, contenu: editContenu }).unwrap();
+      await modifierNote({
+        id,
+        titre: editTitre,
+        contenu: editContenu,
+      }).unwrap();
       setEditId(null);
       setEditTitre("");
       setEditContenu("");
@@ -122,7 +126,9 @@ const NotesSection = ({
 
   const currentUserId = utilisateur?.id || utilisateur?._id;
   const isAuteur = (note) =>
-    currentUserId && note.auteur?._id && String(note.auteur._id) === String(currentUserId);
+    currentUserId &&
+    note.auteur?._id &&
+    String(note.auteur._id) === String(currentUserId);
 
   const notesFiltrees = useMemo(() => {
     let arr = [...notes];
@@ -177,7 +183,7 @@ const NotesSection = ({
         <textarea
           value={contenu}
           onChange={(e) => setContenu(e.target.value)}
-          placeholder="R\u00e9diger une nouvelle note..."
+          placeholder="Rédiger une nouvelle note..."
           rows="4"
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none"
           style={{ outline: "none", transition: "border-color 0.15s" }}
@@ -222,7 +228,9 @@ const NotesSection = ({
             className="flex-1 min-w-45"
           />
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 font-medium whitespace-nowrap">De</span>
+            <span className="text-xs text-gray-400 font-medium whitespace-nowrap">
+              De
+            </span>
             <input
               type="date"
               value={dateFrom}
@@ -234,7 +242,9 @@ const NotesSection = ({
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 font-medium whitespace-nowrap">À</span>
+            <span className="text-xs text-gray-400 font-medium whitespace-nowrap">
+              À
+            </span>
             <input
               type="date"
               value={dateTo}
@@ -256,7 +266,11 @@ const NotesSection = ({
           </button>
           {(recherche || dateFrom || dateTo) && (
             <button
-              onClick={() => { setRecherche(""); setDateFrom(""); setDateTo(""); }}
+              onClick={() => {
+                setRecherche("");
+                setDateFrom("");
+                setDateTo("");
+              }}
               className="px-3 py-2 text-xs font-medium text-red-500 bg-red-50 rounded-xl hover:bg-red-100"
               style={{ transition: "background-color 0.15s" }}
             >
@@ -268,7 +282,9 @@ const NotesSection = ({
 
       {notesFiltrees.length === 0 ? (
         <p className="text-sm text-gray-400 text-center py-8">
-          {recherche ? "Aucune note trouv\u00e9e" : "Aucune note pour ce chantier"}
+          {recherche
+            ? "Aucune note trouv\u00e9e"
+            : "Aucune note pour ce chantier"}
         </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -320,7 +336,11 @@ const NotesSection = ({
                         className="p-1 text-gray-400 hover:text-red-500 rounded"
                         style={{ transition: "color 0.15s" }}
                       >
-                        <TrashIcon width={14} height={14} color="currentColor" />
+                        <TrashIcon
+                          width={14}
+                          height={14}
+                          color="currentColor"
+                        />
                       </button>
                     </div>
                   )}
@@ -433,7 +453,11 @@ const NotesSection = ({
                           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg"
                           style={{ transition: "opacity 0.15s" }}
                         >
-                          <EditIcon width={12} height={12} color="currentColor" />
+                          <EditIcon
+                            width={12}
+                            height={12}
+                            color="currentColor"
+                          />
                           Modifier
                         </button>
                         <button
@@ -441,7 +465,11 @@ const NotesSection = ({
                           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-500 bg-red-50 rounded-lg"
                           style={{ transition: "opacity 0.15s" }}
                         >
-                          <TrashIcon width={12} height={12} color="currentColor" />
+                          <TrashIcon
+                            width={12}
+                            height={12}
+                            color="currentColor"
+                          />
                           Supprimer
                         </button>
                       </>
