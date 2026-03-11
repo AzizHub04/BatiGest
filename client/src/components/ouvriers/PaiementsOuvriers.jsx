@@ -555,6 +555,7 @@ const PaiementsOuvriers = () => {
                   required
                   min="1"
                   max={reglerModal.montantRestant}
+                  placeholder="0.00"
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none" }}
                   autoFocus
@@ -620,6 +621,7 @@ const PaiementsOuvriers = () => {
                   required
                   min="0"
                   max={modifierModal.montantTotal}
+                  placeholder="0.00"
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none" }}
                   autoFocus

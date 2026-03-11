@@ -261,6 +261,7 @@ const ListeMateriels = () => {
                     value={form.nom}
                     onChange={(e) => setForm({ ...form, nom: e.target.value })}
                     required
+                    placeholder="Ex: Ciment Portland"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -281,6 +282,7 @@ const ListeMateriels = () => {
                       setForm({ ...form, categorie: e.target.value })
                     }
                     required
+                    placeholder="Ex: Gros œuvre"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -325,6 +327,7 @@ const ListeMateriels = () => {
                     }
                     required
                     min="0"
+                    placeholder="0"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",

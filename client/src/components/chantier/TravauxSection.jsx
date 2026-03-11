@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   useGetTravauxByChantierQuery,
   useCreerTravailMutation,
@@ -8,6 +8,7 @@ import {
 import TachesList from "../TachesList";
 import Alert from "../Alert";
 import ConfirmDelete from "../ConfirmDelete";
+import SearchInput from "../SearchInput";
 import {
   PlusIcon,
   GridIcon,
@@ -58,6 +59,12 @@ const TravauxSection = ({
   const [succes, setSucces] = useState(null);
   const [erreur, setErreur] = useState("");
   const [form, setForm] = useState({ titre: "", description: "" });
+
+  // Search + sort + date filter
+  const [recherche, setRecherche] = useState("");
+  const [triDesc, setTriDesc] = useState(true);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
   useEffect(() => {
     if (!chantierId) return;
@@ -125,6 +132,30 @@ const TravauxSection = ({
     }
   };
 
+  const travauxFiltres = useMemo(() => {
+    let arr = [...travaux];
+    if (recherche.trim()) {
+      const q = recherche.toLowerCase();
+      arr = arr.filter(
+        (t) =>
+          (t.titre || "").toLowerCase().includes(q) ||
+          (t.description || "").toLowerCase().includes(q),
+      );
+    }
+    if (dateFrom) {
+      arr = arr.filter((t) => (t.createdAt || "").substring(0, 10) >= dateFrom);
+    }
+    if (dateTo) {
+      arr = arr.filter((t) => (t.createdAt || "").substring(0, 10) <= dateTo);
+    }
+    arr.sort((a, b) => {
+      const da = new Date(a.createdAt);
+      const db = new Date(b.createdAt);
+      return triDesc ? db - da : da - db;
+    });
+    return arr;
+  }, [travaux, recherche, triDesc, dateFrom, dateTo]);
+
   if (!chantierId) return null;
 
   return (
@@ -139,7 +170,8 @@ const TravauxSection = ({
       <Alert type={succes?.type} message={succes?.message} />
 
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
-        <div className="flex items-center justify-between mb-4">
+        {/* Header row */}
+        <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-bold text-gray-800">
             Travaux ({travaux.length})
           </h3>
@@ -158,13 +190,69 @@ const TravauxSection = ({
           </button>
         </div>
 
+        {/* Filter row */}
+        <div className="flex flex-wrap items-center gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
+          <SearchInput
+            value={recherche}
+            onChange={(e) => setRecherche(e.target.value)}
+            placeholder="Rechercher un travail..."
+            className="flex-1 min-w-45"
+          />
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400 font-medium whitespace-nowrap">De</span>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="px-3 py-2 border border-gray-200 rounded-xl text-sm bg-white"
+              style={{ outline: "none", transition: "border-color 0.15s" }}
+              onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+              onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400 font-medium whitespace-nowrap">À</span>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              min={dateFrom || undefined}
+              className="px-3 py-2 border border-gray-200 rounded-xl text-sm bg-white"
+              style={{ outline: "none", transition: "border-color 0.15s" }}
+              onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+              onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+            />
+          </div>
+          <button
+            onClick={() => setTriDesc(!triDesc)}
+            className="flex items-center gap-1.5 px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-600 bg-white hover:bg-gray-50 whitespace-nowrap"
+            style={{ transition: "background-color 0.15s" }}
+          >
+            <span>{triDesc ? "↓" : "↑"}</span>
+            <span>Date</span>
+          </button>
+          {(recherche || dateFrom || dateTo) && (
+            <button
+              onClick={() => { setRecherche(""); setDateFrom(""); setDateTo(""); }}
+              className="px-3 py-2 text-xs font-medium text-red-500 bg-red-50 rounded-xl hover:bg-red-100"
+              style={{ transition: "background-color 0.15s" }}
+            >
+              Effacer
+            </button>
+          )}
+        </div>
+
         {travaux.length === 0 ? (
           <p className="text-sm text-gray-400 text-center py-8">
             Aucun travail pour ce chantier
           </p>
+        ) : travauxFiltres.length === 0 ? (
+          <p className="text-sm text-gray-400 text-center py-8">
+            Aucun travail trouv\u00e9
+          </p>
         ) : (
           <div className="space-y-3">
-            {travaux.map((t) => {
+            {travauxFiltres.map((t) => {
               const etatStyle = travailEtatStyle(t.etat);
               const isOpen = travailOpen === t._id;
               return (
@@ -436,6 +524,7 @@ const TravauxSection = ({
                   value={form.titre}
                   onChange={(e) => setForm({ ...form, titre: e.target.value })}
                   required
+                  placeholder="Ex: Maçonnerie..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
                   onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
@@ -452,6 +541,7 @@ const TravauxSection = ({
                     setForm({ ...form, description: e.target.value })
                   }
                   rows="3"
+                  placeholder="Description du travail..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
                   onFocus={(e) => (e.target.style.borderColor = "#dc5539")}

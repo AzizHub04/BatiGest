@@ -256,6 +256,7 @@ const TachesList = ({ travailId }) => {
                   value={form.titre}
                   onChange={(e) => setForm({ ...form, titre: e.target.value })}
                   required
+                  placeholder="Ex: Coulage dalle..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
                   onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
@@ -272,6 +273,7 @@ const TachesList = ({ travailId }) => {
                     setForm({ ...form, description: e.target.value })
                   }
                   rows="2"
+                  placeholder="Description de la tâche..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
                   onFocus={(e) => (e.target.style.borderColor = "#dc5539")}

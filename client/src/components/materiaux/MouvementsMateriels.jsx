@@ -421,6 +421,7 @@ const MouvementsMateriels = () => {
                     }
                     required
                     min="1"
+                    placeholder="1"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{ outline: "none" }}
                   />

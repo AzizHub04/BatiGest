@@ -535,6 +535,7 @@ const Chantiers = () => {
                     value={form.nom}
                     onChange={(e) => setForm({ ...form, nom: e.target.value })}
                     required
+                    placeholder="Ex: Résidence Les Pins..."
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -555,6 +556,7 @@ const Chantiers = () => {
                       setForm({ ...form, localisation: e.target.value })
                     }
                     required
+                    placeholder="Ex: Tunis, Sfax..."
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -623,6 +625,7 @@ const Chantiers = () => {
                     }
                     required
                     min="0"
+                    placeholder="0.00"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",

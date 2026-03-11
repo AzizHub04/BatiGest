@@ -494,6 +494,7 @@ const ChantierDetail = () => {
                     }
                     required
                     min="0"
+                    placeholder="0.00"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -514,6 +515,7 @@ const ChantierDetail = () => {
                   onChange={(e) =>
                     setCoutForm({ ...coutForm, description: e.target.value })
                   }
+                  placeholder="Ex: Achat ciment, Règlement fournisseur..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
                   onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
@@ -593,6 +595,7 @@ const ChantierDetail = () => {
                       setChantierForm({ ...chantierForm, nom: e.target.value })
                     }
                     required
+                    placeholder="Ex: Résidence Les Pins..."
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -616,6 +619,7 @@ const ChantierDetail = () => {
                       })
                     }
                     required
+                    placeholder="Ex: Tunis, Sfax..."
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -691,6 +695,7 @@ const ChantierDetail = () => {
                     }
                     required
                     min="0"
+                    placeholder="0.00"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",

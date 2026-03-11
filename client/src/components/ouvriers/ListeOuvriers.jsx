@@ -262,6 +262,7 @@ const ListeOuvriers = () => {
                     value={form.nom}
                     onChange={(e) => setForm({ ...form, nom: e.target.value })}
                     required
+                    placeholder="Dupont"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -282,6 +283,7 @@ const ListeOuvriers = () => {
                       setForm({ ...form, prenom: e.target.value })
                     }
                     required
+                    placeholder="Mohamed"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -303,6 +305,7 @@ const ListeOuvriers = () => {
                     onChange={(e) =>
                       setForm({ ...form, telephone: e.target.value })
                     }
+                    placeholder="+216 XX XXX XXX"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -324,6 +327,7 @@ const ListeOuvriers = () => {
                     }
                     required
                     min="0"
+                    placeholder="0.00"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",

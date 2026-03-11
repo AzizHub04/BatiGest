@@ -54,30 +54,30 @@ function App() {
 
   useEffect(() => {
     if (utilisateur) {
-      const userId = utilisateur.id || utilisateur._id;
-      console.log("Socket connect avec userId:", userId);
+      const userId = String(utilisateur.id || utilisateur._id);
+
+      // Re-join personal room on every connect/reconnect
+      const handleConnect = () => {
+        socket.emit("join", userId);
+      };
+
+      socket.on("connect", handleConnect);
 
       if (!socket.connected) {
         socket.connect();
+      } else {
+        // Already connected: join immediately
+        socket.emit("join", userId);
       }
 
-      // Émettre join après connexion
-      if (socket.connected) {
-        socket.emit("join", userId);
-      } else {
-        socket.on("connect", () => {
-          socket.emit("join", userId);
-        });
-      }
+      return () => {
+        socket.off("connect", handleConnect);
+      };
     } else {
       if (socket.connected) {
         socket.disconnect();
       }
     }
-
-    return () => {
-      socket.off("connect");
-    };
   }, [utilisateur]);
 
   if (verifSession) {

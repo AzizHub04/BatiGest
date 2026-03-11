@@ -291,6 +291,7 @@ const Responsables = () => {
                     value={form.nom}
                     onChange={(e) => setForm({ ...form, nom: e.target.value })}
                     required
+                    placeholder="Dupont"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -311,6 +312,7 @@ const Responsables = () => {
                       setForm({ ...form, prenom: e.target.value })
                     }
                     required
+                    placeholder="Jean"
                     className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                     style={{
                       outline: "none",
@@ -331,6 +333,7 @@ const Responsables = () => {
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   required
+                  placeholder="jean.dupont@email.com"
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
                   onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
