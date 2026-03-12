@@ -243,16 +243,16 @@ const PaiementsOuvriers = () => {
               }}
               className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm border"
               style={{
-                borderColor: selectedPersonne === o._id ? "#dc5539" : "#e5e7eb",
+                borderColor: selectedPersonne === o._id ? "var(--color-brand)" : "#e5e7eb",
                 backgroundColor:
-                  selectedPersonne === o._id ? "#dc55390f" : "white",
-                color: selectedPersonne === o._id ? "#dc5539" : "#374151",
+                  selectedPersonne === o._id ? "var(--color-brand-faint)" : "white",
+                color: selectedPersonne === o._id ? "var(--color-brand)" : "var(--color-text-secondary)",
                 transition: "all 0.15s",
               }}
             >
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[9px] font-bold"
-                style={{ backgroundColor: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand)" }}
               >
                 {o.prenom?.[0]}
                 {o.nom?.[0]}
@@ -269,16 +269,16 @@ const PaiementsOuvriers = () => {
               }}
               className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm border"
               style={{
-                borderColor: selectedPersonne === r._id ? "#2563eb" : "#e5e7eb",
+                borderColor: selectedPersonne === r._id ? "var(--color-info)" : "#e5e7eb",
                 backgroundColor:
                   selectedPersonne === r._id ? "#2563eb0f" : "white",
-                color: selectedPersonne === r._id ? "#2563eb" : "#374151",
+                color: selectedPersonne === r._id ? "var(--color-info)" : "var(--color-text-secondary)",
                 transition: "all 0.15s",
               }}
             >
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[9px] font-bold"
-                style={{ backgroundColor: "#2563eb" }}
+                style={{ backgroundColor: "var(--color-info)" }}
               >
                 {r.prenom?.[0]}
                 {r.nom?.[0]}
@@ -340,12 +340,12 @@ const PaiementsOuvriers = () => {
             <button
               onClick={openGenerer}
               className="flex items-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium"
-              style={{ backgroundColor: "#dc5539" }}
+              style={{ backgroundColor: "var(--color-brand)" }}
               onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#c44a30")
+                (e.currentTarget.style.backgroundColor = "var(--color-brand-dark)")
               }
               onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#dc5539")
+                (e.currentTarget.style.backgroundColor = "var(--color-brand)")
               }
             >
               <PlusIcon width={16} height={16} color="currentColor" />
@@ -369,7 +369,7 @@ const PaiementsOuvriers = () => {
             </div>
             <div className="bg-white rounded-2xl border border-gray-100 p-5">
               <p className="text-xs text-gray-400 mb-1">Total payé</p>
-              <p className="text-xl font-bold" style={{ color: "#16a34a" }}>
+              <p className="text-xl font-bold" style={{ color: "var(--color-success)" }}>
                 {totalPaye} DT
               </p>
             </div>
@@ -377,7 +377,7 @@ const PaiementsOuvriers = () => {
               <p className="text-xs text-gray-400 mb-1">Restant</p>
               <p
                 className="text-xl font-bold"
-                style={{ color: totalRestant > 0 ? "#dc2626" : "#16a34a" }}
+                style={{ color: totalRestant > 0 ? "var(--color-danger)" : "var(--color-success)" }}
               >
                 {totalRestant} DT
               </p>
@@ -412,8 +412,8 @@ const PaiementsOuvriers = () => {
                         <td className="px-5 py-3 text-sm font-medium text-gray-700">{s.label}</td>
                         <td className="px-5 py-3 text-sm text-gray-600">{s.joursTravailes} j</td>
                         <td className="px-5 py-3 text-sm font-medium text-gray-800">{s.montantDu} DT</td>
-                        <td className="px-5 py-3 text-sm font-medium" style={{ color: "#16a34a" }}>{s.montantPaye} DT</td>
-                        <td className="px-5 py-3 text-sm font-medium" style={{ color: s.montantRestant > 0 ? "#dc2626" : "#16a34a" }}>{s.montantRestant} DT</td>
+                        <td className="px-5 py-3 text-sm font-medium" style={{ color: "var(--color-success)" }}>{s.montantPaye} DT</td>
+                        <td className="px-5 py-3 text-sm font-medium" style={{ color: s.montantRestant > 0 ? "var(--color-danger)" : "var(--color-success)" }}>{s.montantRestant} DT</td>
                         <td className="px-5 py-3">
                           <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: ss.bg, color: ss.color }}>{s.statut}</span>
                         </td>
@@ -423,7 +423,7 @@ const PaiementsOuvriers = () => {
                         <td className="px-5 py-3 text-right">
                           <div className="flex items-center justify-end gap-2">
                             {s.montantRestant > 0 && (
-                              <button onClick={() => { setReglerModal({ lundiStr: s.lundiStr, label: s.label, montantRestant: s.montantRestant }); setReglerMontant(String(s.montantRestant)); setErreur(""); }} className="px-3 py-1.5 text-xs font-medium text-white rounded-lg" style={{ backgroundColor: "#16a34a" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#15803d")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#16a34a")}>
+                              <button onClick={() => { setReglerModal({ lundiStr: s.lundiStr, label: s.label, montantRestant: s.montantRestant }); setReglerMontant(String(s.montantRestant)); setErreur(""); }} className="px-3 py-1.5 text-xs font-medium text-white rounded-lg" style={{ backgroundColor: "var(--color-success)" }} onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#15803d")} onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "var(--color-success)")}>
                                 Régler
                               </button>
                             )}
@@ -432,7 +432,7 @@ const PaiementsOuvriers = () => {
                                 <button onClick={() => { setModifierModal({ id: s.paiementId, label: s.label, montantTotal: s.montantDu, montantPaye: s.montantPaye }); setModifierMontant(String(s.montantPaye)); setErreur(""); }} className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50">
                                   <EditIcon width={14} height={14} color="currentColor" />
                                 </button>
-                                <button onClick={() => setConfirmSuppr({ id: s.paiementId, label: s.label })} className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-red-50" style={{ color: "#dc5539" }}>
+                                <button onClick={() => setConfirmSuppr({ id: s.paiementId, label: s.label })} className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-red-50" style={{ color: "var(--color-brand)" }}>
                                   <TrashIcon width={14} height={14} color="currentColor" />
                                 </button>
                               </>
@@ -474,11 +474,11 @@ const PaiementsOuvriers = () => {
                       </div>
                       <div className="bg-gray-50 rounded-lg p-2 text-center">
                         <p className="text-[10px] text-gray-400">Payé</p>
-                        <p className="text-sm font-bold mt-0.5" style={{ color: "#16a34a" }}>{s.montantPaye} DT</p>
+                        <p className="text-sm font-bold mt-0.5" style={{ color: "var(--color-success)" }}>{s.montantPaye} DT</p>
                       </div>
                       <div className="bg-gray-50 rounded-lg p-2 text-center">
                         <p className="text-[10px] text-gray-400">Restant</p>
-                        <p className="text-sm font-bold mt-0.5" style={{ color: s.montantRestant > 0 ? "#dc2626" : "#16a34a" }}>{s.montantRestant} DT</p>
+                        <p className="text-sm font-bold mt-0.5" style={{ color: s.montantRestant > 0 ? "var(--color-danger)" : "var(--color-success)" }}>{s.montantRestant} DT</p>
                       </div>
                     </div>
                     {/* Date paiement */}
@@ -490,7 +490,7 @@ const PaiementsOuvriers = () => {
                     {/* Actions */}
                     <div className="flex items-center gap-2 pt-3 border-t border-gray-100">
                       {s.montantRestant > 0 && (
-                        <button onClick={() => { setReglerModal({ lundiStr: s.lundiStr, label: s.label, montantRestant: s.montantRestant }); setReglerMontant(String(s.montantRestant)); setErreur(""); }} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-white rounded-lg" style={{ backgroundColor: "#16a34a" }}>
+                        <button onClick={() => { setReglerModal({ lundiStr: s.lundiStr, label: s.label, montantRestant: s.montantRestant }); setReglerMontant(String(s.montantRestant)); setErreur(""); }} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-white rounded-lg" style={{ backgroundColor: "var(--color-success)" }}>
                           Régler
                         </button>
                       )}
@@ -531,14 +531,14 @@ const PaiementsOuvriers = () => {
             </p>
             <p className="text-xs text-gray-400 mb-4">
               Restant :{" "}
-              <strong style={{ color: "#dc2626" }}>
+              <strong style={{ color: "var(--color-danger)" }}>
                 {reglerModal.montantRestant} DT
               </strong>
             </p>
             {erreur && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreur}
               </div>
@@ -572,7 +572,7 @@ const PaiementsOuvriers = () => {
                 <button
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
-                  style={{ backgroundColor: "#16a34a" }}
+                  style={{ backgroundColor: "var(--color-success)" }}
                 >
                   Confirmer
                 </button>
@@ -604,7 +604,7 @@ const PaiementsOuvriers = () => {
             {erreur && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreur}
               </div>
@@ -638,7 +638,7 @@ const PaiementsOuvriers = () => {
                 <button
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
-                  style={{ backgroundColor: "#dc5539" }}
+                  style={{ backgroundColor: "var(--color-brand)" }}
                 >
                   Enregistrer
                 </button>
@@ -700,9 +700,9 @@ const PaiementsOuvriers = () => {
                       }
                       className="px-2.5 py-1 text-xs rounded-lg border transition-all"
                       style={{
-                        borderColor: selected ? "#dc5539" : "#e5e7eb",
-                        backgroundColor: selected ? "#dc55390f" : "white",
-                        color: selected ? "#dc5539" : "#6b7280",
+                        borderColor: selected ? "var(--color-brand)" : "#e5e7eb",
+                        backgroundColor: selected ? "var(--color-brand-faint)" : "white",
+                        color: selected ? "var(--color-brand)" : "var(--color-neutral)",
                       }}
                     >
                       S{i + 1} : {s.label}
@@ -715,7 +715,7 @@ const PaiementsOuvriers = () => {
             {erreur && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreur}
               </div>
@@ -771,7 +771,7 @@ const PaiementsOuvriers = () => {
                 <button
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
-                  style={{ backgroundColor: "#dc5539" }}
+                  style={{ backgroundColor: "var(--color-brand)" }}
                 >
                   Générer
                 </button>

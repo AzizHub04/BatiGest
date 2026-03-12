@@ -257,7 +257,7 @@ const ChantierDetail = () => {
                   className="h-full rounded-full"
                   style={{
                     width: `${chantier.avancement || 0}%`,
-                    backgroundColor: "#dc5539",
+                    backgroundColor: "var(--color-brand)",
                     transition: "width 0.3s",
                   }}
                 />
@@ -285,8 +285,8 @@ const ChantierDetail = () => {
             onClick={() => setOnglet(tab.id)}
             className="px-4 py-2.5 text-sm font-medium border-b-2"
             style={{
-              borderColor: onglet === tab.id ? "#dc5539" : "transparent",
-              color: onglet === tab.id ? "#dc5539" : "#6b7280",
+              borderColor: onglet === tab.id ? "var(--color-brand)" : "transparent",
+              color: onglet === tab.id ? "var(--color-brand)" : "var(--color-neutral)",
               transition: "all 0.15s",
             }}
           >
@@ -305,9 +305,9 @@ const ChantierDetail = () => {
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div
               className="p-4 rounded-xl"
-              style={{ backgroundColor: "#dbeafe" }}
+              style={{ backgroundColor: "var(--color-info-bg)" }}
             >
-              <p className="text-xs font-medium" style={{ color: "#2563eb" }}>
+              <p className="text-xs font-medium" style={{ color: "var(--color-info)" }}>
                 Budget initial
               </p>
               <p
@@ -319,9 +319,9 @@ const ChantierDetail = () => {
             </div>
             <div
               className="p-4 rounded-xl"
-              style={{ backgroundColor: "#fee2e2" }}
+              style={{ backgroundColor: "var(--color-danger-bg)" }}
             >
-              <p className="text-xs font-medium" style={{ color: "#dc2626" }}>
+              <p className="text-xs font-medium" style={{ color: "var(--color-danger)" }}>
                 Total dépenses
               </p>
               <p
@@ -333,9 +333,9 @@ const ChantierDetail = () => {
             </div>
             <div
               className="p-4 rounded-xl"
-              style={{ backgroundColor: "#dcfce7" }}
+              style={{ backgroundColor: "var(--color-success-bg)" }}
             >
-              <p className="text-xs font-medium" style={{ color: "#16a34a" }}>
+              <p className="text-xs font-medium" style={{ color: "var(--color-success)" }}>
                 Total reçu
               </p>
               <p
@@ -352,7 +352,7 @@ const ChantierDetail = () => {
             <button
               onClick={openCreateCout}
               className="flex items-center gap-2 px-4 py-2 text-white rounded-xl text-sm font-medium"
-              style={{ backgroundColor: "#dc5539" }}
+              style={{ backgroundColor: "var(--color-brand)" }}
             >
               <PlusIcon width={16} height={16} color="currentColor" />
               Ajouter
@@ -380,12 +380,12 @@ const ChantierDetail = () => {
                     {coutsData.couts.map((c) => (
                       <tr key={c._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
                         <td className="py-3 px-3">
-                          <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: c.type === "Dépense" ? "#fee2e2" : "#dcfce7", color: c.type === "Dépense" ? "#dc2626" : "#16a34a" }}>{c.type}</span>
+                          <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: c.type === "Dépense" ? "var(--color-danger-bg)" : "var(--color-success-bg)", color: c.type === "Dépense" ? "var(--color-danger)" : "var(--color-success)" }}>{c.type}</span>
                         </td>
                         <td className="py-3 px-3 text-sm text-gray-600">{c.description || "—"}</td>
                         <td className="py-3 px-3 text-sm text-gray-500">{c.modePaiement}</td>
                         <td className="py-3 px-3 text-sm text-gray-500">{formatDate(c.createdAt)}</td>
-                        <td className="py-3 px-3 text-sm font-semibold text-right" style={{ color: c.type === "Dépense" ? "#dc2626" : "#16a34a" }}>
+                        <td className="py-3 px-3 text-sm font-semibold text-right" style={{ color: c.type === "Dépense" ? "var(--color-danger)" : "var(--color-success)" }}>
                           {c.type === "Dépense" ? "-" : "+"}{formatMontant(c.montant)}
                         </td>
                         <td className="py-3 px-3">
@@ -411,12 +411,12 @@ const ChantierDetail = () => {
                     {/* Header: montant + type badge */}
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
-                        <p className="text-lg font-bold" style={{ color: c.type === "Dépense" ? "#dc2626" : "#16a34a" }}>
+                        <p className="text-lg font-bold" style={{ color: c.type === "Dépense" ? "var(--color-danger)" : "var(--color-success)" }}>
                           {c.type === "Dépense" ? "-" : "+"}{formatMontant(c.montant)}
                         </p>
                         <p className="text-xs text-gray-500 mt-0.5">{c.description || "—"}</p>
                       </div>
-                      <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: c.type === "Dépense" ? "#fee2e2" : "#dcfce7", color: c.type === "Dépense" ? "#dc2626" : "#16a34a" }}>
+                      <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: c.type === "Dépense" ? "var(--color-danger-bg)" : "var(--color-success-bg)", color: c.type === "Dépense" ? "var(--color-danger)" : "var(--color-success)" }}>
                         {c.type}
                       </span>
                     </div>
@@ -500,7 +500,7 @@ const ChantierDetail = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -518,7 +518,7 @@ const ChantierDetail = () => {
                   placeholder="Ex: Achat ciment, Règlement fournisseur..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
               </div>
@@ -551,7 +551,7 @@ const ChantierDetail = () => {
                 <button
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
-                  style={{ backgroundColor: "#dc5539" }}
+                  style={{ backgroundColor: "var(--color-brand)" }}
                 >
                   {editMode ? "Modifier" : "Enregistrer"}
                 </button>
@@ -577,7 +577,7 @@ const ChantierDetail = () => {
             {erreurChantier && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreurChantier}
               </div>
@@ -601,7 +601,7 @@ const ChantierDetail = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -625,7 +625,7 @@ const ChantierDetail = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -650,7 +650,7 @@ const ChantierDetail = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -674,7 +674,7 @@ const ChantierDetail = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -701,7 +701,7 @@ const ChantierDetail = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -761,14 +761,14 @@ const ChantierDetail = () => {
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
                   style={{
-                    backgroundColor: "#dc5539",
+                    backgroundColor: "var(--color-brand)",
                     transition: "background-color 0.15s",
                   }}
                   onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#c44a30")
+                    (e.target.style.backgroundColor = "var(--color-brand-dark)")
                   }
                   onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#dc5539")
+                    (e.target.style.backgroundColor = "var(--color-brand)")
                   }
                 >
                   Modifier

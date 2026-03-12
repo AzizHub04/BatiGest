@@ -105,7 +105,7 @@ const BadgeSelect = ({ value, onChange, options, stopPropagation = false }) => {
               left: dropdownPos.left,
               minWidth: 156,
               zIndex: 99999,
-              boxShadow: "0 8px 28px rgba(0,0,0,0.10)",
+              boxShadow: "0 8px 28px var(--color-overlay-light)",
             }}
             className="bg-white rounded-xl border border-gray-100 py-1 overflow-hidden"
             onClick={(e) => stopPropagation && e.stopPropagation()}
@@ -124,7 +124,7 @@ const BadgeSelect = ({ value, onChange, options, stopPropagation = false }) => {
                   }}
                   onMouseEnter={(e) => {
                     if (!isSelected)
-                      e.currentTarget.style.backgroundColor = "#f9fafb";
+                      e.currentTarget.style.backgroundColor = "var(--color-bg-subtle)";
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected)
@@ -137,7 +137,7 @@ const BadgeSelect = ({ value, onChange, options, stopPropagation = false }) => {
                   />
                   <span
                     className="text-xs font-medium"
-                    style={{ color: isSelected ? opt.color : "#374151" }}
+                    style={{ color: isSelected ? opt.color : "var(--color-text-secondary)" }}
                   >
                     {opt.value}
                   </span>

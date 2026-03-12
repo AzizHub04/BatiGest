@@ -113,7 +113,7 @@ const TachesList = ({ travailId }) => {
         <button
           onClick={openCreate}
           className="text-xs font-medium"
-          style={{ color: "#dc5539" }}
+          style={{ color: "var(--color-brand)" }}
         >
           + Ajouter
         </button>
@@ -259,7 +259,7 @@ const TachesList = ({ travailId }) => {
                   placeholder="Ex: Coulage dalle..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
               </div>
@@ -276,7 +276,7 @@ const TachesList = ({ travailId }) => {
                   placeholder="Description de la tâche..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm resize-none"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
               </div>
@@ -308,7 +308,7 @@ const TachesList = ({ travailId }) => {
                 <button
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
-                  style={{ backgroundColor: "#dc5539" }}
+                  style={{ backgroundColor: "var(--color-brand)" }}
                 >
                   {editMode ? "Modifier" : "Créer"}
                 </button>

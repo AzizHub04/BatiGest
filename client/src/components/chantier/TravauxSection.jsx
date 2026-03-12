@@ -179,11 +179,11 @@ const TravauxSection = ({
             onClick={openCreate}
             className="flex items-center gap-2 px-4 py-2 text-white rounded-xl text-sm font-medium"
             style={{
-              backgroundColor: "#dc5539",
+              backgroundColor: "var(--color-brand)",
               transition: "background-color 0.15s",
             }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#c44a30")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc5539")}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "var(--color-brand-dark)")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "var(--color-brand)")}
           >
             <PlusIcon width={16} height={16} color="currentColor" />
             {panelAddLabel}
@@ -206,7 +206,7 @@ const TravauxSection = ({
               onChange={(e) => setDateFrom(e.target.value)}
               className="px-3 py-2 border border-gray-200 rounded-xl text-sm bg-white"
               style={{ outline: "none", transition: "border-color 0.15s" }}
-              onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+              onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
               onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
             />
           </div>
@@ -219,7 +219,7 @@ const TravauxSection = ({
               min={dateFrom || undefined}
               className="px-3 py-2 border border-gray-200 rounded-xl text-sm bg-white"
               style={{ outline: "none", transition: "border-color 0.15s" }}
-              onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+              onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
               onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
             />
           </div>
@@ -269,9 +269,9 @@ const TravauxSection = ({
                     <div className="flex items-center gap-3">
                       <div
                         className="w-9 h-9 rounded-lg flex items-center justify-center"
-                        style={{ backgroundColor: "#dc55391a" }}
+                        style={{ backgroundColor: "var(--color-brand-subtle)" }}
                       >
-                        <GridIcon width={18} height={18} color="#dc5539" />
+                        <GridIcon width={18} height={18} color="var(--color-brand)" />
                       </div>
                       <div>
                         <span className="text-sm font-medium text-gray-800">
@@ -318,7 +318,7 @@ const TravauxSection = ({
                               className="h-full rounded-full"
                               style={{
                                 width: `${t.avancement}%`,
-                                backgroundColor: "#dc5539",
+                                backgroundColor: "var(--color-brand)",
                               }}
                             />
                           </div>
@@ -509,7 +509,7 @@ const TravauxSection = ({
             {erreur && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreur}
               </div>
@@ -561,14 +561,14 @@ const TravauxSection = ({
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
                   style={{
-                    backgroundColor: "#dc5539",
+                    backgroundColor: "var(--color-brand)",
                     transition: "background-color 0.15s",
                   }}
                   onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#c44a30")
+                    (e.target.style.backgroundColor = "var(--color-brand-dark)")
                   }
                   onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#dc5539")
+                    (e.target.style.backgroundColor = "var(--color-brand)")
                   }
                 >
                   {editMode ? "Modifier" : "Cr\u00e9er"}

@@ -4,17 +4,17 @@ const Alert = ({ type, message }) => {
   if (!message) return null;
 
   const styles = {
-    success: { bg: "#dcfce7", border: "#bbf7d0", color: "#16a34a" },
-    error: { bg: "#dc55391a", border: "#dc55394d", color: "#dc5539" },
-    warning: { bg: "#fef3c7", border: "#fde68a", color: "#d97706" },
-    delete: { bg: "#fee2e2", border: "#fecaca", color: "#dc2626" },
+    success: { bg: "var(--color-success-bg)",  border: "var(--color-success-border)", color: "var(--color-success)" },
+    error:   { bg: "var(--color-brand-subtle)", border: "var(--color-brand-muted)",   color: "var(--color-brand)" },
+    warning: { bg: "var(--color-warning-bg)",   border: "var(--color-warning-border)", color: "var(--color-warning)" },
+    delete:  { bg: "var(--color-danger-bg)",    border: "var(--color-danger-border)",  color: "var(--color-danger)" },
   };
 
   const iconMap = {
     success: <SuccessIcon width={18} height={18} color={styles[type].color} />,
-    error: <ErrorIcon width={18} height={18} color={styles[type].color} />,
+    error:   <ErrorIcon   width={18} height={18} color={styles[type].color} />,
     warning: <WarningIcon width={18} height={18} color={styles[type].color} />,
-    delete: <ErrorIcon width={18} height={18} color={styles[type].color} />,
+    delete:  <ErrorIcon   width={18} height={18} color={styles[type].color} />,
   };
 
   const s = styles[type];

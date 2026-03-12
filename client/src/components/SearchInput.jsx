@@ -29,8 +29,8 @@ const SearchInput = ({
       onChange={onChange}
       className="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm w-full"
       style={{ outline: "none", transition: "border-color 0.15s" }}
-      onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
-      onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+      onFocus={(e) => (e.target.style.borderColor = "var(--color-border-focus)")}
+      onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
     />
   </div>
 );

@@ -175,10 +175,10 @@ const Chantiers = () => {
 
   // Couleur barre d'avancement
   const avancementColor = (pct) => {
-    if (pct >= 75) return "#16a34a";
-    if (pct >= 50) return "#dc5539";
-    if (pct >= 25) return "#d97706";
-    return "#9ca3af";
+    if (pct >= 75) return "var(--color-success)";
+    if (pct >= 50) return "var(--color-brand)";
+    if (pct >= 25) return "var(--color-warning)";
+    return "var(--color-text-muted)";
   };
 
   const formatDate = (date) => {
@@ -234,11 +234,11 @@ const Chantiers = () => {
               onClick={openCreate}
               className="flex items-center gap-2 px-4 py-2 text-white rounded-xl text-sm font-medium"
               style={{
-                backgroundColor: "#dc5539",
+                backgroundColor: "var(--color-brand)",
                 transition: "background-color 0.15s",
               }}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = "#c44a30")}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc5539")}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "var(--color-brand-dark)")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "var(--color-brand)")}
             >
               <PlusIcon width={16} height={16} color="currentColor" />
               Ajouter
@@ -518,7 +518,7 @@ const Chantiers = () => {
             {erreur && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreur}
               </div>
@@ -541,7 +541,7 @@ const Chantiers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -562,7 +562,7 @@ const Chantiers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -585,7 +585,7 @@ const Chantiers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -606,7 +606,7 @@ const Chantiers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -631,7 +631,7 @@ const Chantiers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -647,7 +647,7 @@ const Chantiers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   >
                     <option value="Planifié">Planifié</option>
@@ -670,7 +670,7 @@ const Chantiers = () => {
                   }
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 >
                   <option value="">— Aucun responsable —</option>
@@ -711,14 +711,14 @@ const Chantiers = () => {
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
                   style={{
-                    backgroundColor: "#dc5539",
+                    backgroundColor: "var(--color-brand)",
                     transition: "background-color 0.15s",
                   }}
                   onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#c44a30")
+                    (e.target.style.backgroundColor = "var(--color-brand-dark)")
                   }
                   onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#dc5539")
+                    (e.target.style.backgroundColor = "var(--color-brand)")
                   }
                 >
                   {editMode ? "Modifier" : "Créer"}

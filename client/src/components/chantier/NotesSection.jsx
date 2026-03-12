@@ -177,7 +177,7 @@ const NotesSection = ({
           required
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm mb-3"
           style={{ outline: "none", transition: "border-color 0.15s" }}
-          onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+          onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
           onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
         />
         <textarea
@@ -187,7 +187,7 @@ const NotesSection = ({
           rows="4"
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none"
           style={{ outline: "none", transition: "border-color 0.15s" }}
-          onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+          onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
           onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
         />
         <div className="flex justify-end mt-3">
@@ -197,19 +197,19 @@ const NotesSection = ({
             className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl"
             style={{
               backgroundColor:
-                titre.trim() && contenu.trim() ? "#dc5539" : "#f3f4f6",
-              color: titre.trim() && contenu.trim() ? "white" : "#9ca3af",
+                titre.trim() && contenu.trim() ? "var(--color-brand)" : "var(--color-neutral-bg)",
+              color: titre.trim() && contenu.trim() ? "white" : "var(--color-text-muted)",
               transition: "all 0.15s",
               cursor:
                 titre.trim() && contenu.trim() ? "pointer" : "not-allowed",
             }}
             onMouseEnter={(e) => {
               if (titre.trim() && contenu.trim())
-                e.target.style.backgroundColor = "#c44a30";
+                e.target.style.backgroundColor = "var(--color-brand-dark)";
             }}
             onMouseLeave={(e) => {
               if (titre.trim() && contenu.trim())
-                e.target.style.backgroundColor = "#dc5539";
+                e.target.style.backgroundColor = "var(--color-brand)";
             }}
           >
             <PlusIcon width={16} height={16} color="currentColor" />
@@ -295,21 +295,21 @@ const NotesSection = ({
               style={{ transition: "border-color 0.15s, box-shadow 0.15s" }}
               onClick={() => setNoteDetail(note)}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#dc553940";
-                e.currentTarget.style.boxShadow = "0 2px 12px 0 #dc55391a";
+                e.currentTarget.style.borderColor = "var(--color-brand-muted)";
+                e.currentTarget.style.boxShadow = "0 2px 12px 0 var(--color-brand-subtle)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "#f3f4f6";
+                e.currentTarget.style.borderColor = "var(--color-neutral-bg)";
                 e.currentTarget.style.boxShadow = "none";
               }}
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-1.5">
-                    <CalendarIcon width={14} height={14} color="#dc5539" />
+                    <CalendarIcon width={14} height={14} color="var(--color-brand)" />
                     <span
                       className="text-xs font-semibold"
-                      style={{ color: "#dc5539" }}
+                      style={{ color: "var(--color-brand)" }}
                     >
                       {formatDate(note.createdAt)}
                     </span>
@@ -357,7 +357,7 @@ const NotesSection = ({
               <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-50">
                 <div
                   className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
-                  style={{ backgroundColor: "#dc5539" }}
+                  style={{ backgroundColor: "var(--color-brand)" }}
                 >
                   {getInitiales(note.auteur)}
                 </div>
@@ -398,7 +398,7 @@ const NotesSection = ({
                   placeholder="Titre de la note..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm mb-3"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
                 <textarea
@@ -408,7 +408,7 @@ const NotesSection = ({
                   placeholder="Contenu de la note..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm resize-none mb-4"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
                 <div className="flex gap-3">
@@ -422,7 +422,7 @@ const NotesSection = ({
                   <button
                     onClick={() => handleEdit(noteDetail._id)}
                     className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
-                    style={{ backgroundColor: "#dc5539" }}
+                    style={{ backgroundColor: "var(--color-brand)" }}
                   >
                     Sauvegarder
                   </button>
@@ -433,10 +433,10 @@ const NotesSection = ({
               <>
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-1.5">
-                    <CalendarIcon width={14} height={14} color="#dc5539" />
+                    <CalendarIcon width={14} height={14} color="var(--color-brand)" />
                     <span
                       className="text-xs font-semibold"
-                      style={{ color: "#dc5539" }}
+                      style={{ color: "var(--color-brand)" }}
                     >
                       {formatDate(noteDetail.createdAt)}
                     </span>

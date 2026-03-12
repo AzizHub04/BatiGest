@@ -161,11 +161,11 @@ const Responsables = () => {
               onClick={openCreate}
               className="flex items-center gap-2 px-4 py-2 text-white rounded-xl text-sm font-medium"
               style={{
-                backgroundColor: "#dc5539",
+                backgroundColor: "var(--color-brand)",
                 transition: "background-color 0.15s",
               }}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = "#c44a30")}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc5539")}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "var(--color-brand-dark)")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "var(--color-brand)")}
             >
               <PlusIcon width={16} height={16} color="currentColor" />
               Créer compte
@@ -195,7 +195,7 @@ const Responsables = () => {
                   <td className="py-3.5 px-4 text-sm text-gray-500">{r.email}</td>
                   <td className="py-3.5 px-4">
                     {getChantierAssigne(r._id) ? (
-                      <span className="text-xs px-2.5 py-1 rounded-full font-medium" style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}>{getChantierAssigne(r._id)}</span>
+                      <span className="text-xs px-2.5 py-1 rounded-full font-medium" style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}>{getChantierAssigne(r._id)}</span>
                     ) : (
                       <span className="text-xs text-gray-400">Non assigné</span>
                     )}
@@ -226,7 +226,7 @@ const Responsables = () => {
                 {/* Header: avatar + nom prénom + chantier badge */}
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold" style={{ backgroundColor: "#dc5539" }}>
+                    <div className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold" style={{ backgroundColor: "var(--color-brand)" }}>
                       {r.prenom?.[0]}{r.nom?.[0]}
                     </div>
                     <div>
@@ -235,7 +235,7 @@ const Responsables = () => {
                     </div>
                   </div>
                   {getChantierAssigne(r._id) ? (
-                    <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}>
+                    <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}>
                       {getChantierAssigne(r._id)}
                     </span>
                   ) : (
@@ -274,7 +274,7 @@ const Responsables = () => {
             {erreur && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreur}
               </div>
@@ -297,7 +297,7 @@ const Responsables = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -318,7 +318,7 @@ const Responsables = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -336,7 +336,7 @@ const Responsables = () => {
                   placeholder="jean.dupont@email.com"
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
               </div>
@@ -355,7 +355,7 @@ const Responsables = () => {
                   step="0.5"
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
               </div>
@@ -382,7 +382,7 @@ const Responsables = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                   <button
@@ -413,14 +413,14 @@ const Responsables = () => {
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
                   style={{
-                    backgroundColor: "#dc5539",
+                    backgroundColor: "var(--color-brand)",
                     transition: "background-color 0.15s",
                   }}
                   onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#c44a30")
+                    (e.target.style.backgroundColor = "var(--color-brand-dark)")
                   }
                   onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#dc5539")
+                    (e.target.style.backgroundColor = "var(--color-brand)")
                   }
                 >
                   {editMode ? "Modifier" : "Créer"}

@@ -1,1 +1,67 @@
 @import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   BatiGest Global Design Tokens  (light mode)
+   Override inside  .dark { }  to enable dark mode.
+   Usage in JSX:  style={{ color: "var(--color-brand)" }}
+───────────────────────────────────────────────────────────── */
+:root {
+  /* ── Brand ─────────────────────────────────────────────── */
+  --color-brand:         #dc5539;
+  --color-brand-dark:    #c44a30;
+  --color-brand-subtle:  #dc55391a;
+  --color-brand-faint:   #dc55390d;
+  --color-brand-muted:   #dc553940;
+  --color-brand-text:    #fff4f0;
+
+  /* ── Status: Success ────────────────────────────────────── */
+  --color-success:        #16a34a;
+  --color-success-bg:     #dcfce7;
+  --color-success-border: #bbf7d0;
+
+  /* ── Status: Danger ─────────────────────────────────────── */
+  --color-danger:         #dc2626;
+  --color-danger-bg:      #fee2e2;
+  --color-danger-border:  #fecaca;
+
+  /* ── Status: Warning ────────────────────────────────────── */
+  --color-warning:        #d97706;
+  --color-warning-bg:     #fef3c7;
+  --color-warning-border: #fde68a;
+
+  /* ── Status: Info (blue) ────────────────────────────────── */
+  --color-info:           #2563eb;
+  --color-info-bg:        #dbeafe;
+
+  /* ── Status: Purple ─────────────────────────────────────── */
+  --color-purple:         #9333ea;
+  --color-purple-bg:      #f3e8ff;
+
+  /* ── Status: Neutral ────────────────────────────────────── */
+  --color-neutral:        #6b7280;
+  --color-neutral-bg:     #f3f4f6;
+
+  /* ── Surfaces & Backgrounds ─────────────────────────────── */
+  --color-bg-page:        #f9fafb;
+  --color-bg-card:        #ffffff;
+  --color-bg-hover:       #f3f4f6;
+  --color-bg-subtle:      #f9fafb;
+
+  /* ── Text ───────────────────────────────────────────────── */
+  --color-text-heading:   #111827;
+  --color-text-primary:   #1f2937;
+  --color-text-secondary: #374151;
+  --color-text-tertiary:  #6b7280;
+  --color-text-muted:     #9ca3af;
+  --color-text-subtle:    #d1d5db;
+
+  /* ── Borders ────────────────────────────────────────────── */
+  --color-border-light:   #f3f4f6;
+  --color-border:         #e5e7eb;
+  --color-border-focus:   #dc5539;
+
+  /* ── Overlays ───────────────────────────────────────────── */
+  --color-overlay:        rgba(0, 0, 0, 0.4);
+  --color-overlay-light:  rgba(0, 0, 0, 0.12);
+  --color-overlay-card:   rgba(255, 255, 255, 0.15);
+}

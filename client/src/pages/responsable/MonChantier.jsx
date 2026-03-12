@@ -54,10 +54,10 @@ const MonChantier = () => {
   };
 
   const avancementColor = (pct) => {
-    if (pct >= 75) return "#16a34a";
-    if (pct >= 50) return "#dc5539";
-    if (pct >= 25) return "#d97706";
-    return "#9ca3af";
+    if (pct >= 75) return "var(--color-success)";
+    if (pct >= 50) return "var(--color-brand)";
+    if (pct >= 25) return "var(--color-warning)";
+    return "var(--color-text-muted)";
   };
   useEffect(() => {
     if (chantier) {
@@ -144,7 +144,7 @@ const MonChantier = () => {
           <div className="flex items-center gap-3 sm:gap-4">
             <div
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl shrink-0 flex items-center justify-center"
-              style={{ backgroundColor: "#dc55391a" }}
+              style={{ backgroundColor: "var(--color-brand-subtle)" }}
             >
               <ChartIcon width={20} height={20} color="#dc5539" />
             </div>
@@ -170,7 +170,7 @@ const MonChantier = () => {
           <div className="flex items-center gap-3 sm:gap-4">
             <div
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl shrink-0 flex items-center justify-center"
-              style={{ backgroundColor: "#dbeafe" }}
+              style={{ backgroundColor: "var(--color-info-bg)" }}
             >
               <CalendarIcon width={20} height={20} color="#2563eb" />
             </div>
@@ -223,7 +223,7 @@ const MonChantier = () => {
           <div className="flex items-center gap-2 mb-4">
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: "#dc55391a" }}
+              style={{ backgroundColor: "var(--color-brand-subtle)" }}
             >
               <BoxIcon width={16} height={16} color="#dc5539" />
             </div>
@@ -232,7 +232,7 @@ const MonChantier = () => {
             </h3>
             <span
               className="text-xs px-2 py-0.5 rounded-full font-medium"
-              style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+              style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
             >
               {materiauxChantier.length}
             </span>
@@ -256,7 +256,7 @@ const MonChantier = () => {
                   <div className="flex items-center gap-3">
                     <div
                       className="w-8 h-8 rounded-lg flex items-center justify-center"
-                      style={{ backgroundColor: "#dbeafe" }}
+                      style={{ backgroundColor: "var(--color-info-bg)" }}
                     >
                       <BoxIcon width={14} height={14} color="#2563eb" />
                     </div>
@@ -272,7 +272,7 @@ const MonChantier = () => {
                   <div className="text-right">
                     <p
                       className="text-sm font-bold"
-                      style={{ color: "#dc5539" }}
+                      style={{ color: "var(--color-brand)" }}
                     >
                       {item.quantite} {item.materiel?.unite}
                     </p>
@@ -297,7 +297,7 @@ const MonChantier = () => {
           <div className="flex items-center gap-2 mb-4">
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: "#16a34a1a" }}
+              style={{ backgroundColor: "var(--color-success-bg)" }}
             >
               <PeopleIcon width={16} height={16} color="#16a34a" />
             </div>
@@ -306,7 +306,7 @@ const MonChantier = () => {
             </h3>
             <span
               className="text-xs px-2 py-0.5 rounded-full font-medium"
-              style={{ backgroundColor: "#16a34a1a", color: "#16a34a" }}
+              style={{ backgroundColor: "var(--color-success-bg)", color: "var(--color-success)" }}
             >
               {ouvriersPresents.filter((o) => o.presentAujourdhui).length}
             </span>
@@ -334,7 +334,7 @@ const MonChantier = () => {
                         className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold"
                         style={{
                           backgroundColor:
-                            item.type === "responsable" ? "#2563eb" : "#dc5539",
+                            item.type === "responsable" ? "var(--color-info)" : "var(--color-brand)",
                         }}
                       >
                         {item.personne?.prenom?.[0]}

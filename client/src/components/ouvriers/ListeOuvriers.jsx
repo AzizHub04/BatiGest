@@ -126,11 +126,11 @@ const ListeOuvriers = () => {
           onClick={openCreate}
           className="flex items-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium"
           style={{
-            backgroundColor: "#dc5539",
+            backgroundColor: "var(--color-brand)",
             transition: "background-color 0.15s",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#c44a30")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc5539")}
+          onMouseEnter={(e) => (e.target.style.backgroundColor = "var(--color-brand-dark)")}
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "var(--color-brand)")}
         >
           <PlusIcon width={16} height={16} color="currentColor" />
           Nouvel ouvrier
@@ -159,7 +159,7 @@ const ListeOuvriers = () => {
                   <tr key={o._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "#dc5539" }}>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: "var(--color-brand)" }}>
                           {o.prenom?.[0]}{o.nom?.[0]}
                         </div>
                         <p className="text-sm font-medium text-gray-800">{o.prenom} {o.nom}</p>
@@ -200,7 +200,7 @@ const ListeOuvriers = () => {
                 {/* Header: avatar + nom + statut */}
                 <div className="flex items-center justify-between gap-3 mb-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold" style={{ backgroundColor: "#dc5539" }}>
+                    <div className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-white text-sm font-bold" style={{ backgroundColor: "var(--color-brand)" }}>
                       {o.prenom?.[0]}{o.nom?.[0]}
                     </div>
                     <div>
@@ -246,7 +246,7 @@ const ListeOuvriers = () => {
             {erreur && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreur}
               </div>
@@ -268,7 +268,7 @@ const ListeOuvriers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -289,7 +289,7 @@ const ListeOuvriers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -311,7 +311,7 @@ const ListeOuvriers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -333,7 +333,7 @@ const ListeOuvriers = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -351,14 +351,14 @@ const ListeOuvriers = () => {
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
                   style={{
-                    backgroundColor: "#dc5539",
+                    backgroundColor: "var(--color-brand)",
                     transition: "background-color 0.15s",
                   }}
                   onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#c44a30")
+                    (e.target.style.backgroundColor = "var(--color-brand-dark)")
                   }
                   onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#dc5539")
+                    (e.target.style.backgroundColor = "var(--color-brand)")
                   }
                 >
                   {editMode ? "Modifier" : "Créer"}

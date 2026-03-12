@@ -99,7 +99,7 @@ const NotificationBell = () => {
         {nonLues > 0 && (
           <span
             className="absolute top-1 right-1 min-w-[16px] h-4 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"
-            style={{ backgroundColor: "#dc5539" }}
+            style={{ backgroundColor: "var(--color-brand)" }}
           >
             {nonLues > 9 ? "9+" : nonLues}
           </span>
@@ -111,7 +111,7 @@ const NotificationBell = () => {
           <div className="fixed inset-0 z-90" onClick={() => setOpen(false)} />
           <div
             className="fixed right-4 top-17 w-80 bg-white rounded-2xl border border-gray-100 z-100 overflow-hidden"
-            style={{ boxShadow: "0 8px 24px rgba(0,0,0,0.12)" }}
+            style={{ boxShadow: "0 8px 24px var(--color-overlay-light)" }}
           >
             {/* Header */}
             <div className="flex z-50 items-center justify-between px-4 py-3 border-b border-gray-100">
@@ -121,7 +121,7 @@ const NotificationBell = () => {
                   <button
                     onClick={handleMarquerToutLu}
                     className="text-[11px] font-medium hover:underline"
-                    style={{ color: "#dc5539" }}
+                    style={{ color: "var(--color-brand)" }}
                   >
                     Tout marquer lu
                   </button>
@@ -153,18 +153,18 @@ const NotificationBell = () => {
                     onClick={() => handleClick(n)}
                     className="flex items-start gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50"
                     style={{
-                      backgroundColor: n.estLue ? "transparent" : "#dc553908",
+                      backgroundColor: n.estLue ? "transparent" : "var(--color-brand-faint)",
                       transition: "background-color 0.15s",
                       borderLeft: n.estLue
                         ? "3px solid transparent"
-                        : "3px solid #dc5539",
+                        : "3px solid var(--color-brand)",
                     }}
                   >
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: "#dc55391a" }}
+                      style={{ backgroundColor: "var(--color-brand-subtle)" }}
                     >
-                      <DocumentIcon width={14} height={14} color="#dc5539" />
+                      <DocumentIcon width={14} height={14} color="var(--color-brand)" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-gray-800">
@@ -182,7 +182,7 @@ const NotificationBell = () => {
                             <span className="text-[10px] text-gray-300">•</span>
                             <span
                               className="text-[10px]"
-                              style={{ color: "#dc5539" }}
+                              style={{ color: "var(--color-brand)" }}
                             >
                               {n.chantier.nom}
                             </span>
@@ -194,7 +194,7 @@ const NotificationBell = () => {
                       {!n.estLue && (
                         <div
                           className="w-2 h-2 rounded-full"
-                          style={{ backgroundColor: "#dc5539" }}
+                          style={{ backgroundColor: "var(--color-brand)" }}
                         />
                       )}
                       <button

@@ -120,11 +120,11 @@ const ListeMateriels = () => {
           onClick={openCreate}
           className="flex items-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium"
           style={{
-            backgroundColor: "#dc5539",
+            backgroundColor: "var(--color-brand)",
             transition: "background-color 0.15s",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#c44a30")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc5539")}
+          onMouseEnter={(e) => (e.target.style.backgroundColor = "var(--color-brand-dark)")}
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "var(--color-brand)")}
         >
           <PlusIcon width={16} height={16} color="currentColor" />
           Nouveau matériel
@@ -152,21 +152,21 @@ const ListeMateriels = () => {
                 <tr key={m._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#dc55391a" }}>
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: "var(--color-brand-subtle)" }}>
                         <BoxIcon width={16} height={16} color="#dc5539" />
                       </div>
                       <span className="text-sm font-medium text-gray-800">{m.nom}</span>
                     </div>
                   </td>
                   <td className="px-5 py-3">
-                    <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: "#f3f4f6", color: "#6b7280" }}>{m.categorie}</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: "var(--color-neutral-bg)", color: "var(--color-neutral)" }}>{m.categorie}</span>
                   </td>
                   <td className="px-5 py-3 text-sm text-gray-600">{m.unite}</td>
                   <td className="px-5 py-3">
-                    <span className="text-sm font-semibold" style={{ color: m.quantiteStock > 0 ? "#16a34a" : "#dc2626" }}>{m.quantiteStock}</span>
+                    <span className="text-sm font-semibold" style={{ color: m.quantiteStock > 0 ? "var(--color-success)" : "var(--color-danger)" }}>{m.quantiteStock}</span>
                   </td>
                   <td className="px-5 py-3">
-                    <span className="text-sm font-semibold" style={{ color: m.quantiteDehors > 0 ? "#d97706" : "#9ca3af" }}>{m.quantiteDehors}</span>
+                    <span className="text-sm font-semibold" style={{ color: m.quantiteDehors > 0 ? "var(--color-warning)" : "var(--color-text-muted)" }}>{m.quantiteDehors}</span>
                   </td>
                   <td className="px-5 py-3">
                     <div className="flex items-center justify-end gap-2">
@@ -203,17 +203,17 @@ const ListeMateriels = () => {
                     <p className="text-xs text-gray-400 mt-0.5">{m.unite}</p>
                   </div>
                 </div>
-                <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: "#f3f4f6", color: "#6b7280" }}>{m.categorie}</span>
+                <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: "var(--color-neutral-bg)", color: "var(--color-neutral)" }}>{m.categorie}</span>
               </div>
               {/* Stock info */}
               <div className="grid grid-cols-2 gap-3 mb-3 text-xs">
                 <div className="bg-gray-50 rounded-lg p-2.5">
                   <p className="text-gray-400">En stock</p>
-                  <p className="text-base font-bold mt-0.5" style={{ color: m.quantiteStock > 0 ? "#16a34a" : "#dc2626" }}>{m.quantiteStock}</p>
+                  <p className="text-base font-bold mt-0.5" style={{ color: m.quantiteStock > 0 ? "var(--color-success)" : "var(--color-danger)" }}>{m.quantiteStock}</p>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-2.5">
                   <p className="text-gray-400">Dehors</p>
-                  <p className="text-base font-bold mt-0.5" style={{ color: m.quantiteDehors > 0 ? "#d97706" : "#9ca3af" }}>{m.quantiteDehors}</p>
+                  <p className="text-base font-bold mt-0.5" style={{ color: m.quantiteDehors > 0 ? "var(--color-warning)" : "var(--color-text-muted)" }}>{m.quantiteDehors}</p>
                 </div>
               </div>
               {/* Actions */}
@@ -245,7 +245,7 @@ const ListeMateriels = () => {
             {erreur && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreur}
               </div>
@@ -267,7 +267,7 @@ const ListeMateriels = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -288,7 +288,7 @@ const ListeMateriels = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -311,7 +311,7 @@ const ListeMateriels = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -333,7 +333,7 @@ const ListeMateriels = () => {
                       outline: "none",
                       transition: "border-color 0.15s",
                     }}
-                    onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
@@ -351,14 +351,14 @@ const ListeMateriels = () => {
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
                   style={{
-                    backgroundColor: "#dc5539",
+                    backgroundColor: "var(--color-brand)",
                     transition: "background-color 0.15s",
                   }}
                   onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#c44a30")
+                    (e.target.style.backgroundColor = "var(--color-brand-dark)")
                   }
                   onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#dc5539")
+                    (e.target.style.backgroundColor = "var(--color-brand)")
                   }
                 >
                   {editMode ? "Modifier" : "Créer"}

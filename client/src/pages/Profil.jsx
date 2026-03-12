@@ -163,7 +163,7 @@ const Profil = () => {
       <div className="flex items-center gap-4 mb-6">
         <div
           className="w-16 h-16 rounded-full flex items-center justify-center text-white text-xl font-bold"
-          style={{ backgroundColor: "#dc5539" }}
+          style={{ backgroundColor: "var(--color-brand)" }}
         >
           {utilisateur?.prenom?.[0]}
           {utilisateur?.nom?.[0]}
@@ -188,8 +188,8 @@ const Profil = () => {
             onClick={() => setOnglet(tab.id)}
             className="px-4 py-2.5 text-sm font-medium border-b-2"
             style={{
-              borderColor: onglet === tab.id ? "#dc5539" : "transparent",
-              color: onglet === tab.id ? "#dc5539" : "#6b7280",
+              borderColor: onglet === tab.id ? "var(--color-brand)" : "transparent",
+              color: onglet === tab.id ? "var(--color-brand)" : "var(--color-neutral)",
               transition: "all 0.15s",
             }}
           >
@@ -224,7 +224,7 @@ const Profil = () => {
                   required
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
               </div>
@@ -241,7 +241,7 @@ const Profil = () => {
                   required
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
               </div>
@@ -270,14 +270,14 @@ const Profil = () => {
                 type="submit"
                 className="px-6 py-2.5 text-white rounded-xl text-sm font-medium"
                 style={{
-                  backgroundColor: "#dc5539",
+                  backgroundColor: "var(--color-brand)",
                   transition: "background-color 0.15s",
                 }}
                 onMouseEnter={(e) =>
-                  (e.target.style.backgroundColor = "#c44a30")
+                  (e.target.style.backgroundColor = "var(--color-brand-dark)")
                 }
                 onMouseLeave={(e) =>
-                  (e.target.style.backgroundColor = "#dc5539")
+                  (e.target.style.backgroundColor = "var(--color-brand)")
                 }
               >
                 Enregistrer
@@ -313,7 +313,7 @@ const Profil = () => {
                   required
                   className="w-full px-3 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
                 <EyeToggle
@@ -337,7 +337,7 @@ const Profil = () => {
                   required
                   className="w-full px-3 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
                 <EyeToggle
@@ -361,7 +361,7 @@ const Profil = () => {
                   required
                   className="w-full px-3 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
                 <EyeToggle
@@ -376,14 +376,14 @@ const Profil = () => {
                 type="submit"
                 className="px-6 py-2.5 text-white rounded-xl text-sm font-medium"
                 style={{
-                  backgroundColor: "#dc5539",
+                  backgroundColor: "var(--color-brand)",
                   transition: "background-color 0.15s",
                 }}
                 onMouseEnter={(e) =>
-                  (e.target.style.backgroundColor = "#c44a30")
+                  (e.target.style.backgroundColor = "var(--color-brand-dark)")
                 }
                 onMouseLeave={(e) =>
-                  (e.target.style.backgroundColor = "#dc5539")
+                  (e.target.style.backgroundColor = "var(--color-brand)")
                 }
               >
                 Changer le mot de passe
@@ -398,12 +398,12 @@ const Profil = () => {
                 onClick={handleResetByEmail}
                 className="px-6 py-2.5 border rounded-xl text-sm font-medium"
                 style={{
-                  borderColor: "#dc5539",
-                  color: "#dc5539",
+                  borderColor: "var(--color-brand)",
+                  color: "var(--color-brand)",
                   transition: "all 0.15s",
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "#dc55390f";
+                  e.target.style.backgroundColor = "var(--color-brand-faint)";
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.backgroundColor = "transparent";
@@ -435,11 +435,11 @@ const Profil = () => {
             }}
             className="px-6 py-2.5 text-white rounded-xl text-sm font-medium"
             style={{
-              backgroundColor: "#dc2626",
+              backgroundColor: "var(--color-danger)",
               transition: "background-color 0.15s",
             }}
             onMouseEnter={(e) => (e.target.style.backgroundColor = "#b91c1c")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc2626")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "var(--color-danger)")}
           >
             Supprimer mon compte
           </button>
@@ -458,7 +458,7 @@ const Profil = () => {
           >
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ backgroundColor: "#dc26261a" }}
+              style={{ backgroundColor: "var(--color-danger-bg)" }}
             >
               <TrashIcon width={24} height={24} color="#dc2626" />
             </div>
@@ -484,7 +484,7 @@ const Profil = () => {
                   required
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm mb-4"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc2626")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-danger)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
                 <div className="flex gap-3">
@@ -500,14 +500,14 @@ const Profil = () => {
                     type="submit"
                     className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
                     style={{
-                      backgroundColor: "#dc2626",
+                      backgroundColor: "var(--color-danger)",
                       transition: "background-color 0.15s",
                     }}
                     onMouseEnter={(e) =>
                       (e.target.style.backgroundColor = "#b91c1c")
                     }
                     onMouseLeave={(e) =>
-                      (e.target.style.backgroundColor = "#dc2626")
+                      (e.target.style.backgroundColor = "var(--color-danger)")
                     }
                   >
                     Confirmer

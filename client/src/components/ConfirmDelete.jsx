@@ -14,9 +14,9 @@ const ConfirmDelete = ({ isOpen, onClose, onConfirm, title, message }) => {
       >
         <div
           className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
-          style={{ backgroundColor: "#dc55391a" }}
+          style={{ backgroundColor: "var(--color-brand-subtle)" }}
         >
-          <TrashIcon width={24} height={24} color="#dc5539" />
+          <TrashIcon width={24} height={24} color="var(--color-brand)" />
         </div>
         <h3 className="text-lg font-bold text-gray-800 mb-2">{title}</h3>
         <p className="text-sm text-gray-500 mb-6">{message}</p>
@@ -32,11 +32,11 @@ const ConfirmDelete = ({ isOpen, onClose, onConfirm, title, message }) => {
             onClick={onConfirm}
             className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
             style={{
-              backgroundColor: "#dc5539",
+              backgroundColor: "var(--color-brand)",
               transition: "background-color 0.15s",
             }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#c44a30")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc5539")}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "var(--color-brand-dark)")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "var(--color-brand)")}
           >
             Supprimer
           </button>

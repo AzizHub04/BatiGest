@@ -85,7 +85,7 @@ const ResponsableLayout = () => {
         <div className="h-16 flex items-center gap-2.5 px-5 border-b border-gray-100">
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ backgroundColor: "#dc5539" }}
+            style={{ backgroundColor: "var(--color-brand)" }}
           >
             <PhoneIcon width={18} height={18} color="white" strokeW={1.5} />
           </div>
@@ -105,14 +105,14 @@ const ResponsableLayout = () => {
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium"
               style={{
                 backgroundColor: isActive(item.path)
-                  ? "#dc55390f"
+                  ? "var(--color-brand-faint)"
                   : "transparent",
-                color: isActive(item.path) ? "#dc5539" : "#6b7280",
+                color: isActive(item.path) ? "var(--color-brand)" : "var(--color-neutral)",
                 transition: "all 0.15s",
               }}
               onMouseEnter={(e) => {
                 if (!isActive(item.path))
-                  e.currentTarget.style.backgroundColor = "#f3f4f6";
+                  e.currentTarget.style.backgroundColor = "var(--color-neutral-bg)";
               }}
               onMouseLeave={(e) => {
                 if (!isActive(item.path))
@@ -121,7 +121,7 @@ const ResponsableLayout = () => {
             >
               <span
                 className="flex-shrink-0"
-                style={{ color: isActive(item.path) ? "#dc5539" : "#9ca3af" }}
+                style={{ color: isActive(item.path) ? "var(--color-brand)" : "var(--color-text-muted)" }}
               >
                 {item.icon}
               </span>
@@ -178,7 +178,7 @@ const ResponsableLayout = () => {
               >
                 <div
                   className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold"
-                  style={{ backgroundColor: "#dc5539" }}
+                  style={{ backgroundColor: "var(--color-brand)" }}
                 >
                   {utilisateur?.prenom?.[0]}
                   {utilisateur?.nom?.[0]}
@@ -189,7 +189,7 @@ const ResponsableLayout = () => {
                   </p>
                   <p className="text-xs text-gray-400">Responsable</p>
                 </div>
-                <ChevronDownIcon width={16} height={16} color="#9ca3af" />
+                <ChevronDownIcon width={16} height={16} color="var(--color-text-muted)" />
               </button>
 
               {profileOpen && (

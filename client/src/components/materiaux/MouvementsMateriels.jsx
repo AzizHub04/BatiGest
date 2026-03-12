@@ -167,11 +167,11 @@ const MouvementsMateriels = () => {
           onClick={openCreate}
           className="flex items-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium"
           style={{
-            backgroundColor: "#dc5539",
+            backgroundColor: "var(--color-brand)",
             transition: "background-color 0.15s",
           }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = "#c44a30")}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = "#dc5539")}
+          onMouseEnter={(e) => (e.target.style.backgroundColor = "var(--color-brand-dark)")}
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "var(--color-brand)")}
         >
           <PlusIcon width={16} height={16} color="currentColor" />
           Nouveau mouvement
@@ -202,14 +202,14 @@ const MouvementsMateriels = () => {
                   <tr key={mv._id} className="border-b border-gray-50 hover:bg-gray-50" style={{ transition: "background-color 0.1s" }}>
                     <td className="px-5 py-3 text-sm text-gray-700">{formatDate(mv.dateMouvement)}</td>
                     <td className="px-5 py-3">
-                      <span className="text-xs px-2.5 py-1 rounded-full font-medium flex items-center gap-1.5 w-fit" style={{ backgroundColor: isSortie ? "#fee2e2" : "#dcfce7", color: isSortie ? "#dc2626" : "#16a34a" }}>
+                      <span className="text-xs px-2.5 py-1 rounded-full font-medium flex items-center gap-1.5 w-fit" style={{ backgroundColor: isSortie ? "var(--color-danger-bg)" : "var(--color-success-bg)", color: isSortie ? "var(--color-danger)" : "var(--color-success)" }}>
                         {isSortie ? <ArrowDownIcon width={12} height={12} color="currentColor" /> : <ArrowUpIcon width={12} height={12} color="currentColor" />}
                         {mv.typeMouvement}
                       </span>
                     </td>
                     <td className="px-5 py-3"><span className="text-sm font-medium text-gray-800">{mv.materiel?.nom}</span></td>
                     <td className="px-5 py-3">
-                      <span className="text-sm font-semibold" style={{ color: isSortie ? "#dc2626" : "#16a34a" }}>
+                      <span className="text-sm font-semibold" style={{ color: isSortie ? "var(--color-danger)" : "var(--color-success)" }}>
                         {isSortie ? "-" : "+"}{mv.quantite} {mv.materiel?.unite}
                       </span>
                     </td>
@@ -248,7 +248,7 @@ const MouvementsMateriels = () => {
                     <p className="text-sm font-semibold text-gray-800">{mv.materiel?.nom}</p>
                     <p className="text-xs text-gray-400 mt-0.5">{formatDate(mv.dateMouvement)}</p>
                   </div>
-                  <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold flex items-center gap-1" style={{ backgroundColor: isSortie ? "#fee2e2" : "#dcfce7", color: isSortie ? "#dc2626" : "#16a34a" }}>
+                  <span className="shrink-0 text-[10px] px-2.5 py-1 rounded-full font-semibold flex items-center gap-1" style={{ backgroundColor: isSortie ? "var(--color-danger-bg)" : "var(--color-success-bg)", color: isSortie ? "var(--color-danger)" : "var(--color-success)" }}>
                     {isSortie ? <ArrowDownIcon width={10} height={10} color="currentColor" /> : <ArrowUpIcon width={10} height={10} color="currentColor" />}
                     {mv.typeMouvement}
                   </span>
@@ -257,7 +257,7 @@ const MouvementsMateriels = () => {
                 <div className="grid grid-cols-2 gap-2 text-xs mb-3">
                   <div>
                     <p className="text-gray-400">Quantité</p>
-                    <p className="font-bold mt-0.5" style={{ color: isSortie ? "#dc2626" : "#16a34a" }}>
+                    <p className="font-bold mt-0.5" style={{ color: isSortie ? "var(--color-danger)" : "var(--color-success)" }}>
                       {isSortie ? "-" : "+"}{mv.quantite} {mv.materiel?.unite}
                     </p>
                   </div>
@@ -303,7 +303,7 @@ const MouvementsMateriels = () => {
             {erreur && (
               <div
                 className="mb-4 p-3 rounded-xl text-sm"
-                style={{ backgroundColor: "#dc55391a", color: "#dc5539" }}
+                style={{ backgroundColor: "var(--color-brand-subtle)", color: "var(--color-brand)" }}
               >
                 {erreur}
               </div>
@@ -325,21 +325,21 @@ const MouvementsMateriels = () => {
                         borderColor:
                           form.typeMouvement === t
                             ? t === "Sortie"
-                              ? "#dc2626"
-                              : "#16a34a"
+                              ? "var(--color-danger)"
+                              : "var(--color-success)"
                             : "#e5e7eb",
                         backgroundColor:
                           form.typeMouvement === t
                             ? t === "Sortie"
-                              ? "#fee2e2"
-                              : "#dcfce7"
+                              ? "var(--color-danger-bg)"
+                              : "var(--color-success-bg)"
                             : "white",
                         color:
                           form.typeMouvement === t
                             ? t === "Sortie"
-                              ? "#dc2626"
-                              : "#16a34a"
-                            : "#6b7280",
+                              ? "var(--color-danger)"
+                              : "var(--color-success)"
+                            : "var(--color-neutral)",
                         transition: "all 0.15s",
                       }}
                     >
@@ -454,7 +454,7 @@ const MouvementsMateriels = () => {
                   placeholder="Ex: Livraison fournisseur..."
                   className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"
                   style={{ outline: "none", transition: "border-color 0.15s" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#dc5539")}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--color-brand)")}
                   onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                 />
               </div>
@@ -472,14 +472,14 @@ const MouvementsMateriels = () => {
                   type="submit"
                   className="flex-1 py-2.5 text-white rounded-xl text-sm font-medium"
                   style={{
-                    backgroundColor: "#dc5539",
+                    backgroundColor: "var(--color-brand)",
                     transition: "background-color 0.15s",
                   }}
                   onMouseEnter={(e) =>
-                    (e.target.style.backgroundColor = "#c44a30")
+                    (e.target.style.backgroundColor = "var(--color-brand-dark)")
                   }
                   onMouseLeave={(e) =>
-                    (e.target.style.backgroundColor = "#dc5539")
+                    (e.target.style.backgroundColor = "var(--color-brand)")
                   }
                 >
                   {editMode ? "Modifier" : "Enregistrer"}
